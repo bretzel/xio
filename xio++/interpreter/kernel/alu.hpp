@@ -1,0 +1,208 @@
+#pragma once
+#include <xio++/xio++.hpp>
+#include <xio++/xtypes.hpp>
+#include <xio++/string_t.hpp>
+#include <any>
+
+namespace xio {
+
+/*!
+    @brief Arithmetic Logical Unit.
+
+*/
+class xio_api alu
+{
+    static std::string __nil;
+    type_t::T _type = type_t::null;
+    std::any a;
+
+public:
+
+    using list_t = std::vector<alu>;
+
+    enum conv {
+        DEG,
+        RAD
+    };
+
+    alu() { a = nullptr; }
+
+    alu(const alu& lf) { a = lf.a; _type = lf._type; }
+    alu(double lf);
+    alu(float lf);
+    //alu(token_t* rhs);
+
+    alu(const std::string& lf);
+    alu(const char* lf);
+    alu(void* lf);
+    alu(alu&& lf);
+    alu(int8_t lf);
+    alu(int16_t lf);
+    alu(int32_t lf);
+    alu(int64_t lf);
+    alu(uint8_t lf);
+    alu(uint16_t lf);
+    alu(uint32_t lf);
+    alu(uint64_t lf);
+    alu(bool lf);
+
+    void reset();
+    alu& operator =(const alu& lf);// { a = lf.a; _type = lf._type; return *this; }
+
+    alu& operator =(alu&& rhs);
+
+    alu operator==(const alu & lf);
+
+    template<typename T> T value() const {
+
+        if constexpr (std::is_same<T, std::string>::value)
+            return (_type& type_t::text ? std::any_cast<std::string>(a) : alu::__nil);
+        else
+            if constexpr (std::is_same<T, const std::string&>::value)
+                return (_type& type_t::text ? std::any_cast<const std::string&>(a) : alu::__nil);
+            else
+                if constexpr (std::is_same<T, const char*>::value)
+                    return (_type& type_t::text ? std::any_cast<std::string>(a).c_str() : alu::__nil.c_str());
+                else
+                    if constexpr (std::is_same<T, void*>::value)
+                        return std::any_cast<void*>(a);
+                    else
+                    return static_cast<T>(
+                        _type & type_t::i8 ?  std::any_cast<int8_t>(a) :
+                        _type & type_t::i16 ? std::any_cast<int16_t>(a) :
+                        _type & type_t::i32 ? std::any_cast<int32_t>(a) :
+                        _type & type_t::i64 ? std::any_cast<int64_t>(a) :
+                        _type & type_t::u8 ?  std::any_cast<uint8_t>(a) :
+                        _type & type_t::u16 ? std::any_cast<uint16_t>(a) :
+                        _type & type_t::u32 ? std::any_cast<uint32_t>(a) :
+                        _type & type_t::u64 ? std::any_cast<uint64_t>(a) :
+                        _type & type_t::boolean ? std::any_cast<bool>(a) :
+                        _type & type_t::real ? std::any_cast<double>(a) :0
+
+                        );
+    }
+
+    template<typename T> T number() const
+    {
+        if constexpr (std::is_same<T, void*>::value)
+            return std::any_cast<void*>(a);
+        else
+            if constexpr (std::is_same<T, std::string>::value)
+                return (std::string)*this;
+            else
+                return static_cast<T>(
+                    _type & type_t::i8 ?  std::any_cast<int8_t>  (a) :
+                    _type & type_t::i16 ? std::any_cast<int16_t> (a) :
+                    _type & type_t::i32 ? std::any_cast<int32_t> (a) :
+                    _type & type_t::i64 ? std::any_cast<int64_t> (a) :
+                    _type & type_t::u8 ?  std::any_cast<uint8_t> (a) :
+                    _type & type_t::u16 ? std::any_cast<uint16_t>(a) :
+                    _type & type_t::u32 ? std::any_cast<uint32_t>(a) :
+                    _type & type_t::u64 ? std::any_cast<uint64_t>(a) :
+                    _type & type_t::boolean ? std::any_cast<bool>(a) :
+                    _type & type_t::real ? std::any_cast<double>(a) : 0
+                    );
+
+    }
+
+
+    template<type_t::T T> bool is() {
+        return _type == T;
+    }
+
+    
+
+    std::string types() const;
+    virtual ~alu();
+
+
+
+    // Arithmetic operations overload between two alus:
+
+    // Binary operators:
+
+    alu operator +(const alu& rv);
+    alu operator -(const alu& rv);
+    alu operator *(const alu& rv);
+    alu operator [](alu::conv a_conv);
+
+    alu operator /(const alu& rv);
+    alu operator %(const alu& rv);
+    alu operator ^(const alu& rv);
+    alu operator <<(const alu& lf);
+    alu operator >>(const alu& lf);
+    alu operator |(const alu& lf);
+    alu operator &(const alu& lf);
+    alu operator ~();
+    // Assign operators:
+    alu& operator +=(const alu& rv);
+    alu& operator -=(const alu& rv);
+    alu& operator *=(const alu& rv);
+    alu& operator /=(const alu& rv);
+    alu& operator %=(const alu& rv);
+    alu& operator |=(const alu& rv);
+    alu& operator &=(const alu& rv);
+    alu& operator ^=(const alu& rv);
+
+    alu& operator <<=(const alu& rv);
+    alu& operator >>=(const alu& rv);
+
+
+    // boolean operators:
+    alu operator >(const alu& rv);
+    alu operator <(const alu& rv);
+    alu operator >=(const alu& rv);
+    alu operator <=(const alu& rv);
+    alu operator !=(const alu& rv);
+    alu operator ||(const alu& rv);
+    alu operator &&(const alu& rv);
+
+    bool operator !();
+    operator bool();
+
+    alu operator -();
+    alu operator +();
+
+    alu operator ++(int);
+    alu operator ++();
+    alu operator --();
+    alu operator --(int);
+
+    alu radical(const alu& lf);
+    alu factorial(const alu& lf);
+
+    bool type_size(const alu& rv);
+    std::string operator()()const { return (std::string)(*this); }
+    operator std::string() const {
+        string_t str;
+        if (_type &type_t::boolean)
+            str << (value<bool>() ? "true" : "false");
+        else
+            if (_type&type_t::number)
+                str << number<double>();
+            else
+                if (_type&type_t::text)
+                    return value<std::string>();
+                else
+                    if (_type&type_t::voidptr) {
+                        str = "@[%ld]";
+                        str << number<void*>();
+                    }
+                    else
+                        if (_type&type_t::null)
+                            str << "null";
+        return str();
+    }
+
+private:
+    alu remove_substr_copy(const std::string& to_erase);
+    alu completely_remove_substr_copy(const std::string& to_erase);
+    alu& remove_substr(const std::string& to_erase);
+    alu& completely_remove_substr(const std::string& to_erase);
+
+};
+
+
+}
+
+
