@@ -5,6 +5,7 @@
 #include <thread>
 #include <mutex>
 #include <stack>
+#include <stdint.h>
 
 namespace xio {
 

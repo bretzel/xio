@@ -69,12 +69,12 @@ public:
 
         interface_t::iterator f = _interface.find(f_id);
         if (f == _interface.end())
-            throw message::push(message::type::error), " - Symbol '", f_id.c_str(), "': not found.";
+            throw message::push(message::xclass::error), " - Symbol '", f_id.c_str(), "': not found.";
 
         F fn = reinterpret_cast<F>(f->second);
         if (fn)
             return fn(this, a_args...);
-        throw message::push(message::type::error), " - Symbol '" , f_id.c_str() , "': has no proc address.";
+        throw message::push(message::xclass::error), " - Symbol '" , f_id.c_str() , "': has no proc address.";
     }
 
     virtual int run() = 0;

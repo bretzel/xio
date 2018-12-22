@@ -5,7 +5,7 @@ namespace xio {
 message::stack message::sstack;
 
 
-message message::mmessage = { message::xclass::internal,"null" };
+message message::mmessage = { message::xclass::internal };
 
 message::message()
 {
