@@ -14,7 +14,7 @@ using std::swap;
 
 
 
-string xio_api string_t::default_separators = "\\\"'%(){}[]`$#@!;,~?^&<>=+-*/:.";
+string xio_api string_t::default_separators = "\\%(){}[]`$#@!;,~?^&<>=+-*/:.";
 
 static  string __nullstr__ = "";
 

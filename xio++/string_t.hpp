@@ -16,6 +16,7 @@
 #include <time.h>
 
 #include <cmath>
+#include <stdint.h>
 
 
 
@@ -307,7 +308,7 @@ template<typename T> string_t & operator >> (T& _arg) {
         for (int x = 1; x <= nbytes; x++) {
             seq = tableau[nbytes - x];
             if ((x == 1 && !padd && !seq) || (stream.empty() && !padd && !seq)) continue;
-            for (int y = 7; y >= 0; y--) { // est-ce que le bit #y est à 1 ?
+            for (int y = 7; y >= 0; y--) { // est-ce que le bit #y est ï¿½ 1 ?
                 if (s >= f) { stream += ' '; s = 0; }
                 ++s;
                 uint8_t b = 1 << y;
