@@ -30,13 +30,15 @@ PUBLIC_HEADER
 "xio++/dlloader.hpp;xio++/expect.hpp;xio++/message.hpp;xio++/object.hpp;xio++/string_t.hpp;xio++/time_stamp.hpp;xio++/xio++.hpp;xio++/xtypes.hpp;xio++/journal/journal.hpp;xio++/journal/logger.hpp;xio++/interpreter/interpreter.hpp;xio++/interpreter/compiler/lexer.hpp;xio++/interpreter/kernel/alu.hpp;xio++/interpreter/kernel/xio.hpp;xio++/interpreter/kernel/function_t.hpp;xio++/interpreter/kernel/stack.hpp"
 )
 
-
+target_link_libraries(xio++ ${CMAKE_DL_LIBS})
 
 target_include_directories(xio++ 
 PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>
 )
+
+
 
 include(GNUInstallDirs)
 
@@ -47,6 +49,7 @@ install(TARGETS xio++
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     PUBLIC_HEADER DESTINATION include/xio++
 )
+
 
 
 install(EXPORT xio++
@@ -60,3 +63,4 @@ install(EXPORT xio++
 
 
 add_subdirectory(xioapp)
+

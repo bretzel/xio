@@ -6,7 +6,7 @@
 #endif
 #include <sstream>
 #include <iostream>
-#include <tea++/xio/interpreter_t.hpp>
+#include <xio++/interpreter/interpreter.hpp>
 
 namespace Ansi{
 
@@ -65,7 +65,7 @@ class  CAnsi
     int    _argc=0;
     char** _argv = nullptr;
 
-    tea::interpreter_t interpret;
+    //xio::interpreter interpret;
 public:
     CAnsi();
     CAnsi(int argc, char** argv);
@@ -85,7 +85,7 @@ public:
     }
 
 
-    tea::message::type execute();
+    //xio::message::type execute();
 
     virtual ~CAnsi();
 };
