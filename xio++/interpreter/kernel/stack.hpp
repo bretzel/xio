@@ -30,7 +30,7 @@ public:
     void push_instruction(xio_t* x);
     void push_variable(variable* var);
     
-
+    
 protected:
     virtual int push();
 
