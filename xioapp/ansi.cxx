@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <xio++/journal/logger.hpp>
-#include <xio++/xio.hpp>
+#include <xio++/xio++.hpp>
 #include <xio++/interpreter/kernel/function_t.hpp>
 #include <xio++/interpreter/compiler/lexer.hpp>
 #include <xio++/expect.hpp>

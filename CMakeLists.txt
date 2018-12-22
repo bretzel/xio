@@ -70,7 +70,7 @@ install(EXPORT xio++
   FILE
     xio++.cmake
   NAMESPACE
-    xio++::
+    xio::
   DESTINATION
     ${CMAKE_INSTALL_LIBDIR}/cmake/xio++
 )

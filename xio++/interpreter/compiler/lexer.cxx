@@ -261,6 +261,7 @@ lexer_t::result lexer_t::scan_hex(xio::token_t & token)
     token.loc.e = ptr;
 
     return { message::xcode::accepted }; // return {}; // oops!
+    
 }
 
 

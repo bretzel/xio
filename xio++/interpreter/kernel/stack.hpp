@@ -1,6 +1,6 @@
 #pragma once
 
-#include <xio++/xio.hpp>
+#include <xio++/xio++.hpp>
 #include <xio++/interpreter/kernel/variable.hpp>
 
 namespace xio {
