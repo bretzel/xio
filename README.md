@@ -1,6 +1,6 @@
 # xio++  
 
-   ### e_*X*_uctable 
+   ### e_*X*_ecutable 
    ### _*I*_nstruction 
    ### _*O*_bject.
 
