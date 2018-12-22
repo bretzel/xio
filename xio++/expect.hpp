@@ -24,14 +24,7 @@ public:
         u.m = &message::null();
     }
     
-    //expect(const message& a_msg){ 
-    //    u.m = new message();
-    //    *u.m = a_msg;
-    //    f = false;
-    //    std::cout << __PRETTY_FUNCTION__ << ":\n";
-    //}
     
-
     expect(message& a_msg) {
         u.m = &a_msg; // new message();
         // *u.m = a_msg;
@@ -62,9 +55,7 @@ public:
                 u.v = nullptr;
             }
         }
-        //if(!u.m)        
-        //    u.m = new message();
-        //*u.m = a_msg;
+  
         f = false;
         u.m = &a_msg;
         return *this;
