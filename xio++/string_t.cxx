@@ -350,6 +350,7 @@ std::size_t string_t::words(string_t::word::list& warray, const std::string& a_d
         if (isspace(*w.end)) {
             if (w.begin < w.end) {
                 warray.push_back({ w.begin, (w.end++) - 1 });
+                //warray.push_back({ w.begin, w.end++ });
                 w.begin = w.end;
             }
             skipws(w.begin);
