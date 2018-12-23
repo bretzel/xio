@@ -148,7 +148,10 @@ xio_t::xio_t(object * a_parent, token_t * a_token, alu * a_alu):object(a_parent)
     if (acc) return;
     mem.own = 1;
     
-    if (!t0) return;
+    if (!t0){
+        acc = new alu(0.0);
+        return;
+    }
 
     switch(t0->type){
         case type_t::text:

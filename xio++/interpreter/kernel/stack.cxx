@@ -6,7 +6,7 @@ xio_stack::xio_stack():xio_t()
 {
 }
 
-xio_stack::xio_stack(object * a_parent, token_t * a_token, alu * a_alu):xio_t(a_parent,a_token)
+xio_stack::xio_stack(object * a_parent, token_t * a_token, alu * a_alu):xio_t(a_parent,a_token,a_alu)
 {
 
 }

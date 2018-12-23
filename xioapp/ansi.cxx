@@ -7,7 +7,7 @@
 #include <xio++/interpreter/compiler/lexer.hpp>
 #include <xio++/expect.hpp>
 
-#include <xio++/interpreter/kernel/xio.hpp>
+#include <xio++/interpreter/module.hpp>
 #include <xio++/interpreter/compiler/grammar.hpp>
 
 
@@ -46,6 +46,19 @@ xio::message::xcode CAnsi::execute()
 {
     xio::xio_grammar grammar;
     xio::xio_grammar::result r =  grammar.build();
+    
+    xio::xio_module m;
+    m.config() = {
+        "test",
+        "source:'a = \'bonjour, le monde!!\n';"
+    };
+    
+    logdebugfn << " text:'" << xio::logger::Yellow << m.name() << xio::logger::White << "';" << Ends;
+    logdebugfn << " uri:'" << xio::logger::Yellow << m.source() << xio::logger::White << "';" << Ends;
+//     m.build();
+//     m.execute();
+    
+    
     if(!r){
         logerrorfn << " >" << r.notice()() << Ends;
     }
@@ -77,77 +90,6 @@ long fibonacci(unsigned n)
     return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
-void test_xio(Ansi::CAnsi& ansi)
-{
-
-   using namespace xio;
-
-   token_t::list_t tokens;
-   lexer_t lexer;
-   lexer.token_stream() = &tokens;
-   lexer_t::result result = lexer["1.67 / (3+2^2));"];
-
-   if(!result) {
-       ansi << result.notice()() << '\n';
-       tokens.clear();
-       return;
-   }
-
-   xio_t* x = new xio_t(nullptr, &tokens[1]);
-   xio_t::result r;
-   int tt=0;
-   xio_t::list_t xio_stream;
-   xio_stream.push_back(x);
-   for(token_t& token : tokens){
-       if(tt <= 1){ ++tt; continue; }
-
-       if(token.code == e_code::semicolon) break;
-
-       std::cerr << " test_xio: x = " << x->token()->loc.b << " <- input token: " << token.loc.b << "\n";
-
-       r = x->tree_input(&token, [&xio_stream](token_t* a_token)->xio_t*{
-
-           std::cerr << " test_xio::lamba[] => a_token:" << a_token->loc.b << "\n";
-           xio_t* newx = new xio_t(nullptr, a_token);
-           xio_stream.push_back(newx);
-           return newx;
-
-       });
-
-       if(!r){
-           message m = r.notice();
-           logdebugpfn << " Error: " << m() << Ends;
-           break;
-       }
-       x = r.value();
-       std::cerr << " test_xio: (r.value() -> x = " << x->token()->loc.b << ")\n";
-   }
-
-   if (r) {
-       xio_t::result r = x->tree_close();
-
-       if (r) {
-
-           xio_t* xx_op = r.value();
-           alu a = xx_op->jsr();
-           std::cerr << lexer.text() << " = " << a() << '\n';
-           logdebugfn << " Size of xiostream: " << logger::HBlue << xio_stream.size() << logger::Reset << Ends;
-           loginfo << logger::HCyan << lexer.text() << " = " << logger::Yellow << a.number<float>() << Ends;
-
-           for (auto* ix : xio_stream) {
-               //if(xx)
-               logdebugfn << ix->token()->informations() << Ends;
-               delete ix;
-           }
-       }
-       else {
-           logerror << r.notice()() << Ends;
-       }
-   }
-
-   tokens.clear();
-   // leak: x........
-}
 
 
 
