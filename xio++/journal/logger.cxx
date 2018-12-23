@@ -696,7 +696,7 @@ void logger::_inithtml()
 void logger::_initansi()
 {
     
-    logger::m_attr_table.push_back("\033[0;30m"); // logger::black
+    logger::m_attr_table.push_back("\033[0;0m"); // logger::black
     logger::m_attr_table.push_back("\033[0;31m"); // logger::red
     logger::m_attr_table.push_back("\033[0;32m"); // logger::green
     logger::m_attr_table.push_back("\033[0;33m");// logger::ambre

@@ -366,11 +366,11 @@ xio_t::result xio_t::tree_set_left(xio_t* x)
 
 /*
 
-    /             /
-     \             \
-      a < (         ( < 2
-                   /
-                  a 
+    /             /        /
+     \             \        \
+      a < (         ( < 2    (<-XIO++
+                   /        /
+                  a        \ 
 */
 xio_t::result xio_t::tree_set_right(xio_t* x) {
     logdebug 
