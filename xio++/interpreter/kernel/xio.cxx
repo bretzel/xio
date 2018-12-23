@@ -10,7 +10,7 @@ namespace xio {
 
 #define deg2rad(_xio) ((_xio)->acc->number<double>()*3.1415) / 180
 constexpr auto _PI_ = 3.14159265358979323846;
-
+// M_PI ?
 std::stack<xio_t*> xio_t::pars;
 std::stack<xio_t*> xio_t::indexes;
 std::stack<xio_t*> xio_t::curls;
@@ -366,11 +366,11 @@ xio_t::result xio_t::tree_set_left(xio_t* x)
 
 /*
 
-    /             /        /
-     \             \        \
-      a < (         ( < 2    (<-XIO++
-                   /        /
-                  a        \ 
+    /             /        
+     \             \       
+      a < (         ( < 2  
+                   /       
+                  a        
 */
 xio_t::result xio_t::tree_set_right(xio_t* x) {
     logdebug 

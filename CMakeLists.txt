@@ -12,8 +12,8 @@ SHARED
     xio++/xtypes.cxx
     xio++/journal/journal.cxx
     xio++/journal/logger.cxx
-    
     xio++/interpreter/compiler/lexer.cxx
+    xio++/interpreter/compiler/grammar.cxx
     xio++/interpreter/kernel/alu.cxx
     xio++/interpreter/kernel/stack.cxx    
     xio++/interpreter/kernel/function_t.cxx
@@ -21,6 +21,7 @@ SHARED
 
 )
 
+# Someone kind enough to tell me how to NOT use file(GLOB here ?
 file(GLOB H_INTER xio++/interpreter/*.hpp)
 file(GLOB H_COMPILER xio++/interpreter/compiler/*.hpp)
 file(GLOB H_KERNEL xio++/interpreter/kernel/*.hpp)
@@ -37,7 +38,7 @@ VERSION 0.1.0
 #PUBLIC_HEADER 
 #"xio++/dlloader.hpp;xio++/expect.hpp;xio++/message.hpp;xio++/object.hpp;xio++/string_t.hpp;xio++/time_stamp.hpp;xio++/xio++.hpp;xio++/xtypes.hpp;xio++/journal/journal.hpp;xio++/journal/logger.hpp;xio++/interpreter/interpreter.hpp;xio++/interpreter/compiler/lexer.hpp;xio++/interpreter/kernel/alu.hpp;xio++/interpreter/kernel/xio.hpp;xio++/interpreter/kernel/function_t.hpp;xio++/interpreter/kernel/stack.hpp"
 )
-->
+
 target_link_libraries(xio++ ${CMAKE_DL_LIBS})
 
 target_include_directories(xio++ 

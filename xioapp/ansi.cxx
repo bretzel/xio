@@ -8,6 +8,8 @@
 #include <xio++/expect.hpp>
 
 #include <xio++/interpreter/kernel/xio.hpp>
+#include <xio++/interpreter/compiler/grammar.hpp>
+
 
 namespace Ansi{
 
@@ -40,60 +42,17 @@ void CAnsi::End()
 #endif
 
 
-// xio::message::type CAnsi::execute()
-// {
-//     logdebugfn << "testing xio_module through the derived class: interpreter_t:" << Ends;
-//     logdebug << " argc:" << _argc << Ends;
-//     logdebug << " argv[0]: " << _argv[0] << Ends;
-//     if (_argc >= 2) {
-//         for (int c = 1; c < _argc; c++)
-//             logdebug << "arg #" << c << ":" << _argv[c] << Ends;
-//     }
-//     interpret.settings() = { 
-//         "xio::test expression",
-//         //"xor +=.14159;"
-//         //"test=cos 1 * .5a;"
-//         //"a=1.67 / 4(2+3+2^2);"
-//         "hex = (i16) 0xffd2;"
-//         //"'Un essaie sur une constante litterale.. Ca va planter...';"
-//     };
-
+xio::message::xcode CAnsi::execute()
+{
+    xio::xio_grammar grammar;
+    xio::xio_grammar::result r =  grammar.build();
+    if(!r){
+        logerrorfn << " >" << r.notice()() << Ends;
+    }
     
-
-//     xio::alu A;
-//     uint16_t xx = 0xffd2;
-//     std::cerr << " xx = " << xx << '\n';
-//     int16_t xy = xx; std::cerr << " xy = " << xy << '\n';
-
-
-//     xio::xio::result r = interpret.run();
-//     if (r) {
-//         xio::xio* i = r.value();
-//         if (i) {
-//             A = i->jsr();
-//             loginfo << xio::logger::White << interpret.settings().src << xio::logger::Black << " = " << xio::logger::Yellow << A()  << Ends; // A[xio::alu::DEG]() << " deg;" << Ends;
-//             xio::xio* v = interpret["hex"];
-//             if (v) {
-//                 xio::alu var_a = *v->unit();
-                
-//                 loginfo << xio::logger::White <<'\'' 
-//                     << xio::logger::Yellow << v->token()->attribute()
-//                     << xio::logger::White << "' = " 
-//                     << xio::logger::Yellow << var_a() 
-//                     << Ends;
-
-//                 //loginfo << xio::logger::White << "'a' = " << xio::logger::Yellow <<  << Ends;
-//             }
-//             else
-//                 loginfo << xio::logger::White << "'hex' has no storage?" << Ends;
-//         }
-//     }
-//     else {
-//         xio::message M = r.notice();
-//         logerrorfn << "Interpreter returned error:" << M() << Ends;
-//     }
-//     return xio::message::type::accepted;
-// }
+    grammar.dump();
+    return r.value();
+}
 
 
 CAnsi::~CAnsi()
@@ -232,8 +191,9 @@ auto main(int argc, char **argv) -> int {
     str << 10;
     logsuccess << str() << Ends;
     loginfo << "test  _type = 16401: " << xio::type_t::name(16401) << ": " << Ends;
-    test_xio(con);
+    //test_xio(con);
     //test_method(con);
+    con.execute();
     xio::message::clear([](xio::message& msg){
         lognotice  << msg() << Ends;
     });

@@ -7,7 +7,7 @@
 #include <sstream>
 #include <iostream>
 #include <xio++/interpreter/interpreter.hpp>
-
+#include <xio++/message.hpp>
 namespace Ansi{
 
 namespace Color{
@@ -85,7 +85,7 @@ public:
     }
 
 
-    //xio::message::type execute();
+    xio::message::xcode execute();
 
     virtual ~CAnsi();
 };

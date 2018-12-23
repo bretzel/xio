@@ -437,7 +437,7 @@ template<typename T> string_t& string_t::printf(const T& argf)
     std::string ff(_s, _argpos, fmt._delta);
 
     if constexpr (std::is_same<T, const std::string&>::value)
-        std::sprintf(buf, ff.c_str(), argf.c_str());
+        std::snprintf(buf, 199, ff.c_str(), argf.c_str());
     else
         std::sprintf(buf, ff.c_str(), argf);
 
