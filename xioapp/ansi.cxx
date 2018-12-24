@@ -46,15 +46,19 @@ xio::message::xcode CAnsi::execute()
 {
     xio::xio_grammar grammar;
     xio::xio_grammar::result r =  grammar.build();
-    
+    xio::token_t::list_t tokens;
     xio::xio_module m;
     m.config() = {
         "test",
-        "source:'a = \'bonjour, le monde!!\n';"
+        "text:\"a = 'salute! la gang!';\"",
+        &tokens
     };
     
     logdebugfn << " text:'" << xio::logger::Yellow << m.name() << xio::logger::White << "';" << Ends;
-    logdebugfn << " uri:'" << xio::logger::Yellow << m.source() << xio::logger::White << "';" << Ends;
+    logdebugfn << " uri:'" << xio::logger::Yellow << m.uri() << xio::logger::White << "';" << Ends;
+
+    m.build();
+    
 //     m.build();
 //     m.execute();
     
