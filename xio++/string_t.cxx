@@ -1,5 +1,5 @@
 ﻿#include "string_t.hpp"
-
+#include <xio++/journal/logger.hpp>
 
 
 
@@ -385,6 +385,8 @@ std::size_t string_t::words(string_t::word::list& warray, const std::string& a_d
                     warray.push_back({ w.begin, p - 1 });
                     if (keep_as_word) warray.push_back({ p,p });
                     w.end = p;
+                    ++w.end;
+                    logdebugfn << " word: '" << warray.back()() << Ends;
                 }
                 else return warray.size();
             }
