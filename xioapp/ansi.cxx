@@ -50,7 +50,7 @@ xio::message::xcode CAnsi::execute()
     xio::xio_module m;
     m.config() = {
         "test",
-        "text://\"a = 'salute! la gang!';\"",
+        "text://\"a = 'Allo, le monde!\n';\"",
         &tokens
     };
     
