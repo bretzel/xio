@@ -14,7 +14,7 @@ class xio_api message
 {
 
 public:
-    enum class xclass: uint8_t{
+    enum class xio_api xclass: uint8_t{
         status = 1,
         error,
         notice,
@@ -25,7 +25,7 @@ public:
         internal
     };
 
-    enum class xcode : uint16_t {
+    enum class xio_api xcode : uint16_t {
         accepted,
         rejected,
         unexpected,

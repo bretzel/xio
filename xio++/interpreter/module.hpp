@@ -33,7 +33,7 @@ namespace xio {
 /**
  * @todo write docs
  */
-class xio_module : public xio_stack
+class xio_api xio_module : public xio_stack
 {
     
     struct {

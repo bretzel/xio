@@ -10,7 +10,7 @@ namespace xio{
     
     
 
-template<typename T> class expect{
+template<typename T> class  expect{
     
     bool f = false;
     union{

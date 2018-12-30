@@ -137,11 +137,15 @@
   <ItemGroup>
     <ClInclude Include="dlloader.hpp" />
     <ClInclude Include="expect.hpp" />
+    <ClInclude Include="interpreter\compiler\grammar.hpp" />
     <ClInclude Include="interpreter\compiler\lexer.hpp" />
     <ClInclude Include="interpreter\interpreter.hpp" />
     <ClInclude Include="interpreter\kernel\alu.hpp" />
     <ClInclude Include="interpreter\kernel\function_t.hpp" />
+    <ClInclude Include="interpreter\kernel\stack.hpp" />
+    <ClInclude Include="interpreter\kernel\variable.hpp" />
     <ClInclude Include="interpreter\kernel\xio.hpp" />
+    <ClInclude Include="interpreter\module.hpp" />
     <ClInclude Include="journal\journal.hpp" />
     <ClInclude Include="journal\logger.hpp" />
     <ClInclude Include="message.hpp" />
@@ -153,10 +157,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dlloader.cxx" />
+    <ClCompile Include="interpreter\compiler\grammar.cxx" />
     <ClCompile Include="interpreter\compiler\lexer.cxx" />
     <ClCompile Include="interpreter\kernel\alu.cxx" />
     <ClCompile Include="interpreter\kernel\function_t.cxx" />
+    <ClCompile Include="interpreter\kernel\stack.cxx" />
+    <ClCompile Include="interpreter\kernel\variable.cxx" />
     <ClCompile Include="interpreter\kernel\xio.cxx" />
+    <ClCompile Include="interpreter\module.cxx" />
     <ClCompile Include="journal\journal.cxx" />
     <ClCompile Include="journal\logger.cxx" />
     <ClCompile Include="message.cxx" />

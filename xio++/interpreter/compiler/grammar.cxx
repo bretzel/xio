@@ -9,7 +9,7 @@ namespace xio{
 
 xio_grammar::dictionary_t xio_grammar::grammar_dictionary = {
     
-    {':', &xio_grammar::enter_rule_def   },
+    {':', &xio_grammar::enter_rule_def      },
     {',', &xio_grammar::new_sequence        },
     {'.', &xio_grammar::end_rule            },
     {'+', &xio_grammar::set_repeat          },

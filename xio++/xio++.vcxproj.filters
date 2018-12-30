@@ -60,6 +60,18 @@
     <ClInclude Include="interpreter\interpreter.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="interpreter\kernel\variable.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="interpreter\kernel\stack.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="interpreter\compiler\grammar.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="interpreter\module.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="string_t.cxx">
@@ -96,6 +108,18 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="interpreter\kernel\xio.cxx">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="interpreter\kernel\stack.cxx">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="interpreter\kernel\variable.cxx">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="interpreter\compiler\grammar.cxx">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="interpreter\module.cxx">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
