@@ -157,15 +157,14 @@ string_t & operator >> (std::string & _arg);
 template<typename T> string_t & operator >> (T& _arg) {
 
     if constexpr (
+        std::is_same<T, uint64_t&>::value ||
+        std::is_same<T, uint16_t&>::value ||
+        std::is_same<T, uint32_t&>::value ||
+        std::is_same<T, uint64_t&>::value ||
+        std::is_same<T, uint8_t&>::value ||
+        std::is_same<T, uint16_t&>::value ||
+        std::is_same<T, uint32_t&>::value ||
         std::is_same<T, uint64_t&>::value
-        //std::is_same<T, uint16_t&>::value ||
-        //std::is_same<T, uint32_t&>::value ||
-        //std::is_same<T, uint64_t&>::value ||
-
-        //std::is_same<T, uint8_t&>::value ||
-        //std::is_same<T, uint16_t&>::value ||
-        //std::is_same<T, uint32_t&>::value ||
-        //std::is_same<T, uint64_t&>::value
 
         ) {
         std::string::size_type pos;
@@ -231,11 +230,7 @@ template<typename T> string_t & operator >> (T& _arg) {
 
     std::size_t words(string_t::word::list& warray, const std::string& a_delimiters = "", bool keep_as_word = true);
 
-
-    //     MessageID::T for_each(string_t::cword::list& wl, msef::code(*)(const std::string &));
-    //     MessageID::T for_each(string_t::word::list& wl, msef::code(*)(const std::string &));
-
-    template<typename t> string_t& arg(t _arg) {
+    template<typename T> string_t& arg(T _arg) {
         if (scanarg() == std::string::npos) {
             std::ostringstream os;
             os << std::oct << _arg;
@@ -243,10 +238,10 @@ template<typename T> string_t & operator >> (T& _arg) {
             return *this;
         }
 
-        return printf<t>(_arg);
+        return printf<T>(_arg);
     }
     bool filter(const string_t::list& a_exp);
-    template<typename t> std::string expand(const t& cnt) {
+    template<typename T> std::string expand(const T& cnt) {
         string_t ss;
 
         int x = cnt.size();
@@ -308,7 +303,7 @@ template<typename T> string_t & operator >> (T& _arg) {
         for (int x = 1; x <= nbytes; x++) {
             seq = tableau[nbytes - x];
             if ((x == 1 && !padd && !seq) || (stream.empty() && !padd && !seq)) continue;
-            for (int y = 7; y >= 0; y--) { // est-ce que le bit #y est � 1 ?
+            for (int y = 7; y >= 0; y--) { // est-ce que le bit #y est à 1 ?
                 if (s >= f) { stream += ' '; s = 0; }
                 ++s;
                 uint8_t b = 1 << y;
@@ -327,16 +322,6 @@ private:
 
     bool pushword(word::list& strm, word& w, std::string::size_type sz);
 };
-
-
-
-//extern xio_api std::ostream&  operator << (std::ostream& in, const string_t& _str);
-
-
-
-
-
-
 
 
 template<typename T> string_t& string_t::printf(const T& argf)
