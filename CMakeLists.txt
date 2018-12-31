@@ -79,5 +79,5 @@ install(EXPORT xio++
 )
 
 
-add_subdirectory(xioapp)
+add_subdirectory(xio.exe)
 
