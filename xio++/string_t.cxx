@@ -379,6 +379,9 @@ std::size_t string_t::words(string_t::word::list& warray, const std::string& a_d
         else
             if ((*cc == '\'') || (*cc == '"')) {
                 w.begin = cc;
+				if (keep_as_word) 
+					warray.push_back({ cc,cc });
+				
                 ++w.begin;
                 string::iterator p = scanto(w.begin, *cc);
                 if (p != _s.end()) {
@@ -386,6 +389,7 @@ std::size_t string_t::words(string_t::word::list& warray, const std::string& a_d
                     if (keep_as_word) warray.push_back({ p,p });
                     w.end = p;
                     ++w.end;
+					w.begin = w.end;
                     logdebugfn << " word: '" << warray.back()() << Ends;
                 }
                 else return warray.size();

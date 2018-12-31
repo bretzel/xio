@@ -51,6 +51,7 @@ alu xio_module::jsr()
 xio_t::result xio::xio_module::build()
 {
     text.tokens = cfg.tokens;
+	logdebugfn << " Parse URI:" << Ends;
     parse_uri();
     /*
     text.src    = cfg.src;
