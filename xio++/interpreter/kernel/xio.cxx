@@ -1043,4 +1043,13 @@ alu xio_t::kstring()
 }
 
 
+std::string xio_t::type_name()
+{
+    return type_t::name(t0->type);
 }
+
+
+}
+
+
+

@@ -60,6 +60,10 @@ public:
     xio_t::result tree_input(token_t* a_token, xio_t::allocator_t a_allocator=nullptr);
 
     virtual alu jsr(); // "Jump Subroutine" :)
+    
+    
+    virtual std::string type_name();
+    
     xio_t* oper() { return op; }
     token_t* token() { return t0;}
     xio_t::result tree_close();

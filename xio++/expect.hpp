@@ -117,6 +117,11 @@ public:
     ~expect(){
 
     }
+    
+    std::string text(){
+        
+        return "expect::text: not implement yet";
+    }
 }; 
    
 
