@@ -142,7 +142,7 @@ xio_t::xio_t(object * a_parent):object(a_parent)
 xio_t::xio_t(object * a_parent, token_t * a_token, alu * a_alu):object(a_parent)
 {
     t0 = a_token;
-    std::cerr << "xio_t::xio_t this->type:[" << type_t::name(t0->sem) << "'" << t0->attribute() <<  "'] \n";
+    logdebugpfn << "xio_t::xio_t this->type:[" << type_t::name(t0->sem) << "'" << t0->attribute() <<  "'] \n";
 
     acc = a_alu;
     if (acc) return;
@@ -517,7 +517,6 @@ xio_t::result xio_t::tree_lpar_input_binary(xio_t * x)
 }
 
 /*
-
         a = 32 * (2+3) / 4;
                                                                                                        
                     =           =               =              =              =            =              =               = <---+           =           

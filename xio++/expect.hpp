@@ -113,16 +113,16 @@ public:
         //}
         u.m = nullptr;
     }
-    
+
     ~expect(){
 
     }
-    
+    /*!
+        @brief  to be verified.
+    */
     std::string text(){
-        
         return "expect::text: not implement yet";
     }
-}; 
-   
+};
 
 }
