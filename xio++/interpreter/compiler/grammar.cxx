@@ -30,7 +30,8 @@ std::string grammar_txt =
 "paramseq           : ', param.\n"
 "param              : *typename identifier.\n"
 "params             : param *+paramseq.\n"
-"arg                : identifier ': expression.\n"
+"objcarg            : indentifier ': expression.\n"
+"arg                : objcarg, expression.\n"
 "argseq             : ', arg.\n"
 "args               : arg *+argseq.\n"
 "typename           : *i8 *u8 *i16 *u16 *i32 *u32 *i64 *u64 *real *string *text *objectid.\n"
@@ -45,7 +46,9 @@ std::string grammar_txt =
 "var_id             .\n"
 "new_var            .\n"
 "objectid           .\n"
-"function_id        .";
+"function_id        : scope function_id, objectid scope function_id, var_id dot function_id.\n"
+"objcfncall         : [ function_id *args ].";
+//"function_id        .";
 
 
 xio_grammar::result xio_grammar::build()
