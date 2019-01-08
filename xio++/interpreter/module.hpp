@@ -49,7 +49,11 @@ public:
         std::string uri; // "[file:file_path/filename.ext | text:'code source;']"
         token_t::list_t* tokens;
         const char* src;
-    }cfg;
+    };
+    
+private: config_t cfg;
+public:
+    
     
     xio_module();
     xio_module(object* a_parent, token_t* a_token, alu* a=nullptr);

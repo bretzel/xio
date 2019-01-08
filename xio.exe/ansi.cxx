@@ -7,7 +7,7 @@
 #include <xio++/interpreter/compiler/lexer.hpp>
 #include <xio++/expect.hpp>
 
-#include <xio++/interpreter/module.hpp>
+#include <xio++/interpreter/interpreter.hpp>
 #include <xio++/interpreter/compiler/grammar.hpp>
 
 
@@ -42,33 +42,51 @@ void CAnsi::End()
 #endif
 
 
+// xio::message::xcode CAnsi::execute()
+// {
+//     xio::xio_grammar grammar;
+//     xio::xio_grammar::result r =  grammar.build();
+//     xio::token_t::list_t tokens;
+//     xio::xio_module m;
+//     m.config() = {
+//         "test",
+//         "text://\"a = 'salute! la gang!';\"",
+//         &tokens
+//     };
+//     
+//     logdebugfn << " text:'" << xio::logger::Yellow << m.name() << xio::logger::White << "';" << Ends;
+//     logdebugfn << " uri:'" << xio::logger::Yellow << m.uri() << xio::logger::White << "';" << Ends;
+// 
+//     m.build();
+//     
+// //     m.build();
+// //     m.execute();
+//     
+//     
+//     if(!r){
+//         logerrorfn << " >" << r.notice()() << Ends;
+//     }
+//     
+//     grammar.dump();
+//     return r.value();
+// }
+
 xio::message::xcode CAnsi::execute()
 {
-    xio::xio_grammar grammar;
-    xio::xio_grammar::result r =  grammar.build();
     xio::token_t::list_t tokens;
-    xio::xio_module m;
-    m.config() = {
+    xio::interpreter inter;
+    inter.config() = {
         "test",
-        "text://\"a = 'salute! la gang!';\"",
+        "expr:\"a = .45 * sin 45;\"",
         &tokens
     };
     
-    logdebugfn << " text:'" << xio::logger::Yellow << m.name() << xio::logger::White << "';" << Ends;
-    logdebugfn << " uri:'" << xio::logger::Yellow << m.uri() << xio::logger::White << "';" << Ends;
-
-    m.build();
+    logdebugfn << " text:'" << xio::logger::Yellow << inter.name() << xio::logger::White << "';" << Ends;
+    logdebugfn << " uri:'" << xio::logger::Yellow << inter.uri() << xio::logger::White << "';" << Ends;
     
-//     m.build();
-//     m.execute();
+    xio::alu a = inter.jsr();
     
-    
-    if(!r){
-        logerrorfn << " >" << r.notice()() << Ends;
-    }
-    
-    grammar.dump();
-    return r.value();
+    return xio::message::xcode::accepted;
 }
 
 

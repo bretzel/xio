@@ -36,17 +36,17 @@ namespace xio {
 class compiler
 {
     
-    
-    
-public:
-    
-    
     struct context_t{
         token_t::list_t* tokens;
         token_t::cursor  cursor;
         xio_stack*       bloc       = nullptr;
         xio_t*           instruction= nullptr;
     }ctx;
+    
+    
+public:
+    
+    
     
     
     /**

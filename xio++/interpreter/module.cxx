@@ -78,25 +78,6 @@ message::xcode xio::xio_module::parse_uri()
         logdebugfn << " token:[" << logger::Yellow << (*it)() << logger::Reset << ']' << Ends;
     }
     
-//     if((*it)() == "text"){
-//         ++it;
-//         if((*it)() != ":"){
-//             message::push(message::xclass::error), "error in module::parse_uri: expected separator ':', got ", (*it)(), "instead.";
-//             return message::xcode::rejected;
-//         }
-//         ++it;
-//         if((*it)() != "//"){
-//             message::push(message::xclass::error), "error in module::parse_uri: expected separator '//', got ", (*it)(), "instead.";
-//             return message::xcode::rejected;
-//         }
-//         ++it;
-//         const char* m = (*it)().c_str();
-//         const char* n = cfg.uri.c_str();
-//         cfg.src = reinterpret_cast<const char*>(m-n);
-//         logdebugfn << logger::White << "source: [" << logger::Yellow << cfg.src << logger::White << "]" << Ends;
-//     }
-//     
-    
     return message::xcode::accepted;
 }
 

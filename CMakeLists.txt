@@ -19,6 +19,7 @@ SHARED
     xio++/interpreter/kernel/function_t.cxx
     xio++/interpreter/kernel/xio.cxx
     xio++/interpreter/module.cxx
+    xio++/interpreter/interpreter.cxx
     xio++/interpreter/compiler/compiler.cxx
 
 
