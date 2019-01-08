@@ -258,7 +258,7 @@ private:
         st_init_rule, ///< initialize sequence of terms: cursor on ':'.
         st_seq,       ///< back and forth between st_seq<->st_init_term. 
         st_option,    ///< one of ' *+? ' option state.
-        st_init_term, ///< query {rule | type sementic | e_code | litteral} : cursor on identifier.
+        st_init_term, ///< query {rule | type semantic | e_code | litteral} : cursor on identifier.
         st_add_seq,   ///< terminate current sequence and start a new sequence on the rule: cursor on ','.
         st_end_rule   ///< terminate rule : cursor on '.'.
     };

@@ -359,40 +359,25 @@ lexer_t::result lexer_t::scan_postfix(xio::token_t & token)
 
 lexer_t::result lexer_t::scan_binary(xio::token_t & token)
 {
-    if ((token.code == e_code::add) || (token.code == e_code::sub)) {
-        if (!scan_sign(token)) return { message::xcode::accepted };
-    }
-
-    //if (!empty()) {
-
-    //    token_t& prev = tokens->back();
-    //    if ((prev.type == type_t::keyword) && !prev.f.v)
-    //        return { message:: };
-    //}
+    if ((token.code == e_code::add) || (token.code == e_code::sub)) (void)scan_sign(token);
     return { message::xcode::accepted };
 }
 
 
 lexer_t::result lexer_t::scan_punctuation(xio::token_t & token)
 {
-    //if (!empty()) {
-    //    token_t& prev = tokens->back();
-    //    if (!(prev.sem & (type_t::punctuation | type_t::id | type_t::postfix | type_t::leaf)))
-    //        return { };
-    //}
     return { message::xcode::accepted };
 }
 
 lexer_t::result lexer_t::scan_assign(xio::token_t & token)
 {
-    //if (!empty()) {
-    //    token_t& prev = tokens->back();
-    //    if (prev.type != type_t::id)
-    //        return { };
-    //}
-
     return { message::xcode::accepted };
 }
+
+/*!
+ * 
+ * @code 4.45abc(2^a);
+ */
 
 lexer_t::result lexer_t::scan_factor(xio::token_t & token)
 {
@@ -446,6 +431,7 @@ lexer_t::result lexer_t::push_tail(xio::token_t & token)
     std::cerr << "[" << token.informations() << "]\n";
     return { message::xcode::accepted };
 }
+
 
 lexer_t::result lexer_t::scan_assign_rs(token_t &)
 {
