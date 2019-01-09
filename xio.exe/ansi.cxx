@@ -116,18 +116,24 @@ long fibonacci(unsigned n)
 void test_methodology(Ansi::CAnsi& ansi)
 {
     struct rt_class {
-        const Ansi::CAnsi& cc;
         
-        rt_class(const Ansi::CAnsi& con):cc(con){ }
-        int call(const char* text){
-            cc << text << '\n';
+        rt_class(){}
+        
+        int call(int bb, const std::string& text){
+            std::cout << "bb=" << bb << "; text(pretending!)=" << text << '\n';
             return 0;
         }
     };
     
-    
-    xio::methodology<rt_class,int, const char*> m;
+    rt_class rt;
+    xio::methodology<rt_class, int, int, const std::string&> m(rt,&rt_class::call);;
     m.name() = "fibonacci";
+    int ret = m(23,std::string("argument #1")   );
+    int a = 0;
+    
+    xio::alu::list_t params = {23,std::string("hello, world")};
+    xio::alu al = m("fibonacci", params);
+    
     
     
 }

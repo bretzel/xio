@@ -116,6 +116,7 @@ alu::operator bool()
 
 
 
+
 alu & alu::operator=(const alu & rhs)
 {
     if(&rhs != this) {
@@ -780,6 +781,9 @@ alu& alu::remove_substr(const std::string &to_erase) {
     return *this;
 }
 
+
+
+bool alu::number_t() { return (_type&(type_t::real|type_t::number)); }
 
 alu& alu::completely_remove_substr(const std::string &to_erase) {
     // J'suis paresseux :: copy-paste here (from thispointer :: how to remove substr: )

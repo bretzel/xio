@@ -17,8 +17,7 @@ public:
     
 }; 
 
-template<typename C, typename R, typename ...A>
-class methodology{
+template<typename C, typename R, typename ...A> class methodology{
     
     std::string _name;
     
@@ -29,8 +28,14 @@ class methodology{
     //using out_fn_t  = alu(const alu::list_t& params);
     
 public:
+    
+    methodology(C& a_obj, rt_fn_t fn){
+        rt_obj = &a_obj;
+        rt_fn = fn;
+    }
+    
     std::string& name() { return _name; }
-    R operator()(A& ...args){
+    R operator()(const A& ...args){
         auto param = [](auto a){
             return alu(a);
         };
@@ -40,10 +45,11 @@ public:
         return R();
     }
     
-    alu operator()(const alu::list_t& params){
-        //params => A..args ???
-        //alu a = (rt_obj->*rt_fn)(args...);
-        return a;
+    template <std::size_t ... Is> alu op_helper (alu::list_t const & params, std::index_sequence<Is...> const &)
+    { return (rt_obj->*rt_fn)(params[Is].value<A>()...); }
+
+    alu operator()(const std::string& f_name, const alu::list_t& params){        
+        return op_helper(params, std::index_sequence_for<A...>{});
     }
 };
 

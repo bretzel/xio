@@ -52,7 +52,8 @@ public:
     alu& operator =(alu&& rhs);
 
     alu operator==(const alu & lf);
-
+    type_t::T type() { return _type; }
+    
     template<typename T> T value() const {
 
         if constexpr (std::is_same<T, std::string>::value)
@@ -110,8 +111,8 @@ public:
         return _type == T;
     }
 
-    
-
+    bool text_t() { return _type&type_t::text;}
+    bool number_t();
     std::string types() const;
     virtual ~alu();
 
