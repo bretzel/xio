@@ -29,7 +29,7 @@
 using namespace xio;
 
 
-xio_module::xio_module()
+xio_module::xio_module():xio_stack()
 {
 }
 

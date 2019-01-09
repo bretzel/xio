@@ -75,12 +75,12 @@ xio_grammar::result xio_grammar::build()
     auto s = list.begin();
     _state = st_begin;
     do{
-        logdebug
-            << logger::HCyan << __FUNCTION__
-            << logger::White << "do-loop: ["
-            << logger::Yellow << *s
-            << logger::White << ']'
-            << Ends;
+//         logdebug
+//             << logger::HCyan << __FUNCTION__
+//             << logger::White << "do-loop: ["
+//             << logger::Yellow << *s
+//             << logger::White << ']'
+//             << Ends;
 
         result r;
         auto p = xio_grammar::grammar_dictionary.find((*s)[0]);
@@ -95,14 +95,15 @@ xio_grammar::result xio_grammar::build()
             return r;
 
     } while (s != list.end());
-    
+    dump();
     return { message::xcode::accepted };
 }
 
 void xio_grammar::dump()
 {
+    loginfopfnx << Ends;
     for (auto rule : _rules) {
-        logdebugfn << logger::HCyan << rule.second->_id << logger::White << ':';
+        loginfo << logger::HCyan << rule.second->_id << logger::White << ':';
         for (auto seq : rule.second->lists) {
             logger() << logger::HCyan << "{ " << logger::Yellow;// << Ends;
             for (auto t : seq.terms) {
@@ -117,9 +118,9 @@ void xio_grammar::dump()
 
 xio_grammar::result xio_grammar::parse_identifier(string_t::iterator & crs)
 {
-    logdebugfn << logger::White << " : token: '" << logger::Yellow << *crs << logger::White << "':" << Ends;
+    //logdebugfn << logger::White << " : token: '" << logger::Yellow << *crs << logger::White << "':" << Ends;
     rule_t* r = query_rule(*crs);
-    logdebugfn << logger::White << " rule: " << logger::Yellow << (r ? r->_id : "null")  << logger::White << ":" << Ends;
+    //logdebugfn << logger::White << " rule: " << logger::Yellow << (r ? r->_id : "null")  << logger::White << ":" << Ends;
     switch (_state) {
         case st_begin:
             if (r) {
@@ -130,7 +131,7 @@ xio_grammar::result xio_grammar::parse_identifier(string_t::iterator & crs)
             else {
                 _rule = new rule_t(*crs);
                 _rules[*crs] = _rule;
-                logdebugfn << logger::White << " : st_begin : rule '" << logger::Yellow << _rule->_id << logger::White << "' created. next machine-state : st_init_rule..." << Ends;
+                //logdebugfn << logger::White << " : st_begin : rule '" << logger::Yellow << _rule->_id << logger::White << "' created. next machine-state : st_init_rule..." << Ends;
             }
             a.reset();
             _state = st_init_rule; //  expect ':' as next token in main loop.
@@ -156,7 +157,7 @@ xio_grammar::result xio_grammar::parse_identifier(string_t::iterator & crs)
                 a.reset();
                 break;
             }
-            logdebug << " ***code: " << static_cast<uint64_t>(c) << " ***" << Ends;
+            //logdebug << " ***code: " << static_cast<uint64_t>(c) << " ***" << Ends;
             if (r) {
                 _rule->a = a;
                 (*_rule) | r;
@@ -167,11 +168,11 @@ xio_grammar::result xio_grammar::parse_identifier(string_t::iterator & crs)
                 r = new rule_t(*crs);
                 _rules[*crs] = r;
                 _rule->a = a;
-                logdebugfn << logger::White << " : st_seq : rule '"
-                    << logger::Yellow << _rule->_id
-                    << logger::White << "' -> created new forward-rule '"
-                    << logger::Yellow << r->_id << logger::White << "'. next machine-state : st_seq..."
-                    << Ends;
+//                 logdebugfn << logger::White << " : st_seq : rule '"
+//                     << logger::Yellow << _rule->_id
+//                     << logger::White << "' -> created new forward-rule '"
+//                     << logger::Yellow << r->_id << logger::White << "'. next machine-state : st_seq..."
+//                     << Ends;
                 _state = st_seq; //  expect ':' as next token in main loop.
                 (*_rule) | r;
                 a.reset();
@@ -186,12 +187,12 @@ xio_grammar::result xio_grammar::parse_identifier(string_t::iterator & crs)
 
 xio_grammar::result xio_grammar::enter_rule_def(string_t::iterator &crs)
 {
-    logdebug
-        << logger::HCyan << __FUNCTION__
-        << logger::White << ": ["
-        << logger::Yellow << *crs
-        << logger::White << ']'
-        << Ends;
+//     logdebug
+//         << logger::HCyan << __FUNCTION__
+//         << logger::White << ": ["
+//         << logger::Yellow << *crs
+//         << logger::White << ']'
+//         << Ends;
     if (_state != st_init_rule) {
         return { (message::push(message::xclass::error), "syntax error '", *crs, "' is invalid in this context") };
     }
@@ -203,12 +204,12 @@ xio_grammar::result xio_grammar::enter_rule_def(string_t::iterator &crs)
 
 xio_grammar::result xio_grammar::new_sequence(string_t::iterator & crs)
 {
-    logdebug
-        << logger::HCyan << __FUNCTION__
-        << logger::White << ": ["
-        << logger::Yellow << *crs
-        << logger::White << ']'
-        << Ends;
+//     logdebug
+//         << logger::HCyan << __FUNCTION__
+//         << logger::White << ": ["
+//         << logger::Yellow << *crs
+//         << logger::White << ']'
+//         << Ends;
 
     if(_state == st_option)
         return { (message::push(message::xclass::error), "syntax error '", *crs, "' is invalid in this context") };
@@ -223,12 +224,12 @@ xio_grammar::result xio_grammar::new_sequence(string_t::iterator & crs)
 
 xio_grammar::result xio_grammar::end_rule(string_t::iterator & crs)
 {
-    logdebug
-        << logger::HCyan << __FUNCTION__
-        << logger::White << ": ["
-        << logger::Yellow << *crs
-        << logger::White << ']'
-        << Ends;
+//     logdebug
+//         << logger::HCyan << __FUNCTION__
+//         << logger::White << ": ["
+//         << logger::Yellow << *crs
+//         << logger::White << ']'
+//         << Ends;
     _state = st_begin;
     ++crs;
     return { message::xcode::accepted };
@@ -236,12 +237,12 @@ xio_grammar::result xio_grammar::end_rule(string_t::iterator & crs)
 
 xio_grammar::result xio_grammar::set_repeat(string_t::iterator & crs)
 {
-    logdebug
-        << logger::HCyan << __FUNCTION__
-        << logger::White << ": ["
-        << logger::Yellow << *crs
-        << logger::White << ']'
-        << Ends;
+//     logdebug
+//         << logger::HCyan << __FUNCTION__
+//         << logger::White << ": ["
+//         << logger::Yellow << *crs
+//         << logger::White << ']'
+//         << Ends;
     _state = st_option;
     +a;
     ++crs;
@@ -250,12 +251,12 @@ xio_grammar::result xio_grammar::set_repeat(string_t::iterator & crs)
 
 xio_grammar::result xio_grammar::set_optional(string_t::iterator & crs)
 {
-    logdebug
-        << logger::HCyan << __FUNCTION__
-        << logger::White << ": ["
-        << logger::Yellow << *crs
-        << logger::White << ']'
-        << Ends;
+//     logdebug
+//         << logger::HCyan << __FUNCTION__
+//         << logger::White << ": ["
+//         << logger::Yellow << *crs
+//         << logger::White << ']'
+//         << Ends;
     *a;
     ++crs;
     _state = st_option;
@@ -269,12 +270,12 @@ xio_grammar::result xio_grammar::set_optional(string_t::iterator & crs)
 xio_grammar::result xio_grammar::enter_litteral(string_t::iterator & crs)
 {
 
-    logdebug
-        << logger::HCyan << __FUNCTION__
-        << logger::White << ": ["
-        << logger::Yellow << *crs
-        << logger::White << ']'
-        << Ends;
+//     logdebug
+//         << logger::HCyan << __FUNCTION__
+//         << logger::White << ": ["
+//         << logger::Yellow << *crs
+//         << logger::White << ']'
+//         << Ends;
 
     if((_state != st_seq) && (_state != st_option))
         return { (message::push(message::xclass::error), "syntax error '", *crs, "' is not a valid xio++ grammar token in context", "(state machine:",(int)_state,")") };
@@ -284,7 +285,7 @@ xio_grammar::result xio_grammar::enter_litteral(string_t::iterator & crs)
     if((*i=="'") || (*i=="\""))
         return { (message::push(message::xclass::error), "error: litteral  cannot be empty") };
 
-    logdebugfn << logger::White << " Checking token: '" << logger::Yellow << *i << logger::White << "'" << Ends;
+//     logdebugfn << logger::White << " Checking token: '" << logger::Yellow << *i << logger::White << "'" << Ends;
      token_t token = token_t::scan(i->c_str());
      if(token){
          _rule->a = a;
@@ -294,7 +295,7 @@ xio_grammar::result xio_grammar::enter_litteral(string_t::iterator & crs)
      else
          return { (message::push(message::xclass::error), "syntax error '", *i, "' is not a valid xio++ grammar token") };
 
-     logdebugfn << logger::White << "term_t : '" << logger::Yellow << *i << logger::White << "':" << Ends;
+//      logdebugfn << logger::White << "term_t : '" << logger::Yellow << *i << logger::White << "':" << Ends;
      crs = i;
      ++crs;
     if((*crs=="'") || (*crs=="\""))
@@ -308,12 +309,12 @@ xio_grammar::result xio_grammar::enter_litteral(string_t::iterator & crs)
 
 xio_grammar::result xio_grammar::set_oneof(string_t::iterator & crs)
 {
-    logdebug
-        << logger::HCyan << __FUNCTION__
-        << logger::White << ": ["
-        << logger::Yellow << *crs
-        << logger::White << ']'
-        << Ends;
+//     logdebug
+//         << logger::HCyan << __FUNCTION__
+//         << logger::White << ": ["
+//         << logger::Yellow << *crs
+//         << logger::White << ']'
+//         << Ends;
     ~a;
     ++crs;
     return { message::xcode::accepted };
@@ -380,7 +381,7 @@ term_t::term_t(const std::string & a_lexem)
 
 term_t::term_t(term_t && _t)
 {
-    logdebugfn << ":" << Ends;
+//     logdebugfn << ":" << Ends;
     using std::swap;
     swap(mem, _t.mem);
     _type = _t._type;

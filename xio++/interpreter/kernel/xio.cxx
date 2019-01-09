@@ -133,10 +133,15 @@ xio_t::xio_opfn_table_t   xio_t::xio_operators_table{
 
 xio_t::xio_t()
 {
+    //t0 = new token_t;
+    acc = new alu(0.0);
 }
+
 
 xio_t::xio_t(object * a_parent):object(a_parent)
 {
+    //t0 = new token_t;
+    acc = new alu(0.0);
 }
 
 xio_t::xio_t(object * a_parent, token_t * a_token, alu * a_alu):object(a_parent)

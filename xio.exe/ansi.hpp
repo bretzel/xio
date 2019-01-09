@@ -77,7 +77,7 @@ public:
     
     
     
-    template<typename T> CAnsi& operator <<(const T& Arg){
+    template<typename T> CAnsi const& operator <<(const T& Arg) const{
         std::ostringstream os;
         os << Arg;
         std::cout << os.str();
