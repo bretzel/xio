@@ -126,7 +126,7 @@ void test_methodology(Ansi::CAnsi& ansi)
     };
     
     rt_class rt;
-    xio::methodology<rt_class, int, int, const std::string&> m(rt,&rt_class::call);;
+    xio::methodology<rt_class, int, int, const std::string&> m(rt,&rt_class::call);
     m.name() = "fibonacci";
     int ret = m(23,std::string("argument #1")   );
     int a = 0;
