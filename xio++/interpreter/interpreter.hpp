@@ -43,19 +43,21 @@ public:
             return R();
         }
 
-        template <std::size_t ... Is> alu pack(alu::list_t const & params, std::index_sequence<Is...> const &)
+        template <std::size_t ... Is> alu accumulate(alu::list_t const & params, std::index_sequence<Is...> const &)
         {
             return (rt_obj->*rt_fn)(params[Is].value<A>()...);
         }
 
         alu operator()(const alu::list_t& params) {
-            return pack(params, std::index_sequence_for<A...>{});
+            return accumulate(params, std::index_sequence_for<A...>{});
         }
     };
 
+    //rtfc& 
+
 private:
     rtfc::list_t* g_fdfn=nullptr;
-    
+public:
     interpreter();
     
     ~interpreter() override;
