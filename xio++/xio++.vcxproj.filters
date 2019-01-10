@@ -122,5 +122,8 @@
     <ClCompile Include="interpreter\module.cxx">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="interpreter\interpreter.cxx">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

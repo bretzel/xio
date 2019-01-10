@@ -159,6 +159,7 @@
     <ClCompile Include="dlloader.cxx" />
     <ClCompile Include="interpreter\compiler\grammar.cxx" />
     <ClCompile Include="interpreter\compiler\lexer.cxx" />
+    <ClCompile Include="interpreter\interpreter.cxx" />
     <ClCompile Include="interpreter\kernel\alu.cxx" />
     <ClCompile Include="interpreter\kernel\function_t.cxx" />
     <ClCompile Include="interpreter\kernel\stack.cxx" />
