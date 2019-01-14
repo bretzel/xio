@@ -91,21 +91,21 @@ void test_methodology(Ansi::CAnsi& ansi)
         rt_class(){}
         
         int call(int bb, const std::string& text){
-            std::cout << "bb=" << bb << "; text(pretending!)=" << text << '\n';
+            std::cout << Ansi::Color::HCyan << "bb=" 
+                      << Ansi::Color::Yellow << bb 
+                      << Ansi::Color::HCyan << "; text(pretending!)=" 
+                      << Ansi::Color::Yellow << text << Ansi::Color::Reset << '\n';
             return 0;
         }
     };
     
     rt_class rt;
-    xio::methodology<rt_class, int, int, const std::string&> m(rt,&rt_class::call);
+    xio::interpreter::rtfc_t<rt_class, int, int, const std::string&> m("call",rt,&rt_class::call);
     m.name() = "fibonacci";
-    int ret = m(23,std::string("argument #1")   );
-    int a = 0;
-    
+    int ret = m(23,std::string("argument #1"));
+
     xio::alu::list_t params = {23,std::string("hello, world")};
-    xio::alu al = m("fibonacci", params);
-    
-    
+    xio::alu al = m(params);
     
 }
 
