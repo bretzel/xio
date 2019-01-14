@@ -46,9 +46,6 @@ class compiler
     
 public:
     
-    
-    
-    
     /**
      * Default constructor
      */

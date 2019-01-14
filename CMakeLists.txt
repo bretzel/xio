@@ -16,7 +16,6 @@ SHARED
     xio++/interpreter/compiler/grammar.cxx
     xio++/interpreter/kernel/alu.cxx
     xio++/interpreter/kernel/stack.cxx
-    xio++/interpreter/kernel/function_t.cxx
     xio++/interpreter/kernel/xio.cxx
     xio++/interpreter/module.cxx
     xio++/interpreter/interpreter.cxx

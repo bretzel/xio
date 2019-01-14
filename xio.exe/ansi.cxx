@@ -84,7 +84,7 @@ long fibonacci(unsigned n)
 }
 
 
-void test_methodology(Ansi::CAnsi& ansi)
+void test_rtfc(Ansi::CAnsi& ansi)
 {
     struct rt_class {
         
@@ -126,7 +126,7 @@ auto main(int argc, char **argv) -> int {
     logsuccess << str() << Ends;
     loginfo << "test  _type = 16401: " << xio::type_t::name(16401) << ": " << Ends;
     //test_xio(con);
-    test_methodology(con);
+    test_rtfc(con);
     con.execute();
     xio::message::clear([](xio::message& msg){
         lognotice  << msg() << Ends;
