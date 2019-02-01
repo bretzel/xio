@@ -8,6 +8,10 @@ xio::interpreter::interpreter():xio_module()
 
 xio::interpreter::~interpreter()
 {
+    if( !g_fdfn.empty() ) {
+        for(auto F : g_fdfn ) delete F;
+    }
+
 }
 
 
