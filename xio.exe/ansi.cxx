@@ -99,18 +99,19 @@ void test_rtfc(Ansi::CAnsi& ansi)
     };
     
     rt_class rt;
+    xio::xio_stack i;
 
-    xio::interpreter::rtfc_t<rt_class, int, int, const std::string&> m("call",rt,&rt_class::call);
+    xio::xio_stack::rtf<rt_class, int, int, const std::string&> m(&i,"call",rt,&rt_class::call);
     m.name() = "fibonacci";
     int ret = m(23,std::string("argument #1"));
 
     xio::alu::list_t params = {23,std::string("hello, world")};
     xio::alu al = m(params);
 
-    xio::interpreter i;
-    xio::interpreter::rtfc* rti = i.bind("fibonaci", rt, &rt_class::call);
+    
+    xio::xio_stack::rt_function* rtf = i.bind("script-func", rt, &rt_class::call);
 
-    al = (*rti)(params);
+    al = (*rtf)(params);
 
     
 }

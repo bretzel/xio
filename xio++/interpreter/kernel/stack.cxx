@@ -14,6 +14,13 @@ xio_stack::xio_stack(object * a_parent, token_t * a_token, alu * a_alu):xio_t(a_
 
 xio_stack::~xio_stack()
 {
+    //...
+    if(rt_functions.empty()) return;
+    
+    for( auto k : rt_functions ) {
+        delete k.second;
+    }
+    rt_functions.clear();
 }
 
 

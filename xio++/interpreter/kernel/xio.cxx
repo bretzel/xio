@@ -147,7 +147,7 @@ xio_t::xio_t(object * a_parent):object(a_parent)
 xio_t::xio_t(object * a_parent, token_t * a_token, alu * a_alu):object(a_parent)
 {
     t0 = a_token;
-    logdebugpfn << "xio_t::xio_t this->type:[" << type_t::name(t0->sem) << "'" << t0->attribute() <<  "'] \n";
+    logdebugpfn << "xio_t::xio_t this->type:[" << type_t::name(t0?t0->sem:type_t::null) << "'" << (t0?t0->attribute():"no token") <<  "'] \n";
 
     acc = a_alu;
     if (acc) return;
