@@ -52,6 +52,7 @@ std::string grammar_txt =
 //"function_id        .";
 
 
+
 xio_grammar::result xio_grammar::build()
 {
     //if (_text.empty())
