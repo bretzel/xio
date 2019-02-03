@@ -24,6 +24,29 @@ xio_stack::~xio_stack()
 }
 
 
+xio_t * xio_stack::__dup(xio_t * a_parent)
+{
+
+    return nullptr;
+}
+
+
+
+xio_t * xio_stack::instanciate()
+{
+    return nullptr;
+}
+
+alu xio_stack::jsr_rtf(const std::string& a_id, const alu::list_t & args)
+{
+    xio_stack::rt_function* rtf = rt_functions[a_id];
+    if( rtf ) 
+        return (*rtf)(args);
+    return alu{0};
+}
+
+
+
 alu xio_stack::jsr()
 {
     if (!_instructions)

@@ -90,7 +90,8 @@ void test_rtfc(Ansi::CAnsi& ansi)
         rt_class(){}
         
         int call(int bb, const std::string& text){
-            std::cout << Ansi::Color::HCyan << "bb=" 
+            std::cout << Ansi::Color::HMagenta << "Let's say that the script is calling this runtime function/method:\n" 
+                      << "\033[30mbb = "
                       << Ansi::Color::Yellow << bb 
                       << Ansi::Color::HCyan << "; text(pretending!)=" 
                       << Ansi::Color::Yellow << text << Ansi::Color::Reset << '\n';
@@ -100,18 +101,16 @@ void test_rtfc(Ansi::CAnsi& ansi)
     
     rt_class rt;
     xio::xio_stack i;
-
-    xio::xio_stack::rtf<rt_class, int, int, const std::string&> m(&i,"call",rt,&rt_class::call);
-    m.name() = "fibonacci";
-    int ret = m(23,std::string("argument #1"));
-
+    xio::alu al;
     xio::alu::list_t params = {23,std::string("hello, world")};
-    xio::alu al = m(params);
-
-    
     xio::xio_stack::rt_function* rtf = i.bind("script-func", rt, &rt_class::call);
 
-    al = (*rtf)(params);
+    logdebug << Ends;
+    logdebug << Ends;
+    logdebugfn << xio::logger::Yellow << " Now testing the stack call to that suposed runtime function:" << Ends;
+    al = i.jsr_rtf("script-func", params);
+    logdebug << Ends;
+    logdebug << Ends;
 
     
 }

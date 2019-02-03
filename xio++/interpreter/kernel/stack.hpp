@@ -9,9 +9,14 @@ namespace xio {
 class xio_api xio_stack : public xio_t
 {
 
-    variable::list_t*       _local_vars    = nullptr;
-    xio_t::list_t*          _instructions  = nullptr;
-    xio_t::list_t*          _functions     = nullptr;
+    variable::list_t*       _local_vars    = nullptr; // inner copy { variable::push() }
+    xio_t::list_t*          _instructions  = nullptr; // no copy
+    xio_t::list_t*          _functions     = nullptr; // inner copy { xio_stack <- xio_function_t::instanciate() }
+
+    // Limiter la recursion (infinie, entre autre).
+    uint32_t nth=0;
+    // ------------------------------------------
+    xio_t* __dup(xio_t* a_parent);
 
 public:
     class xio_api rt_function : public xio_t{
@@ -69,7 +74,7 @@ public:
         }
 
         alu operator()(const alu::list_t& params) {
-            logdebug << " interpreter::rtfc_t(alu::list_t):  " << Ends;
+            logdebug << " xio_stack::rtf(const alu::list_t&):  " << Ends;
             for( auto a : params ) {
                 logdebug << "arg: [" << logger::Yellow << a() << logger::Reset << "]\n";
             }
@@ -91,6 +96,8 @@ public:
 
 
     alu jsr() override;
+    virtual alu jsr_rtf(const std::string& a_id, const alu::list_t& args);
+
 
     variable* query_local_variable(token_t* a_token);
     variable* query_local_variable(const char *var_id);
@@ -110,7 +117,7 @@ public:
 protected:
     virtual int push();
     rt_function::map rt_functions;
-
+    virtual xio_t* instanciate(); // xio_t::jsr() <- xio*::jsr();
 
 };
 
