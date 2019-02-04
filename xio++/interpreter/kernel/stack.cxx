@@ -32,11 +32,6 @@ xio_t * xio_stack::__dup(xio_t * a_parent)
 
 
 
-xio_t * xio_stack::instanciate()
-{
-    return nullptr;
-}
-
 alu xio_stack::jsr_rtf(const std::string& a_id, const alu::list_t & args)
 {
     xio_stack::rt_function* rtf = rt_functions[a_id];
@@ -110,10 +105,15 @@ void xio_stack::push_variable(variable * var)
     _local_vars->push_back(var);
 }
 
-int xio_stack::push()
+std::size_t xio_stack::push()
 {
     
     return 0;
+}
+
+std::size_t xio_stack::pop()
+{
+    return std::size_t();
 }
 
 

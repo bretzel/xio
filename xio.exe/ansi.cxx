@@ -76,11 +76,11 @@ CAnsi::~CAnsi()
 
 }
 
-long fibonacci(unsigned n)
-{
-    if (n < 2) return n;
-    return fibonacci(n - 1) + fibonacci(n - 2);
-}
+//long fibonacci(unsigned n)
+//{
+//    if (n < 2) return n;
+//    return fibonacci(n - 1) + fibonacci(n - 2);
+//}
 
 
 void test_rtfc(Ansi::CAnsi& ansi)
@@ -89,20 +89,25 @@ void test_rtfc(Ansi::CAnsi& ansi)
         
         rt_class(){}
         
-        int call(int bb, const std::string& text){
+        double call(int bb, const std::string& text){
             std::cout << Ansi::Color::HMagenta << "Let's say that the script is calling this runtime function/method:\n" 
                       << "\033[30mbb = "
                       << Ansi::Color::Yellow << bb 
                       << Ansi::Color::HCyan << "; text(pretending!)=" 
                       << Ansi::Color::Yellow << text << Ansi::Color::Reset << '\n';
-            return 0;
+            return 0.25;
         }
+
+        void voidcall(const std::string& message) {
+            logdebugpfn << " message: " << xio::logger::Yellow << message << Ends;
+        }
+
     };
     
     rt_class rt;
     xio::xio_stack i;
     xio::alu al;
-    xio::alu::list_t params = {23,std::string("hello, world")};
+    xio::alu::list_t params = {23.0,std::string("hello, world")};
     xio::xio_stack::rt_function* rtf = i.bind("script-func", rt, &rt_class::call);
 
     logdebug << Ends;
@@ -110,9 +115,19 @@ void test_rtfc(Ansi::CAnsi& ansi)
     logdebugfn << xio::logger::Yellow << " Now testing the stack call to that suposed runtime function:" << Ends;
     al = i.jsr_rtf("script-func", params);
     logdebug << Ends;
+    logdebug << xio::logger::White << " ret: [" << xio::logger::Yellow << al.value<float>() << xio::logger::White << ']' <<  Ends;
     logdebug << Ends;
 
-    
+    /*logdebug << Ends;
+    logdebug << Ends;
+    logdebugfn << xio::logger::Yellow << " Now testing the stack call to rt_class::voidcall (returning void) :" << Ends;
+    params={std::string("je suis une fonction qui retourne void, rien!") };
+    i.bind("void-func",rt,&rt_class::voidcall);
+    al = i.jsr_rtf("void-func", params);
+    logdebug << Ends;
+    logdebug << xio::logger::White << " ret: [" << xio::logger::Yellow << al.value<float>() << xio::logger::White << ']' << Ends;
+    logdebug << Ends;*/
+
 }
 
 

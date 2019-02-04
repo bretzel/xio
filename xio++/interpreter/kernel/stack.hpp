@@ -32,11 +32,10 @@ public:
         std::string& name() { return _name; }
 
         virtual alu operator()(const alu::list_t& args) = 0;
-
     };
 
     /*!
-        @brief  runtime function call.
+        @brief  runtime struct::function call.
 
     */
     template<typename C, typename R, typename ...A> class rtf : public rt_function {
@@ -64,6 +63,7 @@ public:
             alu::list_t params = { param(args)... };
             // alu a = call_script_function(_name, params);
             // return a.value<R>();
+            
             return R();
 
         }
@@ -78,7 +78,6 @@ public:
             for( auto a : params ) {
                 logdebug << "arg: [" << logger::Yellow << a() << logger::Reset << "]\n";
             }
-           
             return accumulate(params, std::index_sequence_for<A...>{});
         }
 
@@ -88,6 +87,8 @@ public:
         }
 
     };
+
+
 
     xio_stack();
     xio_stack(object* a_parent, token_t* a_token=nullptr, alu* a_alu=nullptr);
@@ -115,9 +116,11 @@ public:
     }
 
 protected:
-    virtual int push();
+    virtual std::size_t push();
+    virtual std::size_t pop();
+
     rt_function::map rt_functions;
-    virtual xio_t* instanciate(); // xio_t::jsr() <- xio*::jsr();
+    //virtual xio_t* instanciate(); // xio_t::jsr() <- xio*::jsr();
 
 };
 
