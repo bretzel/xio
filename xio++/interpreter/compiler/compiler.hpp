@@ -41,6 +41,7 @@ class compiler
         token_t::cursor  cursor;
         xio_stack*       bloc       = nullptr;
         xio_t*           instruction= nullptr;
+        
     }ctx;
     
     
