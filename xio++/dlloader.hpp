@@ -43,9 +43,9 @@ namespace dl {
     #define CREATE_PLUGIN_SYM "_create_"
     #define DELETE_PLUGIN_SYM "_delete_"
     #define EXPORT_SYM    "_export_"     
-    #define EXPORT   tea::dl::plugin::interface_t EXPORT_SYM()
-    #define CREATE_PLUGIN_INSTANCE tea::dl::plugin* CREATE_PLUGIN_SYM(tea::object* a_parent, const std::string &a_id)
-    #define DELETE_PLUGIN_INSTANCE void DELETE_PLUGIN_SYM(tea::dl::plugin* a_plugin)
+    #define EXPORT   xio::dl::plugin::interface_t EXPORT_SYM()
+    #define CREATE_PLUGIN_INSTANCE xio::dl::plugin* CREATE_PLUGIN_SYM(xio::object* a_parent, const std::string &a_id)
+    #define DELETE_PLUGIN_INSTANCE void DELETE_PLUGIN_SYM(xio::dl::plugin* a_plugin)
 
 class  xio_api plugin : public object {
 
