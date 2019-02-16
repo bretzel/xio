@@ -33,6 +33,7 @@ class xio_api xio_t : public object
         uint8_t lvalue : 1; // 0 = rvalue non-assignable (such as const,leaf). 1= left value; assignable.
         uint8_t own    : 1; // 1 = this xio owns its acc storage - so will delete it in the destructor.
         uint8_t leave  : 1; // 1 = leave flag because this xio is a return statement.
+        uint8_t sstatic: 1; // 1 = static storage.
         // ...
     }mem = { 0,0,0 }; ///< Storage types of this xio.
     friend class xio_variable;

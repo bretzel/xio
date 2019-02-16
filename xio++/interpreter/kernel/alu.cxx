@@ -164,7 +164,7 @@ alu alu::operator +(const alu& rv)
         lr_number(rv)
             return alu(number<double>() + rv.number<double>());
 
-    message::push(message::xclass::warning), "warning:[", type_t::name(_type), "] + [", type_t::name(rv._type), "] are incompatible.";
+    message::push(message::xclass::warning), "warning:[", type_t::name(_type), "] and [", type_t::name(rv._type), "] are incompatible.";
     return alu(false);
 
 }

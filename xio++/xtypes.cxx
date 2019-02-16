@@ -445,8 +445,8 @@ static token_t::list_t def_table = {
     {e_code::katan       ,type_t::prefix      ,0x0005C0000  ,opdelta::unary      ,{lexem::katan           ,0,0,0,-1} ,{1,0} ,0},
     {e_code::ksin        ,type_t::prefix      ,0x0005C0000  ,opdelta::unary      ,{lexem::ksin            ,0,0,0,-1} ,{1,0} ,0},
     {e_code::kasin       ,type_t::prefix      ,0x0005C0000  ,opdelta::unary      ,{lexem::kasin           ,0,0,0,-1} ,{1,0} ,0},
-    {e_code::kobject     ,type_t::keyword     ,0x000040000  ,opdelta::identifier ,{lexem::kobject         ,0,0,0,-1}, {0,0}, 0}
-
+    {e_code::kobject     ,type_t::keyword     ,0x000040000  ,opdelta::identifier ,{lexem::kobject         ,0,0,0,-1}, {0,0}, 0},
+    {e_code::kstatic     ,type_t::keyword     ,0x000040000  ,opdelta::identifier ,{lexem::kstatic         ,0,0,0,-1}, {0,0}, 0}
 };
 
 

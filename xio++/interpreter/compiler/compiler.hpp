@@ -37,10 +37,18 @@ class compiler
 {
     
     struct context_t{
-        token_t::list_t* tokens;
-        token_t::cursor  cursor;
-        xio_stack*       bloc       = nullptr;
-        xio_t*           instruction= nullptr;
+        token_t::list_t* tokens;    /// ref
+        token_t::cursor  cursor;    /// local instance
+        xio_stack*       bloc       = nullptr; /// local instance
+        xio_t*           instruction= nullptr; /// local instance
+        xio_t::list_t*   i_seq      = nullptr; /// local seq,
+
+        //...
+        context_t();
+        context_t(context_t&& /* ... */);
+        context_t(const context_t& );
+        ~context_t();
+
         
     }ctx;
     

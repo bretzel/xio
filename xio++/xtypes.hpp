@@ -107,6 +107,7 @@ enum class e_code : uint64_t {
     ksin,
     kasin,
     kobject,
+    kstatic,
     noop
 };
 
@@ -236,6 +237,7 @@ constexpr T  leftpar        = 0x800000000;
 constexpr T  closepar       = 0x1000000000;
 constexpr T  openabs        = 0x2000000000;
 constexpr T  closeabs       = 0x4000000000;
+constexpr T  static_t       = 0x8000000000; ///< Flag set at the parser phase when applicable.
 
 std::string     xio_api name(T ty);
 T               xio_api type_name(const std::string& names);
@@ -345,6 +347,7 @@ constexpr const char* katan         = "atan";
 constexpr const char* ksin          = "sin";
 constexpr const char* kasin         = "asin";
 constexpr const char* kobject       = "object";
+constexpr const char* kstatic       = "static";
 
 e_code xio_api code(lexem::T lex);
 

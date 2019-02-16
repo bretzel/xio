@@ -37,3 +37,19 @@ compiler::~compiler()
 {
 
 }
+
+compiler::context_t::context_t() {
+
+}
+
+compiler::context_t::context_t(compiler::context_t &&) {
+
+}
+
+compiler::context_t::context_t(const compiler::context_t &) {
+
+}
+
+compiler::context_t::~context_t() {
+
+}

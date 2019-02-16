@@ -237,7 +237,7 @@ xio_t::result xio_t::tree_input(token_t * a_token, xio_t::allocator_t a_allocato
         xio_t * x = a_allocator(a_token);
         return (this->*pfn)(x);
     }
-    return { (
+    return {(
         message::push(message::xclass::error),
         ":(debug): syntax error, unexpected token:",
         a_token->informations(),
@@ -362,7 +362,7 @@ xio_t::result xio_t::tree_set_left(xio_t* x)
  */
 
     if (lhs) {
-        // here we are supposed to be the openning par/index/bracket. so the iterior will become right hand side of the parent op of this.
+        // here we are supposed to be the openning par/index/bracket. so the interior will become right hand side of the parent op of this.
         lhs->op = x;
         x->lhs = lhs;
     }
@@ -643,7 +643,7 @@ xio_t::result xio_t::tree_rpar_input_leaf(xio_t *x)
             return xx->tree_set_right(x);
         }
     }
-    return { (message::push(message::xclass::error), "illegal rvalue token :", x->t0->mark())};
+    return {(message::push(message::xclass::error), "illegal rvalue token :", x->t0->mark())};
 }
 
 
@@ -987,25 +987,25 @@ alu xio_t::knumber()
 
 alu xio_t::ku8()
 {
-    *acc = rhs->acc->number<uint8_t>() & 0xFF;
+    *acc = rhs->acc->number<uint64_t>() & 0xFF;
     return alu();
 }
 
 alu xio_t::ku16()
 {
-    *acc = rhs->acc->number<uint16_t>() & 0xFFFF;
+    *acc = rhs->acc->number<uint64_t>() & 0xFFFF;
     return *acc;
 }
 
 alu xio_t::ku32()
 {
-    *acc = rhs->acc->number<uint32_t>() & 0xFFFFFFFF;
+    *acc = rhs->acc->number<uint64_t>() & 0xFFFFFFFF;
     return *acc;
 }
 
 alu xio_t::ku64()
 {
-    *acc = (uint64_t)(rhs->acc->number<uint64_t>() & 0xFFFFFFFFFFFFFFFF);
+    *acc = (uint64_t)(rhs->acc->number<uint64_t>());// & 0xFFFFFFFFFFFFFFFF);
     return *acc;
 }
 
