@@ -85,7 +85,7 @@ public:
     }
 
 
-    xio::message::xcode execute();
+    xio::message::code execute();
 
     virtual ~CAnsi();
 };

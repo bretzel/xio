@@ -126,7 +126,7 @@ done_number:
         0
     };
 
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
@@ -204,7 +204,7 @@ lexer_t::result lexer_t::scan_string(xio::token_t & token)
         token.code = e_code::noop;
         token.type = type_t::text;
         token.sem = type_t::text | type_t::leaf;
-        return { message::xcode::accepted };
+        return { message::code::accepted };
     }
     return {};
 }
@@ -231,7 +231,7 @@ lexer_t::result lexer_t::scan_identifier(xio::token_t & token)
         {1,0},
         nullptr
     };
-    return scan_unexpected(token);
+    return { message::code::accepted };
 }
 
 
@@ -260,7 +260,7 @@ lexer_t::result lexer_t::scan_hex(xio::token_t & token)
     token.loc.b = cursor.c;
     token.loc.e = ptr;
 
-    return { message::xcode::accepted }; // return {}; // oops!
+    return { message::code::accepted }; // return {}; // oops!
     
 }
 
@@ -268,13 +268,13 @@ lexer_t::result lexer_t::scan_hex(xio::token_t & token)
 lexer_t::result lexer_t::scan_unary(xio::token_t & token)
 {
     if ((token.code == e_code::add) || (token.code == e_code::sub))
-        if (!scan_sign(token)) return { message::xcode::accepted };
+        if (!scan_sign(token)) return { message::code::accepted };
 
     if (empty()) {
         token.type = type_t::prefix;
         token.sem = type_t::prefix | type_t::unary | type_t::oper;
 
-        return { message::xcode::accepted };
+        return { message::code::accepted };
     }
 
     token_t prev = tokens->back();
@@ -282,12 +282,12 @@ lexer_t::result lexer_t::scan_unary(xio::token_t & token)
     if (prev.is_operator()) {
         token.type = type_t::prefix;
         token.sem = type_t::oper | type_t::prefix | type_t::unary;
-        return { message::xcode::accepted };
+        return { message::code::accepted };
     }
 
     token.type = type_t::postfix;
     token.sem = type_t::oper | type_t::postfix | type_t::unary;
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
@@ -301,7 +301,7 @@ lexer_t::result lexer_t::scan_sign(xio::token_t & token)
         token.sem = type_t::oper | type_t::prefix | type_t::unary | type_t::sign;
         token.delta = opdelta::prefix;
 
-        return{ message::xcode::accepted };
+        return{ message::code::accepted };
     }
 
     token_t b_token = tokens->back();
@@ -315,7 +315,7 @@ lexer_t::result lexer_t::scan_sign(xio::token_t & token)
         token.sem = type_t::oper | type_t::prefix | type_t::unary | type_t::sign;
         token.delta = opdelta::prefix;
 
-        return { message::xcode::accepted };
+        return { message::code::accepted };
     }
     return {  };
 }
@@ -331,7 +331,7 @@ lexer_t::result lexer_t::scan_keyword(xio::token_t & token)
     //            return { (message::push(message::xclass::unexpected), "unhandled keyword '", token.attribute(), "':\n",  cursor.mark()) };
     //    }
     //}
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
@@ -343,7 +343,7 @@ lexer_t::result lexer_t::scan_prefix(xio::token_t & token)
         if (prev->is_leaf() || prev->is_identifier())
             return {  };
     }
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 lexer_t::result lexer_t::scan_postfix(xio::token_t & token)
@@ -353,25 +353,25 @@ lexer_t::result lexer_t::scan_postfix(xio::token_t & token)
         if (prev.is_unary() || (prev.is_binary() && !prev.is_closingpair()))
             return {  };
     }
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
 lexer_t::result lexer_t::scan_binary(xio::token_t & token)
 {
     if ((token.code == e_code::add) || (token.code == e_code::sub)) (void)scan_sign(token);
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
 lexer_t::result lexer_t::scan_punctuation(xio::token_t & token)
 {
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 lexer_t::result lexer_t::scan_assign(xio::token_t & token)
 {
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 /*!
@@ -397,7 +397,7 @@ lexer_t::result lexer_t::scan_factor(xio::token_t & token)
         vt.f.m = 1;
         tokens->push_back(vt);
         std::cerr << "[" << vt.informations() << "]\n";
-        return { message::xcode::accepted };
+        return { message::code::accepted };
     }
     // token is an id or openning par.
     if (!(token.type &(type_t::id | type_t::leftpar))) {
@@ -407,7 +407,7 @@ lexer_t::result lexer_t::scan_factor(xio::token_t & token)
     vt = tokens->back();
     if (!(vt.is_number())) {
         cursor.f = 0;
-        return { message::xcode::accepted };
+        return { message::code::accepted };
     }
     cursor.f = 1;
     goto accepted;
@@ -429,7 +429,7 @@ lexer_t::result lexer_t::push_tail(xio::token_t & token)
     tokens->push_back(token); // copie finale en place; placement of final copy.
     cursor.skip_ws();
     std::cerr << "[" << token.informations() << "]\n";
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
@@ -440,10 +440,11 @@ lexer_t::result lexer_t::scan_assign_rs(token_t &)
     if ((!prev) || cursor.f) 
         return { (message::push(message::xclass::error), cursor.l, ",", cursor.col, "Unexpected assign operator:\n" + cursor.mark()) };
     
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
+/*
 lexer_t::result lexer_t::scan_unexpected(token_t & token)
 {
     //token_t prev = empty() ? token_t::token_null : tokens->back();
@@ -451,8 +452,9 @@ lexer_t::result lexer_t::scan_unexpected(token_t & token)
     //if (!(prev.is_number()||prev.is_operator()) && token.is_leaf() && !cursor.f) {
     //    return { (message::push(message::xclass::unexpected), cursor.l, ",", cursor.col, ": unexpected non-operator token") };
 //    }
-    return {message::xcode::accepted};
+    return {message::code::accepted};
 }
+*/
 
 lexer_t::result lexer_t::scan_leftpar(token_t & token)
 {
@@ -598,7 +600,7 @@ lexer_t::result lexer_t::exec()
         push_tail(token);
     } while (!cursor.eof());
 
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 bool lexer_t::cursor_t::operator++()

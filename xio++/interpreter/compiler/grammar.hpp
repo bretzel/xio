@@ -244,7 +244,7 @@ struct xio_api  rule_t {
 class xio_api xio_grammar
 {
 public:
-    using result = expect<message::xcode>; // accepted, rejected.
+    using result = expect<message::code>; // accepted, rejected.
     xio_grammar();
     ~xio_grammar();
     string_t& text() { return _text; }

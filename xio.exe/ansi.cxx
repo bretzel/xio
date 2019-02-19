@@ -41,7 +41,7 @@ void CAnsi::End()
 #endif
 
 
-xio::message::xcode CAnsi::execute()
+xio::message::code CAnsi::execute()
 {
     xio::token_t::list_t tokens;
     xio::interpreter inter;
@@ -56,7 +56,7 @@ xio::message::xcode CAnsi::execute()
     
     xio::alu a = inter.jsr();
     
-    return xio::message::xcode::accepted;
+    return xio::message::code::accepted;
 }
 
 

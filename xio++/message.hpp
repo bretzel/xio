@@ -25,7 +25,7 @@ public:
         internal
     };
 
-    enum class xio_api xcode : uint16_t {
+    enum class xio_api code : uint16_t {
         accepted,
         rejected,
         unexpected,
@@ -45,7 +45,7 @@ private:
     static message::stack sstack;
 
     message::xclass     mclass = message::xclass::status;
-    message::xcode      mcode = message::xcode::null;
+    message::code      mcode = message::code::null;
     string_t            mtext;
     static message      mmessage;
     static std::mutex   mstack_mtx;
@@ -70,7 +70,7 @@ public:
 
     std::string operator ()() { return mtext(); }
 
-    message::xcode code() { return mcode; }
+    message::code code_enum() { return mcode; }
 
     //message& operator, (message::callback_t p_fn);
     template<typename T> message& operator ,(const T& t) {

@@ -64,7 +64,7 @@ public:
     const std::string& uri() { return cfg.uri; }
     
     virtual xio_t::result build();
-    virtual message::xcode parse_uri();
+    virtual message::code parse_uri();
     
     alu jsr() override;
     

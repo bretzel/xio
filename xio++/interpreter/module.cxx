@@ -68,7 +68,7 @@ xio_t::result xio::xio_module::build()
 }
 
 
-message::xcode xio::xio_module::parse_uri()
+message::code xio::xio_module::parse_uri()
 {
     string_t::word::list words;
     string_t str = cfg.uri;
@@ -78,7 +78,7 @@ message::xcode xio::xio_module::parse_uri()
         logdebugfn << " token:[" << logger::Yellow << (*it)() << logger::Reset << ']' << Ends;
     }
     
-    return message::xcode::accepted;
+    return message::code::accepted;
 }
 
 

@@ -44,7 +44,7 @@ class xio_api lexer_t
     }cursor;
 
 public:
-    using result = expect<message::xcode>;
+    using result = expect<message::code>;
     
 
     using scanner_ptr_t = lexer_t::result(lexer_t::*)(token_t&);
@@ -69,7 +69,7 @@ private:
     lexer_t::result scan_factor(token_t& token);
     lexer_t::result push_tail(token_t& token);
     lexer_t::result scan_assign_rs(token_t& token);
-    lexer_t::result scan_unexpected(token_t& token);
+    //lexer_t::result scan_unexpected(token_t& token);
     lexer_t::result scan_leftpar(token_t& token);
 
     //struct xio_api flags {

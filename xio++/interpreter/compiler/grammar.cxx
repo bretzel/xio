@@ -98,7 +98,7 @@ xio_grammar::result xio_grammar::build()
 
     } while (s != list.end());
     dump();
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 void xio_grammar::dump()
@@ -183,7 +183,7 @@ xio_grammar::result xio_grammar::parse_identifier(string_t::iterator & crs)
             //return { (message::push(message::xclass::error), "identifier '", *crs, "' is invalid in this context") };       
     }
     ++crs;
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
@@ -201,7 +201,7 @@ xio_grammar::result xio_grammar::enter_rule_def(string_t::iterator &crs)
     _state = st_seq;
     a.reset();
     ++crs;
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 xio_grammar::result xio_grammar::new_sequence(string_t::iterator & crs)
@@ -220,7 +220,7 @@ xio_grammar::result xio_grammar::new_sequence(string_t::iterator & crs)
     _state = st_seq;
     a.reset();
     ++crs;
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
@@ -234,7 +234,7 @@ xio_grammar::result xio_grammar::end_rule(string_t::iterator & crs)
 //         << Ends;
     _state = st_begin;
     ++crs;
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 xio_grammar::result xio_grammar::set_repeat(string_t::iterator & crs)
@@ -248,7 +248,7 @@ xio_grammar::result xio_grammar::set_repeat(string_t::iterator & crs)
     _state = st_option;
     +a;
     ++crs;
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 xio_grammar::result xio_grammar::set_optional(string_t::iterator & crs)
@@ -262,7 +262,7 @@ xio_grammar::result xio_grammar::set_optional(string_t::iterator & crs)
     *a;
     ++crs;
     _state = st_option;
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
@@ -304,7 +304,7 @@ xio_grammar::result xio_grammar::enter_litteral(string_t::iterator & crs)
         ++crs;
     //++crs; // will be on the next token.
 
-    return {message::xcode::accepted};
+    return {message::code::accepted};
 
 }
 
@@ -319,7 +319,7 @@ xio_grammar::result xio_grammar::set_oneof(string_t::iterator & crs)
 //         << Ends;
     ~a;
     ++crs;
-    return { message::xcode::accepted };
+    return { message::code::accepted };
 }
 
 
