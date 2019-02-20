@@ -43,19 +43,24 @@ void CAnsi::End()
 
 xio::message::code CAnsi::execute()
 {
-    xio::token_t::list_t tokens;
+    
     xio::interpreter inter;
     inter.config() = {
         "test",
-        "expr:\"a = .45 * sin 45;\"",
-        &tokens
+        "expr:\"a = .45 * sin 45;\""
     };
     
+
     logdebugfn << " text:'" << xio::logger::Yellow << inter.name() << xio::logger::White << "';" << Ends;
     logdebugfn << " uri:'" << xio::logger::Yellow << inter.uri() << xio::logger::White << "';" << Ends;
     
     xio::alu a = inter.jsr();
     
+    auto tokens = inter.tokens();
+    for( auto token : tokens ) {
+        logdebug << token.informations() << Ends;
+    }
+
     return xio::message::code::accepted;
 }
 

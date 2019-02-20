@@ -37,6 +37,14 @@ xio_module::xio_module(xio::object* a_parent):xio_stack(a_parent)
 {
 }
 
+xio::xio_module::~xio_module()
+{
+    text.tokens.clear();
+    cfg.id.clear();
+    cfg.uri.clear();
+
+}
+
 
 xio_module::xio_module(object* a_parent, token_t* a_token, alu* a):xio_stack(a_parent, a_token, a)
 {
@@ -50,22 +58,18 @@ alu xio_module::jsr()
 
 xio_t::result xio::xio_module::build()
 {
-    text.tokens = cfg.tokens;
 	logdebugfn << " Parse URI:" << Ends;
     parse_uri();
-    /*
+    
     text.src    = cfg.src;
-    
-    if(!text.tokens)
-        return { (message::push(message::xclass::error), " module::build: tokens stream is null.") };
-    
-    lexer_t::result r = text.lexer(text.tokens)[cfg.uri.c_str()];
+       
+    lexer_t::result r = text.lexer(&text.tokens)[cfg.uri.c_str()];
     if(!r)
         return { r.notice() };
-    */
     return { nullptr };
     
 }
+
 
 
 message::code xio::xio_module::parse_uri()
@@ -74,8 +78,10 @@ message::code xio::xio_module::parse_uri()
     string_t str = cfg.uri;
     std::size_t count = str.words(words, ":/",true);
     auto it = words.begin();
+    
     for(;it != words.end(); it++){
         logdebugfn << " token:[" << logger::Yellow << (*it)() << logger::Reset << ']' << Ends;
+        // switch case on state machine...
     }
     
     return message::code::accepted;

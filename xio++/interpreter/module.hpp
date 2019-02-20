@@ -38,7 +38,7 @@ class xio_api xio_module : public xio_stack
     
     struct {
         lexer_t          lexer;
-        token_t::list_t* tokens;
+        token_t::list_t  tokens;
         const char* src;
     }text;
     
@@ -46,9 +46,8 @@ public:
     
     struct config_t{
         std::string id;
-        std::string uri; // "[file:file_path/filename.ext | text:'code source;']"
-        token_t::list_t* tokens;
-        const char* src;
+        std::string uri;
+        const char* src; ///< Persistent pointer for the duration of this module. 
     };
     
 private: config_t cfg;
@@ -60,16 +59,16 @@ public:
     xio_module(object* a_parent);    
     xio_module::config_t& config() { return cfg;}
     
+    ~xio_module() override;
+
     const std::string& name() { return cfg.id; }
     const std::string& uri() { return cfg.uri; }
-    
-    virtual xio_t::result build();
-    virtual message::code parse_uri();
-    
+
+    virtual xio_t::result    build();
+    virtual message::code    parse_uri();
+    const   token_t::list_t& tokens() const { return text.tokens; }
     alu jsr() override;
-    
-    
-    
+
 };
 
 }
