@@ -47,7 +47,8 @@ xio::message::code CAnsi::execute()
     xio::interpreter inter;
     inter.config() = {
         "test",
-        "expr:\"a = .45 * sin 45;\""
+        //"expr:\"a = .45 * sin 45;\""
+        "a = .45 * sin 45;"
     };
     
 

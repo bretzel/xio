@@ -50,7 +50,9 @@ public:
         const char* src; ///< Persistent pointer for the duration of this module. 
     };
     
-private: config_t cfg;
+private: 
+    int st=-1;
+    config_t cfg;
 public:
     
     

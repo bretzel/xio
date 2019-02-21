@@ -61,9 +61,9 @@ xio_t::result xio::xio_module::build()
 	logdebugfn << " Parse URI:" << Ends;
     parse_uri();
     
-    text.src    = cfg.src;
+    //text.src    = cfg.src; // Normalement, parse_uri() assigne le bloc texte de la source a cfg.src.
        
-    lexer_t::result r = text.lexer(&text.tokens)[cfg.uri.c_str()];
+    lexer_t::result r = text.lexer(&text.tokens)[text.src];
     if(!r)
         return { r.notice() };
     return { nullptr };
@@ -71,19 +71,25 @@ xio_t::result xio::xio_module::build()
 }
 
 
-
+/*!
+    @note  Pour le future. Pour l'heure, on ne fait que stocker l'adresse du bloc de texte comme tel.
+*/
 message::code xio::xio_module::parse_uri()
 {
-    string_t::word::list words;
-    string_t str = cfg.uri;
-    std::size_t count = str.words(words, ":/",true);
-    auto it = words.begin();
+        
+    //string_t::word::list words;
+    //string_t str = cfg.uri;
+    //std::size_t count = str.words(words, ":/",true);
+    //auto it = words.begin();
+    //
+    //for(;it != words.end(); it++){
+    //    logdebugfn << " token:[" << logger::Yellow << (*it)() << logger::Reset << ']' << Ends;
+    //
+    //    // switch case on state machine...
+    //}
     
-    for(;it != words.end(); it++){
-        logdebugfn << " token:[" << logger::Yellow << (*it)() << logger::Reset << ']' << Ends;
-        // switch case on state machine...
-    }
-    
+    text.src = cfg.uri.c_str();
+
     return message::code::accepted;
 }
 
