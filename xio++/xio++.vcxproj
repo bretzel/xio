@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="dlloader.hpp" />
     <ClInclude Include="expect.hpp" />
+    <ClInclude Include="interpreter\compiler\compiler.hpp" />
     <ClInclude Include="interpreter\compiler\grammar.hpp" />
     <ClInclude Include="interpreter\compiler\lexer.hpp" />
     <ClInclude Include="interpreter\interpreter.hpp" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dlloader.cxx" />
+    <ClCompile Include="interpreter\compiler\compiler.cxx" />
     <ClCompile Include="interpreter\compiler\grammar.cxx" />
     <ClCompile Include="interpreter\compiler\lexer.cxx" />
     <ClCompile Include="interpreter\interpreter.cxx" />
