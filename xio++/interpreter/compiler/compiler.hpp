@@ -27,6 +27,7 @@
 
 #include <xio++/interpreter/compiler/grammar.hpp>
 #include <xio++/interpreter/kernel/stack.hpp>
+#include <utility>
 
 namespace xio {
 
@@ -36,6 +37,8 @@ namespace xio {
 class compiler
 {
     
+    using aeb_t = std::pair<type_t::T, type_t::T>;
+
     struct context_t{
         token_t::list_t* tokens;    /// ref
         token_t::cursor  cursor;    /// local instance
@@ -52,7 +55,10 @@ class compiler
         
     }ctx;
     
-    
+    static std::vector<aeb_t> aeb_table;
+    static bool validate(const compiler::aeb_t& ab);
+
+
 public:
     
     /**

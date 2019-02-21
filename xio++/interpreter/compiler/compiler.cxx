@@ -27,6 +27,52 @@
 
 using namespace xio;
 
+
+std::vector<compiler::aeb_t> compiler::aeb_table = {
+    {type_t::binary,   type_t::leftpar},
+    {type_t::leftpar,  type_t::leaf},
+    {type_t::leftpar,  type_t::prefix},
+    {type_t::leftpar,  type_t::binary},
+    {type_t::prefix,   type_t::leftpar},
+    {type_t::closepar,  type_t::leaf},
+    {type_t::closepar,  type_t::binary},
+    {type_t::closepar,  type_t::postfix},
+    {type_t::closepar,  type_t::closepar},
+
+    {type_t::prefix,   type_t::closepar},
+    {type_t::leaf,     type_t::closepar},
+    {type_t::leaf,     type_t::postfix},
+    {type_t::leaf,     type_t::assign},
+
+
+    {type_t::postfix,  type_t::closepar},
+    {type_t::leftpar,  type_t::binary},
+    {type_t::leaf,     type_t::binary},
+    {type_t::binary,   type_t::binary},
+    {type_t::binary,   type_t::leaf},
+    {type_t::prefix,   type_t::binary},
+    {type_t::binary,   type_t::prefix},
+    {type_t::prefix,   type_t::leaf},
+    {type_t::prefix,   type_t::number},
+    {type_t::sign,     type_t::id},
+    {type_t::sign,     type_t::number},
+    {type_t::sign,     type_t::leaf},
+    {type_t::postfix,  type_t::binary},
+
+    {type_t::assign,   type_t::binary},
+    {type_t::assign,   type_t::leaf},
+    {type_t::assign,   type_t::prefix},
+    {type_t::assign,   type_t::postfix}
+};
+
+bool xio::compiler::validate(const compiler::aeb_t& ab)
+{
+    for( auto t : compiler::aeb_table )
+        if( t == compiler::aeb_t{ ab.first, t.second & ab.second} ) return true;
+    return false;
+}
+
+// -3-3; sign number bin number
 compiler::compiler()
 {
 
