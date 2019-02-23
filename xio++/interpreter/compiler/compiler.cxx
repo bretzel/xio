@@ -143,12 +143,12 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
 
         } while( !seq.end(term_it) );
         if( !nomatch )
-            return { &(*start_token) };
+            return { start_token };
     }
 
 
 
-    return { nullptr };
+    return { (message::push(message::xclass::error), message::code::unmatch) };
 
 }
 
@@ -157,6 +157,12 @@ compiler::result xio::compiler::cc_expression(rule_t *r)
 {
     token_t::cursor start_pos = ctx.cursor;
 
+    return { nullptr };
+}
+
+
+compiler::result xio::compiler::cc_declvar(rule_t *)
+{
     return { nullptr };
 }
 
@@ -180,10 +186,6 @@ compiler::result xio::compiler::cc_assignstmt(rule_t *)
     return { nullptr };
 }
 
-compiler::result xio::compiler::cc_declvar(rule_t *)
-{
-    return { nullptr };
-}
 
 compiler::result xio::compiler::cc_funcsig(rule_t *)
 {

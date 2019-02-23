@@ -38,7 +38,7 @@ class compiler
 {
     
     using aeb_t = std::pair<type_t::T, type_t::T>;
-    using result = expect<token_t*>;
+    using result = expect<token_t::cursor>;
     using parser_t = result(compiler::*)(rule_t*);
     using parsers_t = std::map<std::string, compiler::parser_t>;
 
