@@ -44,21 +44,21 @@ void CAnsi::End()
 xio::message::code CAnsi::execute()
 {
     
-    xio::interpreter inter;
-    inter.config() = {
+    xio::interpreter interpreter;
+    interpreter.config() = {
         "test",
         //"expr:\"a = .45 * sin 45;\""
         //"a = .45 * sin 45;"
-        "-3-3;"
+        "i8, i16, i32,i64,u8,u16,u32,u64,real,string;"
     };
     
 
-    logdebugfn << " text:'" << xio::logger::Yellow << inter.name() << xio::logger::White << "';" << Ends;
-    logdebugfn << " uri:'" << xio::logger::Yellow << inter.uri() << xio::logger::White << "';" << Ends;
+    logdebugfn << " text:'" << xio::logger::Yellow << interpreter.name() << xio::logger::White << "';" << Ends;
+    logdebugfn << " uri:'" << xio::logger::Yellow << interpreter.uri() << xio::logger::White << "';" << Ends;
     
-    xio::alu a = inter.jsr();
+    xio::alu a = interpreter.jsr();
     
-    auto tokens = inter.tokens();
+    auto tokens = interpreter.tokens();
     for( auto token : tokens ) {
         logdebug << token.informations() << Ends;
     }

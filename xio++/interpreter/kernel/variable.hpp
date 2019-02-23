@@ -6,7 +6,9 @@ namespace xio {
 
 class xio_api variable : public xio_t
 {
-
+protected:
+    type_t::T _restricted_type = type_t::any;
+    // std::string _type_id;
 public:
     using list_t = std::vector<variable*>;
 

@@ -152,6 +152,15 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
 
 }
 
+
+compiler::result xio::compiler::cc_expression(rule_t *r)
+{
+    token_t::cursor start_pos = ctx.cursor;
+
+    return { nullptr };
+}
+
+
 compiler::result xio::compiler::cc_stmts(rule_t * rule)
 {
     
@@ -261,10 +270,6 @@ compiler::result xio::compiler::cc_condexpr(rule_t *)
     return { nullptr };
 }
 
-compiler::result xio::compiler::cc_expression(rule_t *)
-{
-    return { nullptr };
-}
 
 compiler::result xio::compiler::cc_var_id(rule_t *)
 {
