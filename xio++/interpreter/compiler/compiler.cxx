@@ -99,3 +99,194 @@ compiler::context_t::context_t(const compiler::context_t &) {
 compiler::context_t::~context_t() {
 
 }
+
+
+
+
+compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::result(const term_t&)> cc)
+{
+    auto start_token = ctx.cursor;
+    auto seq_it = r->begin();
+    bool nomatch = false;
+    while( !r->end(seq_it) ) {
+        const seq_t& seq = *seq_it;
+        auto term_it = seq.begin();
+        do {
+
+            switch( term_it->_type ) {
+                case term_t::type::rule:
+                {
+                    result res = (this->*parsers[term_it->mem.r->_id])(term_it->mem.r);
+                    if( !res ) {
+
+                    }
+                }
+                case term_t::type::code:
+                    if( ctx.cursor->code != term_it->mem.c ) nomatch = true;
+                    break;
+
+                // ...
+                default:break;
+            }
+
+            if( nomatch ) {
+                if( term_it->a.z ) {
+                    ++term_it;
+                    continue;
+                }
+            }
+            if( term_it->a.l ) {
+                ++ctx.cursor;
+                break;
+            }
+
+
+        } while( !seq.end(term_it) );
+        if( !nomatch )
+            return { &(*start_token) };
+    }
+
+
+
+    return { nullptr };
+
+}
+
+compiler::result xio::compiler::cc_stmts(rule_t * rule)
+{
+    
+    __cc__(rule, [ ](const term_t& t) -> result {
+        return { nullptr };
+    });
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_statement(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_assignstmt(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_declvar(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_funcsig(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_declfunc(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_paramseq(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_param(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_params(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_objcarg(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_arg(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_argseq(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_args(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_typename(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_instruction(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_kif(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_bloc(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_truebloc(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_elsebloc(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_ifbody(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_condexpr(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_expression(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_var_id(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_new_var(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_objectid(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_function_id(rule_t *)
+{
+    return { nullptr };
+}
+
+compiler::result xio::compiler::cc_objcfncall(rule_t *)
+{
+    return { nullptr };
+}

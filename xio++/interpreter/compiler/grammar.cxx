@@ -35,7 +35,7 @@ std::string grammar_txt =
 "arg                : objcarg, expression.\n"
 "argseq             : ', arg.\n"
 "args               : arg *+argseq.\n"
-"typename           : *static *i8 *u8 *i16 *u16 *i32 *u32 *i64 *u64 *real *string *text *objectid.\n"
+"typename           : ?static ?i8 ?u8 ?i16 ?u16 ?i32 ?u32 ?i64 ?u64 ?real ?string ?text ?objectid.\n"
 "instruction        : *if *switch *for *while *repeat *until *do.\n" // to be continued.
 "kif                : if condexpr ifbody.\n"
 "bloc               :  { stmts }.\n"
@@ -144,6 +144,16 @@ xio_grammar::result xio_grammar::parse_identifier(string_t::iterator & crs)
         case st_option:
         case st_seq:
             _state = st_seq;
+            // lexem::T ?
+            e_code c = lexem::code(crs->c_str());
+            if( c != e_code::knull ) {
+                _rule->a = a;
+                (*_rule) | c;
+                a.reset();
+                break;
+            }
+
+
             type_t::T t = type_t::type_name(*crs);
             if (t != 0) {
                 _rule->a = a;
@@ -151,14 +161,7 @@ xio_grammar::result xio_grammar::parse_identifier(string_t::iterator & crs)
                 a.reset();
                 break;
             }
-            // lexem::T ?
-            e_code c = lexem::code(crs->c_str());
-            if (c != e_code::knull) {
-                _rule->a = a;
-                (*_rule) | c;
-                a.reset();
-                break;
-            }
+            
             //logdebug << " ***code: " << static_cast<uint64_t>(c) << " ***" << Ends;
             if (r) {
                 _rule->a = a;
