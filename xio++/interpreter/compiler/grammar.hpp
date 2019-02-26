@@ -1,7 +1,7 @@
 #pragma once
 #include <xio++/xtypes.hpp>
 #include <xio++/expect.hpp>
-#include <xio++/interpreter/kernel/xio.hpp>
+//#include <xio++/interpreter/kernel/xio.hpp>
 #include <map>
 #include <stack>
 #include <memory>
@@ -268,7 +268,7 @@ private:
     state_mac _state = xio_grammar::st_begin;
 
     int init();
-    rule_t::list_t _rules;
+    static rule_t::list_t _rules;
     rule_t*        _rule = nullptr;
     rule_t*        query_rule(const std::string& a_id);
     
@@ -284,6 +284,8 @@ public :
         return _rules[r_id];
         //rule_t* r = _rules[r_id]; return (const rule_t*)r; 
     }
+
+    static bool built() { return _rules.size() != 0; }
 
 private:
     xio_grammar::dictionary_t::iterator _rule_it;

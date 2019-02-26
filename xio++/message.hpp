@@ -73,12 +73,14 @@ public:
     message::code code_enum() { return mcode; }
 
     //message& operator, (message::callback_t p_fn);
+    message& operator ,(message::code cc);
     template<typename T> message& operator ,(const T& t) {
         mtext << t;
         return *this;
     }
 
     static message& push(message::xclass cls = message::xclass::status);
+    static std::string name(message::code cc);
     static bool pop(message&);
     static int clear(std::function<void(message&)> p_fn);
     static message& null() { return message::mmessage; }

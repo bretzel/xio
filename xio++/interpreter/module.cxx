@@ -53,6 +53,18 @@ xio_module::xio_module(object* a_parent, token_t* a_token, alu* a):xio_stack(a_p
 
 alu xio_module::jsr()
 {
+   
+    //xio_grammar grammar;
+    if( !xio::xio_grammar::built() )
+        xio::xio_grammar::result gr = rules.build();
+
+    xio::token_t::list_t tokens;
+    xio_t::result r = build();
+    if( !r ) {
+        logerrorfn << r.notice()() << Ends;
+        return alu(false);
+    }
+
     return xio_stack::jsr();
 }
 

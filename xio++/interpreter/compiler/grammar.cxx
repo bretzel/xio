@@ -20,6 +20,8 @@ xio_grammar::dictionary_t xio_grammar::grammar_dictionary = {
     
 };
 
+rule_t::list_t xio_grammar::_rules;
+
 
 std::string grammar_txt =
 "stmts              : +statement.\n"

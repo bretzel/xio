@@ -26,7 +26,10 @@
 #pragma once 
 
 #include <xio++/interpreter/kernel/stack.hpp>
+#include <xio++/interpreter/compiler/compiler.hpp>
+
 #include <xio++/interpreter/compiler/lexer.hpp>
+
 
 namespace xio {
 
@@ -51,8 +54,10 @@ public:
     };
     
 private: 
-    int st=-1;
+    int      st = -1;
     config_t cfg;
+protected: xio_grammar  rules;
+
 public:
     
     
