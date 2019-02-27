@@ -70,6 +70,7 @@ public:
 
         template <std::size_t ... Is> alu accumulate(alu::list_t const& params, std::index_sequence<Is...> const &)
         {
+            
             return (rt_obj->*rt_fn)(params[Is].value<A>()...);
         }
 
