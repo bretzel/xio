@@ -22,6 +22,5 @@ xio::xio_t::result Calulator::build()
     if( !(aebtree = rules["expression"]) )
         return { (xio::message::push(xio::message::xclass::error), xio::message::code::empty, "grammar gave no rule for arithmetic expression.") };
 
-
     return xio_t::result();
 }
