@@ -53,18 +53,7 @@ xio_module::xio_module(object* a_parent, token_t* a_token, alu* a):xio_stack(a_p
 
 alu xio_module::jsr()
 {
-   
-    //xio_grammar grammar;
-    if( !xio::xio_grammar::built() )
-        xio::xio_grammar::result gr = rules.build();
-
-    xio::token_t::list_t tokens;
-    xio_t::result r = build();
-    if( !r ) {
-        logerrorfn << r.notice()() << Ends;
-        return alu(false);
-    }
-
+    // ...
     return xio_stack::jsr();
 }
 
@@ -74,10 +63,16 @@ xio_t::result xio::xio_module::build()
     parse_uri();
     
     //text.src    = cfg.src; // Normalement, parse_uri() assigne le bloc texte de la source a cfg.src.
-       
+    
+    if( !xio::xio_grammar::built() )
+        xio::xio_grammar::result gr = rules.build();
+
+
     lexer_t::result r = text.lexer(&text.tokens)[text.src];
+
     if(!r)
         return { r.notice() };
+    
     return { nullptr };
     
 }
@@ -89,20 +84,14 @@ xio_t::result xio::xio_module::build()
 message::code xio::xio_module::parse_uri()
 {
         
-    //string_t::word::list words;
-    //string_t str = cfg.uri;
-    //std::size_t count = str.words(words, ":/",true);
-    //auto it = words.begin();
-    //
-    //for(;it != words.end(); it++){
-    //    logdebugfn << " token:[" << logger::Yellow << (*it)() << logger::Reset << ']' << Ends;
-    //
-    //    // switch case on state machine...
-    //}
-    
     text.src = cfg.uri.c_str();
 
     return message::code::accepted;
+}
+
+xio_t::result xio::xio_module::parse()
+{
+    return { nullptr };
 }
 
 

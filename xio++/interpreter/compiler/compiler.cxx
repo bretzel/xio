@@ -88,16 +88,45 @@ compiler::context_t::context_t() {
 
 }
 
-compiler::context_t::context_t(compiler::context_t &&) {
-
+compiler::context_t::context_t(compiler::context_t && ct) {
+    std::swap(bloc, ct.bloc);
+    std::swap(tokens, ct.tokens);
 }
 
-compiler::context_t::context_t(const compiler::context_t &) {
 
+compiler::context_t::context_t(const compiler::context_t & ct) {
+    bloc = ct.bloc;
+    tokens = ct.tokens;
+    cursor = ct.cursor;
+}
+
+xio::compiler::context_t::context_t(xio_stack * a_bloc, token_t::list_t * a_tokens)
+{
+    bloc = a_bloc;
+    tokens = a_tokens;
+    cursor = tokens->begin();
+    
 }
 
 compiler::context_t::~context_t() {
 
+}
+
+compiler::context_t & xio::compiler::context_t::operator=(context_t && ct)
+{
+    std::swap(bloc, ct.bloc);
+    std::swap(tokens, ct.tokens);
+
+    return *this;
+    
+}
+
+compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct)
+{
+    bloc = ct.bloc;
+    tokens = ct.tokens;
+    cursor = ct.cursor;
+    return *this;
 }
 
 

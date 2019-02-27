@@ -5,7 +5,7 @@
 
 class Calulator : public xio::xio_module
 {
-
+    xio::token_t::list_t m_tokens;
     const xio::rule_t* aebtree;
 public:
 
@@ -14,6 +14,7 @@ public:
 
 
     xio_t::result    build() override;
+    xio_t::result    parse() override;
 
 };
 

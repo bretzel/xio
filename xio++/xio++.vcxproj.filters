@@ -72,6 +72,9 @@
     <ClInclude Include="interpreter\compiler\compiler.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="interpreter\kernel\xio_bloc.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="string_t.cxx">
@@ -123,6 +126,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="interpreter\compiler\compiler.cxx">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="interpreter\kernel\xio_bloc.cxx">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -23,60 +23,21 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#pragma once 
+
+#pragma once
 
 #include <xio++/interpreter/kernel/stack.hpp>
-#include <xio++/interpreter/compiler/compiler.hpp>
-
-#include <xio++/interpreter/compiler/lexer.hpp>
-
 
 namespace xio {
 
-/**
- * @todo write docs
- */
-class xio_api xio_module : public xio_stack
+class xio_api xio_bloc
 {
-    
-    struct {
-        lexer_t          lexer;
-        token_t::list_t  tokens;
-        const char* src;
-    }text;
-    
+
+    token_t::list_t* m_tokens = nullptr;
+    token_t::cursor  m_cursor;
 public:
-    
-    struct config_t{
-        std::string id;
-        std::string uri;
-        const char* src; ///< Persistent pointer for the duration of this module. 
-    };
-    
-private: 
-    int      st = -1;
-    config_t cfg;
-protected: xio_grammar  rules;
-
-public:
-    
-    
-    xio_module();
-    xio_module(object* a_parent, token_t* a_token, alu* a=nullptr);
-    xio_module(object* a_parent);    
-    xio_module::config_t& config() { return cfg;}
-    
-    ~xio_module() override;
-
-    const std::string& name() { return cfg.id; }
-    const std::string& uri() { return cfg.uri; }
-
-    virtual xio_t::result    build();
-    virtual message::code    parse_uri();
-    virtual xio_t::result    parse();
-    const   token_t::list_t& tokens() const { return text.tokens; }
-    alu jsr() override;
-
+    xio_bloc();
+    virtual ~xio_bloc();
 };
 
 }

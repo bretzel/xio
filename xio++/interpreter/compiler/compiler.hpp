@@ -34,7 +34,7 @@ namespace xio {
 /**
  * @todo write docs
  */
-class compiler
+class xio_api compiler
 {
     
     using aeb_t = std::pair<type_t::T, type_t::T>;
@@ -42,7 +42,8 @@ class compiler
     using parser_t = result(compiler::*)(rule_t*);
     using parsers_t = std::map<std::string, compiler::parser_t>;
 
-    struct context_t{
+public:
+    struct xio_api context_t{
         token_t::list_t* tokens;    /// ref
         token_t::cursor  cursor;    /// local instance
         xio_stack*       bloc       = nullptr; /// local instance
@@ -53,10 +54,17 @@ class compiler
         context_t();
         context_t(context_t&& /* ... */);
         context_t(const context_t& );
+        context_t(xio_stack* a_bloc, token_t::list_t* a_tokens);
         ~context_t();
 
+        context_t& operator = (context_t&&);
+        context_t& operator = (const context_t&);
         
-    }ctx;
+    };
+    
+    
+private:
+    context_t ctx;
     
     static std::vector<aeb_t> aeb_table;
     static bool validate(const compiler::aeb_t& ab);
@@ -75,6 +83,8 @@ public:
     bool operator==(const compiler& other) const = delete;
     bool operator!=(const compiler& other) const = delete;
    
+
+    compiler::context_t& context_config() { return ctx; }
 
 private:
     result __cc__(rule_t* r, std::function<compiler::result(const term_t&)> cc);

@@ -151,6 +151,7 @@
     <ClInclude Include="message.hpp" />
     <ClInclude Include="object.hpp" />
     <ClInclude Include="string_t.hpp" />
+    <ClInclude Include="interpreter\kernel\xio_bloc.hpp" />
     <ClInclude Include="xtypes.hpp" />
     <ClInclude Include="time_stamp.hpp" />
     <ClInclude Include="xio++.hpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="message.cxx" />
     <ClCompile Include="object.cxx" />
     <ClCompile Include="string_t.cxx" />
+    <ClCompile Include="interpreter\kernel\xio_bloc.cxx" />
     <ClCompile Include="xtypes.cxx" />
     <ClCompile Include="time_stamp.cxx" />
   </ItemGroup>
