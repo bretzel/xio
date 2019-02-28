@@ -30,11 +30,12 @@
 
 namespace xio {
 
-class xio_api xio_bloc
+class xio_api xio_bloc : public xio_stack
 {
 
-    token_t::list_t* m_tokens = nullptr;
-    token_t::cursor  m_cursor;
+    token_t::list_t* m_tokens = nullptr; ///< Mandatory pointer to the tokens stream container.
+    token_t::cursor  m_cursor;           ///< Starting token_t cursor.
+
 public:
     xio_bloc();
     virtual ~xio_bloc();
