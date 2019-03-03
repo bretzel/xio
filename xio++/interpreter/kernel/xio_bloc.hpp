@@ -38,6 +38,7 @@ class xio_api xio_bloc : public xio_stack
 
 public:
     xio_bloc();
+    xio_bloc(xio_t* a_parent, token_t::list_t* a_tokens, token_t::cursor a_cursor);
     virtual ~xio_bloc();
 };
 
