@@ -16,10 +16,12 @@ SHARED
     xio++/interpreter/compiler/grammar.cxx
     xio++/interpreter/kernel/alu.cxx
     xio++/interpreter/kernel/stack.cxx
+    xio++/interpreter/kernel/xio_bloc.cxx
     xio++/interpreter/kernel/xio.cxx
     xio++/interpreter/module.cxx
     xio++/interpreter/interpreter.cxx
     xio++/interpreter/compiler/compiler.cxx
+
 
 
 )

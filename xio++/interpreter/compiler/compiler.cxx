@@ -131,12 +131,15 @@ compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct)
 
 
 
-
+/*!
+    @brief "Compiler" entry.
+ */
 compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::result(const term_t&)> cc)
 {
     auto start_token = ctx.cursor;
     auto seq_it = r->begin();
     bool nomatch = false;
+    result res;
     while( !r->end(seq_it) ) {
         const seq_t& seq = *seq_it;
         auto term_it = seq.begin();
@@ -144,12 +147,13 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
 
             switch( term_it->_type ) {
                 case term_t::type::rule:
-                {
-                    result res = (this->*parsers[term_it->mem.r->_id])(term_it->mem.r);
-                    if( !res ) {
-
+                    // Enter rule, recurisely:
+                    if(!(res=(this->*parsers[term_it->mem.r->_id])(term_it->mem.r))){
+                        // rejected:
+                        
                     }
-                }
+                    break;
+                    
                 case term_t::type::code:
                     if( ctx.cursor->code != term_it->mem.c ) nomatch = true;
                     break;
@@ -165,8 +169,10 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
                 }
             }
             if( term_it->a.l ) {
+                // One Of, and accepted.
                 ++ctx.cursor;
-                break;
+                // ... 
+                return { ctx.cursor };
             }
 
 
