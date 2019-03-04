@@ -5,9 +5,8 @@
 #include <xio++/xio++.hpp>
 #include <xio++/interpreter/compiler/lexer.hpp>
 #include <xio++/expect.hpp>
+#include <xio++/interpreter/kernel/bloc.hpp>
 
-#include <xio++/interpreter/interpreter.hpp>
-#include <xio++/interpreter/compiler/grammar.hpp>
 
 
 namespace Ansi{
@@ -44,24 +43,6 @@ void CAnsi::End()
 xio::message::code CAnsi::execute()
 {
     
-    xio::interpreter interpreter;
-    interpreter.config() = {
-        "test",
-        //"expr:\"a = .45 * sin 45;\""
-        //"a = .45 * sin 45;"
-        "i8, i16, i32,i64,u8,u16,u32,u64,real,string;"
-    };
-    
-
-    logdebugfn << " text:'" << xio::logger::Yellow << interpreter.name() << xio::logger::White << "';" << Ends;
-    logdebugfn << " uri:'" << xio::logger::Yellow << interpreter.uri() << xio::logger::White << "';" << Ends;
-    
-    xio::alu a = interpreter.jsr();
-    
-    auto tokens = interpreter.tokens();
-    for( auto token : tokens ) {
-        logdebug << token.informations() << Ends;
-    }
 
     return xio::message::code::accepted;
 }
@@ -112,10 +93,10 @@ void test_rtfc(Ansi::CAnsi& ansi)
     };
     
     rt_class rt;
-    xio::xio_stack i;
+    xio::bloc_t i;
     xio::alu al;
     xio::alu::list_t params = {23.0,std::string("hello, world")};
-    xio::xio_stack::rt_function* rtf = i.bind("script-func", rt, &rt_class::call);
+    xio::bloc_t::rt_function* rtf = i.bind("script-func", rt, &rt_class::call);
 
     logdebug << Ends;
     logdebug << Ends;
@@ -125,15 +106,6 @@ void test_rtfc(Ansi::CAnsi& ansi)
     logdebug << xio::logger::White << " ret: [" << xio::logger::Yellow << al.value<float>() << xio::logger::White << ']' <<  Ends;
     logdebug << Ends;
 
-    /*logdebug << Ends;
-    logdebug << Ends;
-    logdebugfn << xio::logger::Yellow << " Now testing the stack call to rt_class::voidcall (returning void) :" << Ends;
-    params={std::string("je suis une fonction qui retourne void, rien!") };
-    i.bind("void-func",rt,&rt_class::voidcall);
-    al = i.jsr_rtf("void-func", params);
-    logdebug << Ends;
-    logdebug << xio::logger::White << " ret: [" << xio::logger::Yellow << al.value<float>() << xio::logger::White << ']' << Ends;
-    logdebug << Ends;*/
 
 }
 

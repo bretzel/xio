@@ -108,6 +108,7 @@ enum class e_code : uint64_t {
     kasin,
     kobject,
     kstatic,
+    kme,
     noop
 };
 
@@ -348,6 +349,7 @@ constexpr const char* ksin          = "sin";
 constexpr const char* kasin         = "asin";
 constexpr const char* kobject       = "object";
 constexpr const char* kstatic       = "static";
+constexpr const char* kme           = "me";
 
 e_code xio_api code(lexem::T lex);
 

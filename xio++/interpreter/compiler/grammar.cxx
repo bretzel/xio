@@ -38,18 +38,18 @@ std::string grammar_txt =
 "argseq             : ', arg.\n"
 "args               : arg *+argseq.\n"
 "typename           : ?static ?i8 ?u8 ?i16 ?u16 ?i32 ?u32 ?i64 ?u64 ?real ?string ?text ?objectid.\n"
-"instruction        : *if *switch *for *while *repeat *until *do.\n" // to be continued.
+"instruction        : ?if ?switch ?for *while ?repeat ?until ?do.\n" // to be continued.
 "kif                : if condexpr ifbody.\n"
 "bloc               :  { stmts }.\n"
 "truebloc           : *then bloc, *then statement.\n"
 "elsebloc           : *else bloc, *else statement.\n"
 "ifbody             : truebloc elsebloc, truebloc.\n"
 "condexpr           : expression.\n"
-"expression         : *declvar aebtree.\n"
+"expression         : *declvar aebtree.\n" // ??? 
 "var_id             .\n"
 "new_var            .\n"
 "objectid           .\n"
-"function_id        : scope function_id, objectid scope function_id, var_id dot function_id.\n"
+"function_id        : scope function_id, objectid scope function_id, var_id '. function_id.\n"
 "objcfncall         : [ function_id *args ].";
 //"function_id        .";
 

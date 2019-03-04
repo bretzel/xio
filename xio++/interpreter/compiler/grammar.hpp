@@ -121,7 +121,7 @@ struct xio_api term_t {
         rule_t* r;
         type_t::T sem;
         e_code c;
-    }mem;
+    }mem = { nullptr };
 
     using list_t = std::vector<term_t>;
     using iterator = list_t::iterator;

@@ -15,7 +15,7 @@ class xio_api message
 
 public:
     enum class xio_api xclass: uint8_t{
-        status = 1,
+        status       = 1,
         error,
         notice,
         warning,
@@ -35,7 +35,8 @@ public:
         eof,
         null,
         unmatch,
-        syntax
+        syntax,
+        implement
     };
 
 
@@ -81,6 +82,7 @@ public:
 
     static message& push(message::xclass cls = message::xclass::status);
     static std::string name(message::code cc);
+    static std::string class_name(message::xclass a_c);
     static bool pop(message&);
     static int clear(std::function<void(message&)> p_fn);
     static message& null() { return message::mmessage; }

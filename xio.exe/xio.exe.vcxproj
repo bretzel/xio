@@ -136,11 +136,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ansi.cxx" />
-    <ClCompile Include="Calulator.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ansi.hpp" />
-    <ClInclude Include="Calulator.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

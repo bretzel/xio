@@ -26,8 +26,10 @@
 #pragma once
 
 #include <xio++/interpreter/compiler/grammar.hpp>
-#include <xio++/interpreter/kernel/stack.hpp>
+#include <xio++/interpreter/kernel/bloc.hpp>
 #include <utility>
+#include <stack>
+
 
 namespace xio {
 
@@ -37,29 +39,36 @@ namespace xio {
 class xio_api compiler
 {
     
-    using aeb_t = std::pair<type_t::T, type_t::T>;
-    using result = expect<token_t::cursor>;
-    using parser_t = result(compiler::*)(rule_t*);
+    using aeb_t     = std::pair<type_t::T, type_t::T>;
+    using result    = expect<token_t::cursor>;
+    using parser_t  = result(compiler::*)(rule_t*);
     using parsers_t = std::map<std::string, compiler::parser_t>;
 
+    token_t::list_t* tokens = nullptr; ///< Master Stream;
 public:
+
     struct xio_api context_t{
-        token_t::list_t* tokens;    /// ref
-        token_t::cursor  cursor;    /// local instance
-        xio_stack*       bloc       = nullptr; /// local instance
-        xio_t*           instruction= nullptr; /// local instance
-        xio_t::list_t*   i_seq      = nullptr; /// local seq,
+        token_t::cursor cursor;      /// local instance
+        bloc_t*         bloc         = nullptr; /// local instance
+        xio_t*          instruction  = nullptr; /// local instance
+        xio_t::list_t   i_seq;
 
         //...
         context_t();
         context_t(context_t&& /* ... */);
         context_t(const context_t& );
-        context_t(xio_stack* a_bloc, token_t::list_t* a_tokens);
+        context_t(bloc_t* a_bloc, token_t::cursor a_cursor);
+        
         ~context_t();
 
         context_t& operator = (context_t&&);
         context_t& operator = (const context_t&);
-        
+        void accepted();
+        void rejected();
+
+
+        using stack = std::stack<compiler::context_t>;
+
     };
     
     
@@ -86,7 +95,13 @@ public:
 
     compiler::context_t& context_config() { return ctx; }
 
+
 private:
+    compiler::context_t::stack ctx_stack;
+
+    message::code push_context(bloc_t* a_newbloc=nullptr);
+    message::code pop_context();
+
     result __cc__(rule_t* r, std::function<compiler::result(const term_t&)> cc);
 
     result cc_stmts      (rule_t*);

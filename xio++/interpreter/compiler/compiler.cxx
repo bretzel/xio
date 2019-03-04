@@ -90,32 +90,36 @@ compiler::context_t::context_t() {
 
 compiler::context_t::context_t(compiler::context_t && ct) {
     std::swap(bloc, ct.bloc);
-    std::swap(tokens, ct.tokens);
+    std::swap(cursor, ct.cursor);
+    std::swap(i_seq, ct.i_seq);
+    std::swap(instruction, ct.instruction);
 }
 
 
 compiler::context_t::context_t(const compiler::context_t & ct) {
     bloc = ct.bloc;
-    tokens = ct.tokens;
     cursor = ct.cursor;
+    i_seq = ct.i_seq;
+    instruction = ct.instruction;
 }
 
-xio::compiler::context_t::context_t(xio_stack * a_bloc, token_t::list_t * a_tokens)
+xio::compiler::context_t::context_t(bloc_t* a_bloc, token_t::cursor a_cursor)
 {
     bloc = a_bloc;
-    tokens = a_tokens;
-    cursor = tokens->begin();
-    
+    cursor = a_cursor;
 }
 
-compiler::context_t::~context_t() {
 
+compiler::context_t::~context_t() {
+    i_seq.clear();
 }
 
 compiler::context_t & xio::compiler::context_t::operator=(context_t && ct)
 {
     std::swap(bloc, ct.bloc);
-    std::swap(tokens, ct.tokens);
+    std::swap(cursor, ct.cursor);
+    std::swap(i_seq, ct.i_seq);
+    std::swap(instruction, ct.instruction);
 
     return *this;
     
@@ -123,68 +127,46 @@ compiler::context_t & xio::compiler::context_t::operator=(context_t && ct)
 
 compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct)
 {
-    bloc = ct.bloc;
-    tokens = ct.tokens;
-    cursor = ct.cursor;
+    bloc= ct.bloc;
+    cursor= ct.cursor;
+    i_seq= ct.i_seq;
+    instruction= ct.instruction;
     return *this;
 }
 
 
 
+
+message::code xio::compiler::push_context(bloc_t* a_newbloc)
+{
+    if (a_newbloc)
+        ctx_stack.push({ a_newbloc, ctx.cursor });
+    else 
+        ctx_stack.push(ctx);
+    
+    ctx = ctx_stack.top();
+    return message::code::accepted;
+}
+
+message::code xio::compiler::pop_context()
+{
+    if (ctx_stack.empty())
+        return message::code::empty;
+
+    ctx = ctx_stack.top();
+    ctx_stack.pop();
+    return message::code::accepted;
+}
+
 /*!
     @brief "Compiler" entry.
  */
-compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::result(const term_t&)> cc)
+compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::result(const term_t&)> cb)
 {
     auto start_token = ctx.cursor;
     auto seq_it = r->begin();
-    bool nomatch = false;
-    result res;
-    while( !r->end(seq_it) ) {
-        const seq_t& seq = *seq_it;
-        auto term_it = seq.begin();
-        do {
-
-            switch( term_it->_type ) {
-                case term_t::type::rule:
-                    // Enter rule, recurisely:
-                    if(!(res=(this->*parsers[term_it->mem.r->_id])(term_it->mem.r))){
-                        // rejected:
-                        
-                    }
-                    break;
-                    
-                case term_t::type::code:
-                    if( ctx.cursor->code != term_it->mem.c ) nomatch = true;
-                    break;
-
-                // ...
-                default:break;
-            }
-
-            if( nomatch ) {
-                if( term_it->a.z ) {
-                    ++term_it;
-                    continue;
-                }
-            }
-            if( term_it->a.l ) {
-                // One Of, and accepted.
-                ++ctx.cursor;
-                // ... 
-                return { ctx.cursor };
-            }
-
-
-        } while( !seq.end(term_it) );
-        if( !nomatch )
-            return { start_token };
-    }
-
-
-
-    return { (message::push(message::xclass::error), message::code::unmatch) };
-
+    
+    return{};
 }
 
 
@@ -192,13 +174,13 @@ compiler::result xio::compiler::cc_expression(rule_t *r)
 {
     token_t::cursor start_pos = ctx.cursor;
 
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 
 compiler::result xio::compiler::cc_declvar(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return { };
 }
 
 
@@ -207,129 +189,129 @@ compiler::result xio::compiler::cc_stmts(rule_t * rule)
     
     __cc__(rule, [this](const term_t& t) -> result {
         
-        return { ctx.tokens->end() };
+        return { (message::push(message::xclass::internal), message::code::null) };
     });
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_statement(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_assignstmt(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 
 compiler::result xio::compiler::cc_funcsig(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_declfunc(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_paramseq(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_param(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_params(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_objcarg(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return { };
 }
 
 compiler::result xio::compiler::cc_arg(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_argseq(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_args(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_typename(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_instruction(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_kif(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_bloc(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return { };
 }
 
 compiler::result xio::compiler::cc_truebloc(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_elsebloc(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_ifbody(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return { };
 }
 
 compiler::result xio::compiler::cc_condexpr(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 
 compiler::result xio::compiler::cc_var_id(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_new_var(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_objectid(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {  };
 }
 
 compiler::result xio::compiler::cc_function_id(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {   };
 }
 
 compiler::result xio::compiler::cc_objcfncall(rule_t *)
 {
-    return { ctx.tokens->end() };
+    return {   };
 }

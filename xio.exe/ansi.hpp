@@ -6,7 +6,6 @@
 #endif
 #include <sstream>
 #include <iostream>
-#include <xio++/interpreter/interpreter.hpp>
 #include <xio++/message.hpp>
 namespace Ansi{
 

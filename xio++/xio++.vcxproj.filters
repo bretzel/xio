@@ -54,25 +54,16 @@
     <ClInclude Include="interpreter\kernel\xio.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="interpreter\interpreter.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="interpreter\kernel\variable.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="interpreter\kernel\stack.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="interpreter\compiler\grammar.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="interpreter\module.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="interpreter\compiler\compiler.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="interpreter\kernel\xio_bloc.hpp">
+    <ClInclude Include="interpreter\kernel\bloc.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,25 +101,16 @@
     <ClCompile Include="interpreter\kernel\xio.cxx">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="interpreter\kernel\stack.cxx">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="interpreter\kernel\variable.cxx">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="interpreter\compiler\grammar.cxx">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="interpreter\module.cxx">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="interpreter\interpreter.cxx">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="interpreter\compiler\compiler.cxx">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="interpreter\kernel\xio_bloc.cxx">
+    <ClCompile Include="interpreter\kernel\bloc.cxx">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,6 +6,19 @@ namespace xio {
 message::stack message::sstack;
 
 
+std::map<message::xclass, std::string> classes = {
+
+    {message::xclass::status,      "status"     },
+    {message::xclass::error,       "error"      },
+    {message::xclass::notice,      "notice"     },
+    {message::xclass::warning,     "warning"    },
+    {message::xclass::fatal,       "fatal"      },
+    {message::xclass::exception,   "exception"  },
+    {message::xclass::information, "information"},
+    {message::xclass::internal,     "internal"  }
+};
+
+
 std::map<message::code, std::string> codes = {
     {message::code::accepted,   "accepted"    },
     {message::code::rejected,   "rejected"    },
@@ -16,7 +29,8 @@ std::map<message::code, std::string> codes = {
     {message::code::eof,        "eof"         },
     {message::code::null,       "null"        },
     {message::code::unmatch,    "unmatch"     },
-    {message::code::syntax,     "syntax"      }
+    {message::code::syntax,     "syntax"      },
+    {message::code::implement,  "implement"   }
 };
 
 
@@ -81,6 +95,11 @@ std::string message::name(message::code cc)
 {
     return codes[cc];
     
+}
+
+std::string message::class_name(message::xclass a_c)
+{
+    return classes[a_c];
 }
 
 bool xio::message::pop(message & m)
