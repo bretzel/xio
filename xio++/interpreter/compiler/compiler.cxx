@@ -134,6 +134,15 @@ compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct)
     return *this;
 }
 
+void xio::compiler::context_t::accepted()
+{
+}
+
+void xio::compiler::context_t::rejected()
+{
+    for (auto x : i_seq) x->discard();
+}
+
 
 
 
@@ -161,11 +170,12 @@ message::code xio::compiler::pop_context()
 /*!
     @brief "Compiler" entry.
  */
-compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::result(const term_t&)> cb)
+compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::result(const term_t&, bool)> cb)
 {
     auto start_token = ctx.cursor;
     auto seq_it = r->begin();
     
+
     return{};
 }
 

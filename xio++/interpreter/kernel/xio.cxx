@@ -2,7 +2,6 @@
 #include <xio++/xio++.hpp>
 #include <cmath>
 #include <xio++/journal/logger.hpp>
-#include "../interpreter.hpp"
 #include "xio.hpp"
 
 namespace xio {
@@ -18,6 +17,9 @@ xio_t::xio_t::list_t xio_t::xio_gc;
 
 void xio_t::discard()
 {
+    for (auto x : xio_t::xio_gc)
+        if (this == x) return;
+
     xio_t::xio_gc.push_back(this);
     lhs = rhs = op = nullptr; // Make sure we do not accidentally reuse this;
 }
@@ -124,10 +126,6 @@ xio_t::xio_opfn_table_t   xio_t::xio_operators_table{
     {e_code::ki64,            &xio_t::ki64  },
     {e_code::kreal,           &xio_t::kreal },
     {e_code::kstring,         &xio_t::kstring}
-
-
-
-
 };
 
 

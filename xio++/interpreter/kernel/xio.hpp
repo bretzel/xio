@@ -70,6 +70,8 @@ public:
     xio_t::result tree_close();
     xio_t::result tree_root();
 
+    void discard();
+
 private:
 
 #pragma region Assoc
@@ -98,7 +100,7 @@ private:
     static xio_t::list_t xio_gc;
     static void push_lpar(xio_t* lpar);
     static xio_t* pop_lpar();
-    void discard();
+    
 /*  
     static void push_index(xio* index);
     static xio* pop_index();
@@ -128,7 +130,7 @@ private:
 
     static xio_opfn_table_t xio_operators_table;
     // ----------- Primary operators ----------------------------
-#pragma region ARITHMETICS
+#pragma region ARITMETIC
     virtual alu  lshift();
     virtual alu  radical();
     virtual alu  exponent();

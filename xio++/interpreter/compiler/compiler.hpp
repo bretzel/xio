@@ -102,7 +102,7 @@ private:
     message::code push_context(bloc_t* a_newbloc=nullptr);
     message::code pop_context();
 
-    result __cc__(rule_t* r, std::function<compiler::result(const term_t&)> cc);
+    result __cc__(rule_t* r, std::function<compiler::result(const term_t&, bool)> cc);
 
     result cc_stmts      (rule_t*);
     result cc_statement  (rule_t*);
