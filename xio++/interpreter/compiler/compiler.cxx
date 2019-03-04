@@ -197,131 +197,229 @@ compiler::result xio::compiler::cc_declvar(rule_t *)
 compiler::result xio::compiler::cc_stmts(rule_t * rule)
 {
     
-    __cc__(rule, [this](const term_t& t) -> result {
+    __cc__(rule, [this](const term_t& t, bool accrej) -> result {
         
-        return { (message::push(message::xclass::internal), message::code::null) };
+        return { (message::push(message::xclass::internal), message::code::implement) };
     });
     return {  };
 }
 
-compiler::result xio::compiler::cc_statement(rule_t *)
+compiler::result xio::compiler::cc_statement(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_assignstmt(rule_t *)
+compiler::result xio::compiler::cc_assignstmt(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
 
-compiler::result xio::compiler::cc_funcsig(rule_t *)
+compiler::result xio::compiler::cc_funcsig(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_declfunc(rule_t *)
+compiler::result xio::compiler::cc_declfunc(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_paramseq(rule_t *)
+compiler::result xio::compiler::cc_paramseq(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_param(rule_t *)
+compiler::result xio::compiler::cc_param(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_params(rule_t *)
+compiler::result xio::compiler::cc_params(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_objcarg(rule_t *)
+compiler::result xio::compiler::cc_objcarg(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return { };
 }
 
-compiler::result xio::compiler::cc_arg(rule_t *)
+compiler::result xio::compiler::cc_arg(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_argseq(rule_t *)
+compiler::result xio::compiler::cc_argseq(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_args(rule_t *)
+compiler::result xio::compiler::cc_args(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_typename(rule_t *)
+compiler::result xio::compiler::cc_typename(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_instruction(rule_t *)
+compiler::result xio::compiler::cc_instruction(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_kif(rule_t *)
+compiler::result xio::compiler::cc_kif(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_bloc(rule_t *)
+compiler::result xio::compiler::cc_bloc(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return { };
 }
 
-compiler::result xio::compiler::cc_truebloc(rule_t *)
+compiler::result xio::compiler::cc_truebloc(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_elsebloc(rule_t *)
+compiler::result xio::compiler::cc_elsebloc(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_ifbody(rule_t *)
+compiler::result xio::compiler::cc_ifbody(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return { };
 }
 
-compiler::result xio::compiler::cc_condexpr(rule_t *)
+compiler::result xio::compiler::cc_condexpr(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
 
-compiler::result xio::compiler::cc_var_id(rule_t *)
+compiler::result xio::compiler::cc_var_id(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_new_var(rule_t *)
+compiler::result xio::compiler::cc_new_var(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_objectid(rule_t *)
+compiler::result xio::compiler::cc_objectid(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {  };
 }
 
-compiler::result xio::compiler::cc_function_id(rule_t *)
+compiler::result xio::compiler::cc_function_id(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {   };
 }
 
-compiler::result xio::compiler::cc_objcfncall(rule_t *)
+compiler::result xio::compiler::cc_objcfncall(rule_t * rule)
 {
+    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        });
     return {   };
 }
+
+
