@@ -180,11 +180,11 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
     while (!r->end(seq_it)) {
 
         while(!seq_it->end(tit)){
-        
+            
             if (tit->_type == term_t::type::rule)
                 ///@todo enter rule 
                 cr = (this->*parsers[tit->mem.r->_id])(tit->mem.r);
-            term_t t = seq_it->term(tit);
+            term_t t = seq_it->next(tit);
 
 
 

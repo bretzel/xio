@@ -206,7 +206,7 @@ struct  xio_api seq_t {
         return terms.cend() == t;
     }
     
-    term_t term(term_t::const_iterator it) const { return *it; }
+    term_t next(term_t::const_iterator& it) const;
 
     ~seq_t() {
         terms.clear();

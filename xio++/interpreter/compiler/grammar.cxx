@@ -539,6 +539,13 @@ rule_t & rule_t::operator|(e_code _t)
     return *this;
 }
 
+term_t seq_t::next(term_t::const_iterator& it) const
+{
+    if (it != terms.end())
+        ++it;
+    return *it;
+}
+
 seq_t & seq_t::operator<<(term_t a_t)
 {
     terms.push_back(a_t);
