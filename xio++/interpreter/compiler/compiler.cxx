@@ -184,8 +184,16 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
             if (tit->_type == term_t::type::rule)
                 ///@todo enter rule 
                 cr = (this->*parsers[tit->mem.r->_id])(tit->mem.r);
+            ///@todo ...
             term_t t = seq_it->next(tit);
 
+            if (!t) {
+                // Fin de la sequence... 
+                break;
+                // Règle optionelle si aucun terme n'eu de correspondance.
+                // règle acceptée et vide, aucune incidence. On pass au prochain terme.
+            }
+            //@todo ...
 
 
         }
