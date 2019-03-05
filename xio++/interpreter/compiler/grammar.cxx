@@ -420,6 +420,40 @@ term_t & term_t::operator=(const term_t & _t)
     return *this;
 }
 
+bool term_t::operator==(const term_t& t) const
+{
+    if (_type != t._type)
+        return false;
+
+    switch (_type) {
+        case type::code:
+            return mem.c == t.mem.c;
+        case type::rule:
+            return mem.r == t.mem.r;
+        case type::sem:
+            return (mem.sem & t.mem.sem) != 0;
+        case type::nil:
+            return false;
+    }
+    return false;
+}
+
+bool term_t::operator==(const token_t& t) const
+{
+
+    switch (_type) {
+    case type::code:
+        return mem.c == t.code;
+    case type::sem:
+        return (mem.sem & t.sem) != 0;
+    case type::nil:
+        return false;
+    default:
+        return false;
+    }
+    return false;
+}
+
 
 term_t::~term_t()
 {

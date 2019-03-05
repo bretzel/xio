@@ -5,6 +5,7 @@
 #include <map>
 #include <stack>
 #include <memory>
+#include <xio++/xtypes.hpp>
 
 
 
@@ -78,7 +79,7 @@ struct xio_api attr {
     int8_t z : 1; ///< Zero or one (optional * )
     int8_t r : 1; ///< Repeat      (        + )
     int8_t l : 1; ///< List        (one of  ~ ?)
-    int8_t x : 1; ///< Exclude     (        ! ) 
+    int8_t x : 1; ///< accepted     ( mutable ) 
     int8_t s : 8; ///< Litteral List Separator
     attr& operator | (attr const & a)
     {
@@ -95,6 +96,13 @@ struct xio_api attr {
     attr& operator ~() { l = 1; return *this; }
     void reset() { z = r = l = x = s = 0; }
     std::string operator()();
+    bool is_opt()    const { return z != 0; }
+    bool is_one_of() const { return l != 0; }
+    bool is_strick() const { return z == 0 && l==0 && r==0; }
+    bool is_repeat() const { return r != 0; }
+    bool is_accepted() const { return x != 0; }
+    void accept() { x = 1; }
+    void reject() { x = 0; }
 
 };
 
@@ -104,7 +112,7 @@ class xio_api xio_grammar;
 
 
 struct xio_api term_t {
-    attr a = { 0,0,0,0,0 }; ///< default : punctual, strict match
+    mutable attr a = { 0,0,0,0,0 }; ///< default : punctual, strict match
 
     enum class type :uint8_t {
         //term,
@@ -114,6 +122,8 @@ struct xio_api term_t {
         nil
     };
 
+    void accept() { a.accept(); }
+    void reject() { a.reject(); }
 
     term_t::type _type = term_t::type::nil;
 
@@ -143,6 +153,8 @@ struct xio_api term_t {
     term_t& operator = (term_t&& _t);
     term_t& operator = (const term_t& _t);
 
+    bool operator ==(const term_t& t) const;
+    bool operator ==(const token_t& t) const;
     ~term_t();
 
     term_t& operator *() { *a; return *this; }
@@ -193,6 +205,8 @@ struct  xio_api seq_t {
     bool end(term_t::const_iterator t) const {
         return terms.cend() == t;
     }
+    
+    term_t term(term_t::const_iterator it) const { return *it; }
 
     ~seq_t() {
         terms.clear();
