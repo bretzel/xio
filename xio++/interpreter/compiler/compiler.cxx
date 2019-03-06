@@ -191,7 +191,7 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
                 // Fin de la sequence... 
                 break;
                 // Règle optionelle si aucun terme n'eu de correspondance.
-                // règle acceptée et vide, aucune incidence. On pass au prochain terme.
+                // règle acceptée et vide, aucune incidence. On passe au prochain terme.
             }
             //@todo ...
 
