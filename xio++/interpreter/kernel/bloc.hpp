@@ -45,7 +45,7 @@ class xio_api bloc_t : public xio_t
 
 public:
     class xio_api rt_function : public xio_t {
-        std::string _name;
+        std::string _name; // Sous réserve...L'identificateur de cette fonction devrait être lié au jetton et non défini par stockage locale dupliqué.
     public:
         using list_t = std::vector<rt_function*>;
         using map = std::map<std::string, rt_function*>;
@@ -114,16 +114,14 @@ public:
 
     };
 protected:
+    
     rt_function::map rt_functions;
-
 
     xio_t::list_t* _variables   = nullptr;
     xio_t::list_t* _instructions = nullptr;
     xio_t::list_t* _functions = nullptr;
-    bloc_t::list_t*  _objects = nullptr;
+    xio_t::list_t*  _objects = nullptr;
 
-    token_t::list_t* _tokens = nullptr;
-    token_t::cursor  _cursor;
 
 public:
     bloc_t();

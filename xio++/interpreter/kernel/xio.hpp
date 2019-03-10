@@ -37,7 +37,8 @@ class xio_api xio_t : public object
         // ...
     }mem = { 0,0,0 }; ///< Storage types of this xio.
     friend class xio_variable;
-    friend class xio_stack; 
+    friend class bloc_t; 
+    friend class compiler;
     friend class interpreter_t;
 
 
