@@ -463,7 +463,7 @@ lexer_t::result lexer_t::scan_leftpar(token_t & token)
     token.loc.c = cursor.col;
     token.loc.l = cursor.l;
 
-    scan_factor(token);
+    (void)scan_factor(token);
     return scan_binary(token);
 }
 
@@ -597,7 +597,7 @@ lexer_t::result lexer_t::exec()
                 token.loc.p = static_cast<int>(token.loc.b - cursor.b);
             }
         }
-        push_tail(token);
+        (void)push_tail(token);
     } while (!cursor.eof());
 
     return { message::code::accepted };
