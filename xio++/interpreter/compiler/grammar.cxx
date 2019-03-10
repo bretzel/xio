@@ -454,6 +454,21 @@ bool term_t::operator==(const token_t& t) const
     return false;
 }
 
+bool term_t::operator!=(const token_t& t) const
+{
+    switch (_type) {
+    case type::code:
+        return mem.c != t.code;
+    case type::sem:
+        return (mem.sem & t.sem) == 0;
+    case type::nil:
+        return true;
+    default:
+        return true;
+    }
+    return true;
+}
+
 
 term_t::~term_t()
 {

@@ -88,7 +88,7 @@ compiler::context_t::context_t() {
 
 }
 
-compiler::context_t::context_t(compiler::context_t && ct) {
+compiler::context_t::context_t(compiler::context_t && ct) noexcept {
     std::swap(bloc, ct.bloc);
     std::swap(cursor, ct.cursor);
     std::swap(i_seq, ct.i_seq);
@@ -114,7 +114,7 @@ compiler::context_t::~context_t() {
     i_seq.clear();
 }
 
-compiler::context_t & xio::compiler::context_t::operator=(context_t && ct)
+compiler::context_t & xio::compiler::context_t::operator=(context_t && ct) noexcept
 {
     std::swap(bloc, ct.bloc);
     std::swap(cursor, ct.cursor);
@@ -125,13 +125,27 @@ compiler::context_t & xio::compiler::context_t::operator=(context_t && ct)
     
 }
 
-compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct)
+compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct) noexcept
 {
     bloc= ct.bloc;
     cursor= ct.cursor;
     i_seq= ct.i_seq;
     instruction= ct.instruction;
     return *this;
+}
+
+compiler::context_t& xio::compiler::context_t::operator++()
+{
+    ++cursor;
+    return *this;
+    // TODO: insérer une instruction return ici
+}
+
+compiler::context_t& xio::compiler::context_t::operator++(int)
+{
+    ++cursor;
+    return *this;
+    // TODO: insérer une instruction return ici
 }
 
 void xio::compiler::context_t::accepted()
@@ -181,25 +195,33 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
 
         while(!seq_it->end(tit)){
             
-            if (tit->_type == term_t::type::rule)
+            if (tit->_type == term_t::type::rule) {
                 ///@todo enter rule 
                 cr = (this->*parsers[tit->mem.r->_id])(tit->mem.r);
+                // ...
+                if (cr) {
+                    ctx++;
+                    if (tit->a.is_one_of())
+                        return cr;
+                    continue;
+                }
+                if (tit->a.is_opt())
+                    continue;
+
+                return cb(*tit, false);
+            }            
             ///@todo ...
-            term_t t = seq_it->next(tit);
-
-            if (!t) {
-                // Fin de la sequence... 
-                break;
-                // Règle optionelle si aucun terme n'eu de correspondance.
-                // règle acceptée et vide, aucune incidence. On passe au prochain terme.
+            if (*tit != *ctx.cursor) {
+                if (tit->a.is_opt()) continue;
+                return cb(*tit, false);
             }
-            //@todo ...
 
-
+            cr = cb(*tit, true);
+            if (!cr) 
+                return cb(*tit, false);
         }
     }
-    
-    return{};
+    return cr;
 }
 
 
@@ -220,7 +242,7 @@ compiler::result xio::compiler::cc_declvar(rule_t *)
 compiler::result xio::compiler::cc_stmts(rule_t * rule)
 {
     
-    __cc__(rule, [this](const term_t& t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t& t, bool accrej) -> result {
         
         return { (message::push(message::xclass::internal), message::code::implement) };
     });
@@ -229,26 +251,26 @@ compiler::result xio::compiler::cc_stmts(rule_t * rule)
 
 compiler::result xio::compiler::cc_statement(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
-        });
+    });
     return {  };
 }
 
 compiler::result xio::compiler::cc_assignstmt(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
-        });
+    });
     return {  };
 }
 
 
 compiler::result xio::compiler::cc_funcsig(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -257,7 +279,7 @@ compiler::result xio::compiler::cc_funcsig(rule_t * rule)
 
 compiler::result xio::compiler::cc_declfunc(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -266,7 +288,7 @@ compiler::result xio::compiler::cc_declfunc(rule_t * rule)
 
 compiler::result xio::compiler::cc_paramseq(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -275,7 +297,7 @@ compiler::result xio::compiler::cc_paramseq(rule_t * rule)
 
 compiler::result xio::compiler::cc_param(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -284,7 +306,7 @@ compiler::result xio::compiler::cc_param(rule_t * rule)
 
 compiler::result xio::compiler::cc_params(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -293,7 +315,7 @@ compiler::result xio::compiler::cc_params(rule_t * rule)
 
 compiler::result xio::compiler::cc_objcarg(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -302,7 +324,7 @@ compiler::result xio::compiler::cc_objcarg(rule_t * rule)
 
 compiler::result xio::compiler::cc_arg(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -311,7 +333,7 @@ compiler::result xio::compiler::cc_arg(rule_t * rule)
 
 compiler::result xio::compiler::cc_argseq(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -320,7 +342,7 @@ compiler::result xio::compiler::cc_argseq(rule_t * rule)
 
 compiler::result xio::compiler::cc_args(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -329,7 +351,7 @@ compiler::result xio::compiler::cc_args(rule_t * rule)
 
 compiler::result xio::compiler::cc_typename(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -338,7 +360,7 @@ compiler::result xio::compiler::cc_typename(rule_t * rule)
 
 compiler::result xio::compiler::cc_instruction(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -347,7 +369,7 @@ compiler::result xio::compiler::cc_instruction(rule_t * rule)
 
 compiler::result xio::compiler::cc_kif(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -356,7 +378,7 @@ compiler::result xio::compiler::cc_kif(rule_t * rule)
 
 compiler::result xio::compiler::cc_bloc(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -365,7 +387,7 @@ compiler::result xio::compiler::cc_bloc(rule_t * rule)
 
 compiler::result xio::compiler::cc_truebloc(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -374,7 +396,7 @@ compiler::result xio::compiler::cc_truebloc(rule_t * rule)
 
 compiler::result xio::compiler::cc_elsebloc(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -383,7 +405,7 @@ compiler::result xio::compiler::cc_elsebloc(rule_t * rule)
 
 compiler::result xio::compiler::cc_ifbody(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -392,7 +414,7 @@ compiler::result xio::compiler::cc_ifbody(rule_t * rule)
 
 compiler::result xio::compiler::cc_condexpr(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -402,7 +424,7 @@ compiler::result xio::compiler::cc_condexpr(rule_t * rule)
 
 compiler::result xio::compiler::cc_var_id(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -411,7 +433,7 @@ compiler::result xio::compiler::cc_var_id(rule_t * rule)
 
 compiler::result xio::compiler::cc_new_var(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -420,7 +442,7 @@ compiler::result xio::compiler::cc_new_var(rule_t * rule)
 
 compiler::result xio::compiler::cc_objectid(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -429,7 +451,7 @@ compiler::result xio::compiler::cc_objectid(rule_t * rule)
 
 compiler::result xio::compiler::cc_function_id(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -438,7 +460,7 @@ compiler::result xio::compiler::cc_function_id(rule_t * rule)
 
 compiler::result xio::compiler::cc_objcfncall(rule_t * rule)
 {
-    __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });

@@ -155,6 +155,8 @@ struct xio_api term_t {
 
     bool operator ==(const term_t& t) const;
     bool operator ==(const token_t& t) const;
+    bool operator !=(const token_t& t) const;
+
     operator bool() { return _type != type::nil; }
     ~term_t();
 

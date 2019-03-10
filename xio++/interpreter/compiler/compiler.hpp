@@ -55,14 +55,18 @@ public:
 
         //...
         context_t();
-        context_t(context_t&& /* ... */);
+        context_t(context_t&& /* ... */) noexcept;
         context_t(const context_t& );
         context_t(bloc_t* a_bloc, token_t::cursor a_cursor);
         
         ~context_t();
 
-        context_t& operator = (context_t&&);
-        context_t& operator = (const context_t&);
+        context_t& operator = (context_t&&) noexcept;
+        context_t& operator = (const context_t&) noexcept;
+        
+        context_t& operator ++();
+        context_t& operator ++(int);
+
         void accepted();
         void rejected();
 
