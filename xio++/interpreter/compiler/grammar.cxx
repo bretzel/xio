@@ -37,7 +37,7 @@ std::string grammar_txt =
 "arg                : objcarg, expression.\n"
 "argseq             : ', arg.\n"
 "args               : arg *+argseq.\n"
-"typename           : ?static ?i8 ?u8 ?i16 ?u16 ?i32 ?u32 ?i64 ?u64 ?real ?string ?text ?objectid.\n"
+"typename           : *static ?i8 ?u8 ?i16 ?u16 ?i32 ?u32 ?i64 ?u64 ?real ?string ?text ?objectid.\n"
 "instruction        : ?if ?switch ?for *while ?repeat ?until ?do.\n" // to be continued.
 "kif                : if condexpr ifbody.\n"
 "bloc               :  { stmts }.\n"
