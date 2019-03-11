@@ -52,6 +52,8 @@ public:
         bloc_t*         bloc         = nullptr; /// local instance
         xio_t*          instruction  = nullptr; /// local instance
         xio_t::list_t   i_seq;
+        xio_t::storage_attr st = { 0,0,0,0 };
+        type_t::T _type = type_t::null;
 
         //...
         context_t();

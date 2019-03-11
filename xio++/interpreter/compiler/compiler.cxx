@@ -196,20 +196,22 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
         while(!seq_it->end(tit)){
             
             if (tit->_type == term_t::type::rule) {
-                ///@todo enter rule 
+                ///@todo check that we have a valid delegate ptr then enter rule 
                 cr = (this->*parsers[tit->mem.r->_id])(tit->mem.r);
                 // ...
                 if (cr) {
                     ctx++;
                     if (tit->a.is_one_of())
                         return cr;
+                    ++tit;
                     continue;
                 }
-                if (tit->a.is_opt())
+                // Rule is rejected, then *tit is rejected:
+                if (tit->a.is_opt() || tit->a.is_one_of()) {
+                    ++tit;
                     continue;
-
-                return cb(*tit, false);
-            }            
+                }
+            }
             ///@todo ...
             if (*tit != *ctx.cursor) {
                 if (tit->a.is_opt()) continue;
@@ -221,7 +223,7 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
                 return cb(*tit, false);
         }
     }
-    return cr;
+    return cb(*tit, cr);
 }
 
 
@@ -236,39 +238,16 @@ compiler::result xio::compiler::cc_expression(rule_t *r)
 compiler::result xio::compiler::cc_declvar(rule_t *rule)
 {
     compiler::result cr = __cc__(rule, [this](const term_t & t, bool accrej) -> result {
+        return {};
 
-        // ------- If we get explicitly declared the storage class and/or type:
-        xio_t::storage_attr st;
-        type_t::T vt;
+        });
+        // not yet finished!
+        return { (message::push(message::xclass::internal), message::code::implement) };
+        //...
 
-        if (accrej) {
-
-            if (t._type == term_t::type::code) {
-                switch (ctx.cursor->code) {
-                    case e_code::kstatic    :st.sstatic = 1; break; // Static storage - no matter where.
-                    case e_code::ki8        :vt = type_t::i8; break;
-                    case e_code::ki16       :vt = type_t::i16; break;
-                    case e_code::ki32       :vt = type_t::i32; break;
-                    case e_code::ki64       :vt = type_t::i64; break;
-                    case e_code::ku8        :vt = type_t::u8; break;
-                    case e_code::ku16       :vt = type_t::u16; break;
-                    case e_code::ku32       :vt = type_t::u32; break;
-                    case e_code::ku64       :vt = type_t::u64; break;
-                    case e_code::kreal      :vt = type_t::real; break;
-                }
-            }
-            // ---------------------------------------------------------------------------
-            return { ctx.cursor };
-        }
+        // ...
         
-    });
 
-    // not yet finished!
-    return { (message::push(message::xclass::internal), message::code::implement) };
-    //...
-
-    // ...
-    return cr;
 }
 
 
@@ -384,12 +363,33 @@ compiler::result xio::compiler::cc_args(rule_t * rule)
 
 compiler::result xio::compiler::cc_typename(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    compiler::result cr = __cc__(rule, [this] (const term_t & t, bool acc) -> result {
 
-        return { (message::push(message::xclass::internal), message::code::implement) };
-        });
-    return {  };
+        // ------- If we get explicitly declared the storage class and/or type:
+        
+        if (acc) {
+            if (t._type == term_t::type::code) {
+                switch (ctx.cursor->code) {
+                case e_code::kstatic:ctx.st.sstatic = 1; break; // Static storage - no matter where.
+                case e_code::ki8:ctx._type = type_t::i8; break;
+                case e_code::ki16:ctx._type = type_t::i16; break;
+                case e_code::ki32:ctx._type = type_t::i32; break;
+                case e_code::ki64:ctx._type = type_t::i64; break;
+                case e_code::ku8:ctx._type = type_t::u8; break;
+                case e_code::ku16:ctx._type = type_t::u16; break;
+                case e_code::ku32:ctx._type = type_t::u32; break;
+                case e_code::ku64:ctx._type = type_t::u64; break;
+                case e_code::kreal:ctx._type = type_t::real; break;
+                }
+            }
+            // ---------------------------------------------------------------------------
+            return { ctx.cursor };
+        }
+    });
+    
+    return cr;
 }
+
 
 compiler::result xio::compiler::cc_instruction(rule_t * rule)
 {
