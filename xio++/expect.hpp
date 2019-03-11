@@ -112,6 +112,7 @@ public:
         //    }
         //}
         u.m = nullptr;
+        f = false;
     }
 
     ~expect(){

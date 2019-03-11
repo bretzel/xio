@@ -98,7 +98,7 @@ struct xio_api attr {
     std::string operator()();
     bool is_opt()    const { return z != 0; }
     bool is_one_of() const { return l != 0; }
-    bool is_strick() const { return z == 0 && l==0 && r==0; }
+    bool is_strict() const { return z == 0 && l == 0; /*&& r == 0;*/ }
     bool is_repeat() const { return r != 0; }
     bool is_accepted() const { return x != 0; }
     void accept() { x = 1; }

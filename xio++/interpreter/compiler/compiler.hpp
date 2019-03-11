@@ -54,6 +54,7 @@ public:
         xio_t::list_t   i_seq;
         xio_t::storage_attr st = { 0,0,0,0 };
         type_t::T _type = type_t::null;
+        bloc_t* _object = nullptr;
 
         //...
         context_t();
@@ -69,6 +70,7 @@ public:
         context_t& operator ++();
         context_t& operator ++(int);
 
+        bloc_t* query_object(const std::string& oid);
         void accepted();
         void rejected();
 
@@ -108,7 +110,12 @@ private:
     message::code push_context(bloc_t* a_newbloc=nullptr);
     message::code pop_context();
 
-    result __cc__(rule_t* r, std::function<compiler::result(const term_t&, bool)> cc);
+    result __cc__(rule_t* r, std::function<compiler::result(const term_t&)> cc);
+
+    type_t::T get_type(e_code a_code);
+
+    void cleanup_ctx();
+
 
     result cc_stmts      (rule_t*);
     result cc_statement  (rule_t*);

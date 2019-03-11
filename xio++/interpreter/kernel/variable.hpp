@@ -4,10 +4,16 @@
 
 namespace xio {
 
+
+
+class bloc_t;
+
 class xio_api variable : public xio_t
 {
 protected:
-    type_t::T _restricted_type = type_t::any;
+    type_t::T _effective_type = type_t::any;
+    bloc_t* _bloc_type = nullptr;
+
     // std::string _type_id;
 public:
     using list_t = std::vector<variable*>;

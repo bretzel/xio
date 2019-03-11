@@ -30,6 +30,7 @@ std::map<message::code, std::string> codes = {
     {message::code::null,       "null"        },
     {message::code::unmatch,    "unmatch"     },
     {message::code::syntax,     "syntax"      },
+    {message::code::exists,     "exists"      },
     {message::code::implement,  "implement"   }
 };
 

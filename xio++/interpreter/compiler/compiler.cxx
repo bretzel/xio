@@ -93,6 +93,7 @@ compiler::context_t::context_t(compiler::context_t && ct) noexcept {
     std::swap(cursor, ct.cursor);
     std::swap(i_seq, ct.i_seq);
     std::swap(instruction, ct.instruction);
+    std::swap(_object, ct._object);
 }
 
 
@@ -101,6 +102,7 @@ compiler::context_t::context_t(const compiler::context_t & ct) {
     cursor = ct.cursor;
     i_seq = ct.i_seq;
     instruction = ct.instruction;
+    _object = ct._object;
 }
 
 xio::compiler::context_t::context_t(bloc_t* a_bloc, token_t::cursor a_cursor)
@@ -120,7 +122,7 @@ compiler::context_t & xio::compiler::context_t::operator=(context_t && ct) noexc
     std::swap(cursor, ct.cursor);
     std::swap(i_seq, ct.i_seq);
     std::swap(instruction, ct.instruction);
-
+    std::swap(_object, ct._object);
     return *this;
     
 }
@@ -131,6 +133,7 @@ compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct) 
     cursor= ct.cursor;
     i_seq= ct.i_seq;
     instruction= ct.instruction;
+    _object = ct._object;
     return *this;
 }
 
@@ -146,6 +149,11 @@ compiler::context_t& xio::compiler::context_t::operator++(int)
     ++cursor;
     return *this;
     // TODO: insérer une instruction return ici
+}
+
+bloc_t* xio::compiler::context_t::query_object(const std::string& oid)
+{
+    return bloc->query_object(oid);
 }
 
 void xio::compiler::context_t::accepted()
@@ -184,7 +192,7 @@ message::code xio::compiler::pop_context()
 /*!
     @brief "Compiler" entry.
  */
-compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::result(const term_t&, bool)> cb)
+compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::result(const term_t&)> cb)
 {
     auto start_token = ctx.cursor;
     auto seq_it = r->begin();
@@ -192,38 +200,71 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
     // Enter rule's sequences iteration:
     auto tit = seq_it->begin();
     while (!r->end(seq_it)) {
-
-        while(!seq_it->end(tit)){
+        bool rep_ok = false;
+        while (!seq_it->end(tit)) {
             
-            if (tit->_type == term_t::type::rule) {
+            cr.clear();
+            if (tit->_type == term_t::type::rule)
                 ///@todo check that we have a valid delegate ptr then enter rule 
                 cr = (this->*parsers[tit->mem.r->_id])(tit->mem.r);
-                // ...
-                if (cr) {
-                    ctx++;
-                    if (tit->a.is_one_of())
-                        return cr;
+            else
+                if (*tit == *ctx.cursor)
+                    cr = cb(*tit);
+
+            if (!cr) 
+            {
+                if (rep_ok && tit->a.is_repeat())
+                {
+                    ++tit;
+                    rep_ok = false;
+                    continue;
+                }
+
+                if (!tit->a.is_strict())
+                {
                     ++tit;
                     continue;
                 }
-                // Rule is rejected, then *tit is rejected:
-                if (tit->a.is_opt() || tit->a.is_one_of()) {
-                    ++tit;
-                    continue;
-                }
-            }
-            ///@todo ...
-            if (*tit != *ctx.cursor) {
-                if (tit->a.is_opt()) continue;
-                return cb(*tit, false);
+                // End repeat:
+                // reject the sequence:
+                // Cleanup ...
+                cleanup_ctx();
+                break;
             }
 
-            cr = cb(*tit, true);
-            if (!cr) 
-                return cb(*tit, false);
+            // Accepted:
+            if ((rep_ok = tit->a.is_repeat())) {
+                ++ctx;
+            }
+            
+            if (tit->a.is_one_of()) // Accept on (first) hit:
+                return cr;
+            ++tit;
         }
+        ++seq_it;
     }
-    return cb(*tit, cr);
+    return cb(*tit);
+}
+
+type_t::T xio::compiler::get_type(e_code a_code)
+{
+    token_t t = token_t::query(a_code);
+    return
+        a_code == e_code::ku8 ? type_t::u8 :
+        a_code == e_code::ku16 ? type_t::u16 :
+        a_code == e_code::ku32 ? type_t::u32 :
+        a_code == e_code::ku64 ? type_t::u64 :
+        a_code == e_code::ki8 ? type_t::i8 :
+        a_code == e_code::ki16 ? type_t::i16 :
+        a_code == e_code::ki32 ? type_t::i32 :
+        a_code == e_code::ki64 ? type_t::i64 :
+        a_code == e_code::kreal ? type_t::real :
+        a_code == e_code::kstring ? type_t::text : type_t::null;
+}
+
+void xio::compiler::cleanup_ctx()
+{
+
 }
 
 
@@ -237,9 +278,8 @@ compiler::result xio::compiler::cc_expression(rule_t *r)
 
 compiler::result xio::compiler::cc_declvar(rule_t *rule)
 {
-    compiler::result cr = __cc__(rule, [this](const term_t & t, bool accrej) -> result {
-        return {};
-
+    compiler::result cr = __cc__(rule, [this](const term_t & t) -> result {
+            
         });
         // not yet finished!
         return { (message::push(message::xclass::internal), message::code::implement) };
@@ -254,7 +294,7 @@ compiler::result xio::compiler::cc_declvar(rule_t *rule)
 compiler::result xio::compiler::cc_stmts(rule_t * rule)
 {
     
-    (void)__cc__(rule, [this] (const term_t& t, bool accrej) -> result {
+    auto cr =__cc__(rule, [this] (const term_t& t) -> result {
         
         return { (message::push(message::xclass::internal), message::code::implement) };
     });
@@ -263,7 +303,7 @@ compiler::result xio::compiler::cc_stmts(rule_t * rule)
 
 compiler::result xio::compiler::cc_statement(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
     });
@@ -272,7 +312,7 @@ compiler::result xio::compiler::cc_statement(rule_t * rule)
 
 compiler::result xio::compiler::cc_assignstmt(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
     });
@@ -282,7 +322,7 @@ compiler::result xio::compiler::cc_assignstmt(rule_t * rule)
 
 compiler::result xio::compiler::cc_funcsig(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -291,7 +331,7 @@ compiler::result xio::compiler::cc_funcsig(rule_t * rule)
 
 compiler::result xio::compiler::cc_declfunc(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -300,7 +340,7 @@ compiler::result xio::compiler::cc_declfunc(rule_t * rule)
 
 compiler::result xio::compiler::cc_paramseq(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -309,7 +349,7 @@ compiler::result xio::compiler::cc_paramseq(rule_t * rule)
 
 compiler::result xio::compiler::cc_param(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -318,7 +358,7 @@ compiler::result xio::compiler::cc_param(rule_t * rule)
 
 compiler::result xio::compiler::cc_params(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -327,7 +367,7 @@ compiler::result xio::compiler::cc_params(rule_t * rule)
 
 compiler::result xio::compiler::cc_objcarg(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -336,7 +376,7 @@ compiler::result xio::compiler::cc_objcarg(rule_t * rule)
 
 compiler::result xio::compiler::cc_arg(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -345,7 +385,7 @@ compiler::result xio::compiler::cc_arg(rule_t * rule)
 
 compiler::result xio::compiler::cc_argseq(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -354,7 +394,7 @@ compiler::result xio::compiler::cc_argseq(rule_t * rule)
 
 compiler::result xio::compiler::cc_args(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -363,37 +403,30 @@ compiler::result xio::compiler::cc_args(rule_t * rule)
 
 compiler::result xio::compiler::cc_typename(rule_t * rule)
 {
-    compiler::result cr = __cc__(rule, [this] (const term_t & t, bool acc) -> result {
+    compiler::result cr = __cc__(rule, [this] (const term_t & t) -> result {
 
         // ------- If we get explicitly declared the storage class and/or type:
-        
-        if (acc) {
-            if (t._type == term_t::type::code) {
-                switch (ctx.cursor->code) {
+        if (t._type == term_t::type::code) {
+            switch (ctx.cursor->code) {
                 case e_code::kstatic:ctx.st.sstatic = 1; break; // Static storage - no matter where.
-                case e_code::ki8:ctx._type = type_t::i8; break;
-                case e_code::ki16:ctx._type = type_t::i16; break;
-                case e_code::ki32:ctx._type = type_t::i32; break;
-                case e_code::ki64:ctx._type = type_t::i64; break;
-                case e_code::ku8:ctx._type = type_t::u8; break;
-                case e_code::ku16:ctx._type = type_t::u16; break;
-                case e_code::ku32:ctx._type = type_t::u32; break;
-                case e_code::ku64:ctx._type = type_t::u64; break;
-                case e_code::kreal:ctx._type = type_t::real; break;
-                }
+                default:
+                    ctx._type = get_type(t.mem.c); // reject;
             }
-            // ---------------------------------------------------------------------------
             return { ctx.cursor };
         }
+
+        // ---------------------------------------------------------------------------
+        return { ctx.cursor };
     });
-    
+
+
     return cr;
 }
 
 
 compiler::result xio::compiler::cc_instruction(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -402,7 +435,10 @@ compiler::result xio::compiler::cc_instruction(rule_t * rule)
 
 compiler::result xio::compiler::cc_kif(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    //xio_if kif = new xio_if(ctx.bloc, *ctx.cursor, nullptr);
+    //push_context(kif, ctx.cursor);
+
+    auto cr = __cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -411,7 +447,7 @@ compiler::result xio::compiler::cc_kif(rule_t * rule)
 
 compiler::result xio::compiler::cc_bloc(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -420,7 +456,7 @@ compiler::result xio::compiler::cc_bloc(rule_t * rule)
 
 compiler::result xio::compiler::cc_truebloc(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -429,7 +465,7 @@ compiler::result xio::compiler::cc_truebloc(rule_t * rule)
 
 compiler::result xio::compiler::cc_elsebloc(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -438,7 +474,7 @@ compiler::result xio::compiler::cc_elsebloc(rule_t * rule)
 
 compiler::result xio::compiler::cc_ifbody(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -447,7 +483,7 @@ compiler::result xio::compiler::cc_ifbody(rule_t * rule)
 
 compiler::result xio::compiler::cc_condexpr(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -457,7 +493,7 @@ compiler::result xio::compiler::cc_condexpr(rule_t * rule)
 
 compiler::result xio::compiler::cc_var_id(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -466,16 +502,33 @@ compiler::result xio::compiler::cc_var_id(rule_t * rule)
 
 compiler::result xio::compiler::cc_new_var(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    if (!ctx.cursor->is_identifier()) 
+        return{
+            (message::push(message::xclass::error), message::code::syntax, ctx.cursor->mark())
+        };
+    // .. Create new variable
+    variable* v = ctx.bloc->query_local_variable(ctx.cursor->attribute());
+    if (v) {
+        return { 
+            (message::push(message::xclass::error) , "identifier already exists.", ctx.cursor->mark())
+        };
+    }
 
-        return { (message::push(message::xclass::internal), message::code::implement) };
-        });
-    return {  };
+    /*switch (ctx._type) {
+        case type_t::obj:
+            bloc_t* obj = query_object(ctx.obj_name);
+
+
+    }*/
+    v = new variable(ctx.bloc, &(*ctx.cursor), nullptr);
+    ctx.instruction = v;
+    ctx.i_seq.push_back(v);
+    return { ctx.cursor }; 
 }
 
 compiler::result xio::compiler::cc_objectid(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -484,7 +537,7 @@ compiler::result xio::compiler::cc_objectid(rule_t * rule)
 
 compiler::result xio::compiler::cc_function_id(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
@@ -493,7 +546,7 @@ compiler::result xio::compiler::cc_function_id(rule_t * rule)
 
 compiler::result xio::compiler::cc_objcfncall(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t, bool accrej) -> result {
+    (void)__cc__(rule, [this] (const term_t & t) -> result {
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });

@@ -36,6 +36,7 @@ public:
         null,
         unmatch,
         syntax,
+        exists,
         implement
     };
 

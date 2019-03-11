@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include <xio++/interpreter/kernel/xio.hpp>
+#include <xio++/interpreter/kernel/variable.hpp>
 
 
 namespace xio {
@@ -117,7 +117,7 @@ protected:
     
     rt_function::map rt_functions;
 
-    xio_t::list_t* _variables   = nullptr;
+    variable::list_t* _variables   = nullptr;
     xio_t::list_t* _instructions = nullptr;
     xio_t::list_t* _functions = nullptr;
     xio_t::list_t*  _objects = nullptr;
@@ -134,6 +134,16 @@ public:
     }
 
     virtual alu jsr_rtf(const std::string& a_id, const alu::list_t& args);
+    virtual alu jsr();
+
+protected:
+    friend class compiler;
+    //. ..
+    virtual variable* query_local_variable(const std::string& vid) const;
+    virtual variable* query_variable(const std::string& vid) const;
+
+    virtual bloc_t* query_object(const std::string& oid) const;
+
 
 };
 

@@ -31,8 +31,8 @@ public:
     bool has_child(object* a_child);
     bool remove_child(object* a_child);
 
-    template<class T> T* type() { return dynamic_cast<T*>(this); }
-    template<class T> T* parent() { return dynamic_cast<T*>(m_parent); }
+    template<class T> T* type() const { return dynamic_cast<T*>(this); }
+    template<class T> T* parent() const { return dynamic_cast<T*>(m_parent); }
 
     object::iterator at(object* a_child);
     object::iterator begin();
