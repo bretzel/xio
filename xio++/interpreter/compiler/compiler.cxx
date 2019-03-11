@@ -235,32 +235,40 @@ compiler::result xio::compiler::cc_expression(rule_t *r)
 
 compiler::result xio::compiler::cc_declvar(rule_t *rule)
 {
-    (void)__cc__(rule, [this](const term_t & t, bool accrej) -> result {
+    compiler::result cr = __cc__(rule, [this](const term_t & t, bool accrej) -> result {
 
-        // ------- If we get explicitly declared rstorage class and type:
+        // ------- If we get explicitly declared the storage class and/or type:
         xio_t::storage_attr st;
         type_t::T vt;
 
+        if (accrej) {
 
-        if (t._type == term_t::type::code) {
-            switch (ctx.cursor->code) {
-            case e_code::kstatic: st.sstatic = 1; break; // Static storage - no matter where.
-            case e_code::ki8: vt = type_t::i8; break;
-            case e_code::ki16:vt = type_t::i16; break;
-            case e_code::ki32:vt = type_t::i32; break;
-            case e_code::ki64:vt = type_t::i64; break;
-            case e_code::ku8:vt = type_t::u8; break;
-            case e_code::ku16:vt = type_t::u16; break;
-            case e_code::ku32:vt = type_t::u32; break;
-            case e_code::ku64:vt = type_t::u64; break;
-            case e_code::kreal:vt = type_t::real; break;
+            if (t._type == term_t::type::code) {
+                switch (ctx.cursor->code) {
+                    case e_code::kstatic    :st.sstatic = 1; break; // Static storage - no matter where.
+                    case e_code::ki8        :vt = type_t::i8; break;
+                    case e_code::ki16       :vt = type_t::i16; break;
+                    case e_code::ki32       :vt = type_t::i32; break;
+                    case e_code::ki64       :vt = type_t::i64; break;
+                    case e_code::ku8        :vt = type_t::u8; break;
+                    case e_code::ku16       :vt = type_t::u16; break;
+                    case e_code::ku32       :vt = type_t::u32; break;
+                    case e_code::ku64       :vt = type_t::u64; break;
+                    case e_code::kreal      :vt = type_t::real; break;
+                }
             }
+            // ---------------------------------------------------------------------------
+            return { ctx.cursor };
         }
-
-        return { (message::push(message::xclass::internal), message::code::implement) };
+        
     });
 
-    return {  };
+    // not yet finished!
+    return { (message::push(message::xclass::internal), message::code::implement) };
+    //...
+
+    // ...
+    return cr;
 }
 
 
