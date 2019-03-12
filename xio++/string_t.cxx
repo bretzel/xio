@@ -390,7 +390,7 @@ std::size_t string_t::words(string_t::word::list& warray, const std::string& a_d
                     w.end = p;
                     ++w.end;
 					w.begin = w.end;
-                    logdebugfn << " word: '" << warray.back()() << Ends;
+                    //logdebugfn << " word: '" << warray.back()() << Ends;
                 }
                 else return warray.size();
             }

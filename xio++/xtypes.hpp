@@ -6,7 +6,7 @@
 #include <vector>
 namespace xio {
 
-enum class e_code : uint64_t {
+enum class mnemonic : uint64_t {
     knull = 0,
     lshift,
     radical,
@@ -93,6 +93,7 @@ enum class e_code : uint64_t {
     kprime,
     kdo,
     kwhile,
+    kfor,
     kuntil,
     krepeat,
     kswitch,
@@ -241,7 +242,7 @@ constexpr T  closeabs       = 0x4000000000;
 constexpr T  static_t       = 0x8000000000; ///< Flag set at the parser phase when applicable.
 
 std::string     xio_api name(T ty);
-T               xio_api type_name(const std::string& names);
+T               xio_api strtotype(const std::string& names);
 uint64_t        xio_api integral(T Ty);
 
 }
@@ -334,6 +335,7 @@ constexpr const char* kat           = "@";
 constexpr const char* kprime        = "`";
 constexpr const char* kdo           = "do";
 constexpr const char* kwhile        = "while";
+constexpr const char* kfor          = "for";
 constexpr const char* kuntil        = "until";
 constexpr const char* krepeat       = "repeat";
 constexpr const char* kswitch       = "switch";
@@ -351,7 +353,7 @@ constexpr const char* kobject       = "object";
 constexpr const char* kstatic       = "static";
 constexpr const char* kme           = "me";
 
-e_code xio_api code(lexem::T lex);
+mnemonic xio_api code(lexem::T lex);
 
 }
 
@@ -360,7 +362,7 @@ e_code xio_api code(lexem::T lex);
 
 struct xio_api token_t final {
 
-    e_code     code = e_code::knull;
+    mnemonic     code = mnemonic::knull;
     type_t::T  type = type_t::null;
     type_t::T  sem  = type_t::null;
     opdelta::T delta = opdelta::identifier;
@@ -388,7 +390,7 @@ struct xio_api token_t final {
     token_t();// {};
 
     token_t(
-        e_code  a_code,
+        mnemonic  a_code,
         type_t::T a_type,
         type_t::T a_sem,
         opdelta::T a_delta,
@@ -428,8 +430,8 @@ struct xio_api token_t final {
     static token_t scan(const char* src);
     static token_t query(type_t::T ty);
     static token_t query(lexem::T lx);
-    static token_t query(e_code a_code);
-    
+    static token_t query(mnemonic a_code);
+    static mnemonic strtomnemonic(const std::string& k);
 
 };
 

@@ -21,6 +21,11 @@ alu bloc_t::jsr_rtf(const std::string& a_id, const alu::list_t& args)
     return alu{ 0 };
 }
 
+alu bloc_t::jsr()
+{
+    return alu();
+}
+
 variable* bloc_t::query_local_variable(const std::string& vid) const
 {
     if (!_variables) return nullptr;
@@ -43,7 +48,7 @@ bloc_t* bloc_t::query_object(const std::string& oid) const
 {
     if (!_objects) return nullptr;
     for (auto o : *_objects)
-        if (o->token()->attribute() == oid) return  o;
+        if (o->token()->attribute() == oid) return  dynamic_cast<bloc_t*>(o);
     return nullptr;
 }
 

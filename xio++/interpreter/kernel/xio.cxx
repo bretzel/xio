@@ -68,64 +68,64 @@ xio_t::input_table_t      xio_t::tree_input_assoc_table = {
 
 // Primary arithmetic supported operators table:
 xio_t::xio_opfn_table_t   xio_t::xio_operators_table{
-    {e_code::lshift,          &xio_t::lshift},
-    {e_code::radical,         &xio_t::radical},
-    {e_code::exponent,        &xio_t::exponent},
-    {e_code::rshift,          &xio_t::rshift},
-    {e_code::decr,            &xio_t::decr},
-    {e_code::incr,            &xio_t::incr},
-    {e_code::assignadd,       &xio_t::assignadd},
-    {e_code::assignsub,       &xio_t::assignsub},
-    {e_code::assignmul,       &xio_t::assignmul},
-    {e_code::assigndiv,       &xio_t::assigndiv},
-    {e_code::assignmod,       &xio_t::assignmod},
-    {e_code::assignand,       &xio_t::assignand},
-    {e_code::assignor,        &xio_t::assignor},
-    {e_code::assignxor,       &xio_t::assignxor},
-    {e_code::assignx1,        &xio_t::assignx1},
-    {e_code::assignlshift,    &xio_t::assignlshift},
-    {e_code::assignrshift,    &xio_t::assignrshift},
-    {e_code::leq,             &xio_t::leq},
-    {e_code::geq,             &xio_t::geq},
-    {e_code::eq,              &xio_t::eq},
-    {e_code::neq,             &xio_t::neq},
-    {e_code::add,             &xio_t::add},
-    {e_code::sub,             &xio_t::sub},
-    {e_code::mul,             &xio_t::mul},
-    {e_code::modulo,          &xio_t::modulo},
-    {e_code::lt,              &xio_t::lt},
-    {e_code::gt,              &xio_t::gt},
-    {e_code::assign,          &xio_t::assign},
-    {e_code::binand,          &xio_t::binand},
-    {e_code::binor,           &xio_t::binor},
-    {e_code::bitxor,          &xio_t::bitxor},
-    {e_code::x1,              &xio_t::x1},
-    {e_code::x2,              &xio_t::x2},
-    {e_code::bitnot,          &xio_t::bitnot},
-    {e_code::booland,         &xio_t::booland},
-    {e_code::boolor,          &xio_t::boolor},
-    {e_code::division,        &xio_t::division},
-    {e_code::factorial,       &xio_t::factorial},
-    {e_code::positive,        &xio_t::positive},
-    {e_code::negative,        &xio_t::negative},
-    {e_code::kpi,             &xio_t::kpi},
-    {e_code::kcos,            &xio_t::kcos},
-    {e_code::kacos,           &xio_t::kacos},
-    {e_code::ktan,            &xio_t::ktan},
-    {e_code::katan,           &xio_t::katan},
-    {e_code::ksin,            &xio_t::ksin},
-    {e_code::kasin,           &xio_t::kasin},
-    {e_code::knumber,         &xio_t::knumber},
-    {e_code::ku8,             &xio_t::ku8   },
-    {e_code::ku16,            &xio_t::ku16  },
-    {e_code::ku32,            &xio_t::ku32  },
-    {e_code::ku64,            &xio_t::ku64  },
-    {e_code::ki8,             &xio_t::ki8   },
-    {e_code::ki16,            &xio_t::ki16  },
-    {e_code::ki32,            &xio_t::ki32  },
-    {e_code::ki64,            &xio_t::ki64  },
-    {e_code::kreal,           &xio_t::kreal },
-    {e_code::kstring,         &xio_t::kstring}
+    {mnemonic::lshift,          &xio_t::lshift},
+    {mnemonic::radical,         &xio_t::radical},
+    {mnemonic::exponent,        &xio_t::exponent},
+    {mnemonic::rshift,          &xio_t::rshift},
+    {mnemonic::decr,            &xio_t::decr},
+    {mnemonic::incr,            &xio_t::incr},
+    {mnemonic::assignadd,       &xio_t::assignadd},
+    {mnemonic::assignsub,       &xio_t::assignsub},
+    {mnemonic::assignmul,       &xio_t::assignmul},
+    {mnemonic::assigndiv,       &xio_t::assigndiv},
+    {mnemonic::assignmod,       &xio_t::assignmod},
+    {mnemonic::assignand,       &xio_t::assignand},
+    {mnemonic::assignor,        &xio_t::assignor},
+    {mnemonic::assignxor,       &xio_t::assignxor},
+    {mnemonic::assignx1,        &xio_t::assignx1},
+    {mnemonic::assignlshift,    &xio_t::assignlshift},
+    {mnemonic::assignrshift,    &xio_t::assignrshift},
+    {mnemonic::leq,             &xio_t::leq},
+    {mnemonic::geq,             &xio_t::geq},
+    {mnemonic::eq,              &xio_t::eq},
+    {mnemonic::neq,             &xio_t::neq},
+    {mnemonic::add,             &xio_t::add},
+    {mnemonic::sub,             &xio_t::sub},
+    {mnemonic::mul,             &xio_t::mul},
+    {mnemonic::modulo,          &xio_t::modulo},
+    {mnemonic::lt,              &xio_t::lt},
+    {mnemonic::gt,              &xio_t::gt},
+    {mnemonic::assign,          &xio_t::assign},
+    {mnemonic::binand,          &xio_t::binand},
+    {mnemonic::binor,           &xio_t::binor},
+    {mnemonic::bitxor,          &xio_t::bitxor},
+    {mnemonic::x1,              &xio_t::x1},
+    {mnemonic::x2,              &xio_t::x2},
+    {mnemonic::bitnot,          &xio_t::bitnot},
+    {mnemonic::booland,         &xio_t::booland},
+    {mnemonic::boolor,          &xio_t::boolor},
+    {mnemonic::division,        &xio_t::division},
+    {mnemonic::factorial,       &xio_t::factorial},
+    {mnemonic::positive,        &xio_t::positive},
+    {mnemonic::negative,        &xio_t::negative},
+    {mnemonic::kpi,             &xio_t::kpi},
+    {mnemonic::kcos,            &xio_t::kcos},
+    {mnemonic::kacos,           &xio_t::kacos},
+    {mnemonic::ktan,            &xio_t::ktan},
+    {mnemonic::katan,           &xio_t::katan},
+    {mnemonic::ksin,            &xio_t::ksin},
+    {mnemonic::kasin,           &xio_t::kasin},
+    {mnemonic::knumber,         &xio_t::knumber},
+    {mnemonic::ku8,             &xio_t::ku8   },
+    {mnemonic::ku16,            &xio_t::ku16  },
+    {mnemonic::ku32,            &xio_t::ku32  },
+    {mnemonic::ku64,            &xio_t::ku64  },
+    {mnemonic::ki8,             &xio_t::ki8   },
+    {mnemonic::ki16,            &xio_t::ki16  },
+    {mnemonic::ki32,            &xio_t::ki32  },
+    {mnemonic::ki64,            &xio_t::ki64  },
+    {mnemonic::kreal,           &xio_t::kreal },
+    {mnemonic::kstring,         &xio_t::kstring}
 };
 
 
@@ -388,7 +388,7 @@ xio_t::result xio_t::tree_set_right(xio_t* x) {
         << Ends;
 
     // Temporary hack....
-    if (x->t0->code == e_code::openpar)
+    if (x->t0->code == mnemonic::openpar)
         push_lpar(x);
 
     if (rhs) {
@@ -445,7 +445,7 @@ xio_t::inptr_fn_t xio_t::associate(xio_t * a_lhs, xio_t * a_rhs)
 
 xio_t::result xio_t::tree_close()
 {
-    if (t0->code == e_code::openpar)
+    if (t0->code == mnemonic::openpar)
         return {(
             message::push(message::xclass::error),
             " unexpected end of file."
@@ -458,7 +458,7 @@ xio_t::result xio_t::tree_close()
         ) };
     }
     
-    if (t0->code == e_code::closepar) {
+    if (t0->code == mnemonic::closepar) {
         if (lhs) {
             xio_t* x = lhs;
             lhs->op = op;

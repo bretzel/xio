@@ -25,32 +25,33 @@ rule_t::list_t xio_grammar::_rules;
 
 std::string grammar_txt =
 "stmts              : +statement.\n"
-"statement          : assignstmt ;, expression ;, instruction ;, ;.\n"
-"assignstmt         : declvar assign expression ;, var_id assign expression ;.\n"
+"statement          : assignstmt ';', expression ';', instruction ';', ';'.\n"
+"assignstmt         : declvar assign expression, var_id assign expression.\n"
 "declvar            : *typename new_var.\n"
-"funcsig            : *typename function_id ( *params ).\n"
-"declfunc           : funcsig ;, funcsig bloc.\n"
-"paramseq           : ', param.\n"
+"funcsig            : *typename function_id '(' *params ')'.\n"
+"declfunc           : funcsig ';', funcsig bloc.\n"
+"paramseq           : ',' param.\n"
 "param              : *typename identifier.\n"
 "params             : param *+paramseq.\n"
-"objcarg            : indentifier ': expression.\n"
+"objcarg            : identifier ':' expression.\n"
 "arg                : objcarg, expression.\n"
-"argseq             : ', arg.\n"
+"argseq             : ',' arg.\n"
 "args               : arg *+argseq.\n"
-"typename           : *static ?i8 ?u8 ?i16 ?u16 ?i32 ?u32 ?i64 ?u64 ?real ?string ?text ?objectid.\n"
-"instruction        : ?if ?switch ?for *while ?repeat ?until ?do.\n" // to be continued.
-"kif                : if condexpr ifbody.\n"
-"bloc               :  { stmts }.\n"
-"truebloc           : *then bloc, *then statement.\n"
-"elsebloc           : *else bloc, *else statement.\n"
+"typename           : *'static' ?'i8' ?'u8' ?'i16' ?'u16' ?'i32' ?'u32' ?'i64' ?'u64' ?'real' ?'number' ?'string' ?objectid.\n"
+"instruction        : ?'if' ?'switch' ?'for' ?'while' ?'repeat' ?'until' ?'do'.\n" // to be continued.
+"if                 : 'if' condexpr ifbody.\n"
+"bloc               :  '{' stmts '}'.\n"
+"truebloc           : *'then' bloc, *'then' statement.\n"
+"elsebloc           : *'else' bloc, *'else' statement.\n"
 "ifbody             : truebloc elsebloc, truebloc.\n"
-"condexpr           : expression.\n"
-"expression         : *declvar aebtree.\n" // ??? 
+"condexpr           : assignstmt, expression.\n"
+"expression         : +value.\n" // ???
+"value              : ?var_id ?objectid ?function_id ?number ?string.\n" // ??? 
 "var_id             .\n"
 "new_var            .\n"
 "objectid           .\n"
-"function_id        : scope function_id, objectid scope function_id, var_id '. function_id.\n"
-"objcfncall         : [ function_id *args ].";
+"function_id        : '::' functionid, objectid '::' functionid, var_id '.' function_id.\n"
+"objcfncall         : '[' function_id  *args ']'.";
 //"function_id        .";
 
 
@@ -70,7 +71,7 @@ xio_grammar::result xio_grammar::build()
         << Ends;
 
     _text = grammar_txt;
-    std::size_t count = _text.words(tokens, ":;,|.+*?'\"", true);
+    std::size_t count = _text.words(tokens, ":;,|.+*?", true);
     string_t::list list;
     for (auto s : tokens) list.push_back(s());
     if (!count) 
@@ -106,6 +107,11 @@ xio_grammar::result xio_grammar::build()
 void xio_grammar::dump()
 {
     loginfopfnx << Ends;
+    
+    loginfo << logger::HBlue << "mnemonic" << logger::Yellow << ',' <<
+        logger::HRed << "rule" << logger::Yellow << ',' << 
+        logger::HGreen << "semantic" << logger::Reset << ":" <<  Ends;
+
     for (auto rule : _rules) {
         loginfo << logger::HCyan << rule.second->_id << logger::White << ':';
         for (auto seq : rule.second->lists) {
@@ -147,21 +153,24 @@ xio_grammar::result xio_grammar::parse_identifier(string_t::iterator & crs)
         case st_seq:
             _state = st_seq;
             // lexem::T ?
-            e_code c = lexem::code(crs->c_str());
-            if( c != e_code::knull ) {
+            /*mnemonic c = lexem::code(crs->c_str());
+            if( c != mnemonic::knull ) {
                 _rule->a = a;
                 (*_rule) | c;
                 a.reset();
                 break;
-            }
+            }*/
 
 
-            type_t::T t = type_t::type_name(*crs);
-            if (t != 0) {
-                _rule->a = a;
-                (*_rule) | t;
-                a.reset();
-                break;
+            type_t::T t = type_t::strtotype(*crs);
+            if (t!=type_t::bloc) // Quick and dirty hack about bypassing the type_t::bloc type: 
+            {
+                if (t != 0) {
+                    _rule->a = a;
+                    (*_rule) | t;
+                    a.reset();
+                    break;
+                }
             }
             
             //logdebug << " ***code: " << static_cast<uint64_t>(c) << " ***" << Ends;
@@ -175,11 +184,6 @@ xio_grammar::result xio_grammar::parse_identifier(string_t::iterator & crs)
                 r = new rule_t(*crs);
                 _rules[*crs] = r;
                 _rule->a = a;
-//                 logdebugfn << logger::White << " : st_seq : rule '"
-//                     << logger::Yellow << _rule->_id
-//                     << logger::White << "' -> created new forward-rule '"
-//                     << logger::Yellow << r->_id << logger::White << "'. next machine-state : st_seq..."
-//                     << Ends;
                 _state = st_seq; //  expect ':' as next token in main loop.
                 (*_rule) | r;
                 a.reset();
@@ -285,26 +289,40 @@ xio_grammar::result xio_grammar::enter_litteral(string_t::iterator & crs)
 //         << Ends;
 
     if((_state != st_seq) && (_state != st_option))
-        return { (message::push(message::xclass::error), "syntax error '", *crs, "' is not a valid xio++ grammar token in context", "(state machine:",(int)_state,")") };
+        return {(
+            message::push(message::xclass::error), 
+            "syntax error '", 
+            *crs, 
+            "' is not a valid xio++ grammar token in context", 
+            "(state machine:",(int)_state,
+            ")"
+        )};
 
     string_t::iterator i = crs;
+    //logdebugfn << logger::HBlue << "token: '" << logger::HRed << *i << logger::HBlue << "'" << Ends;
     ++i;
+    // logdebugfn << logger::HBlue << "token[++i]: '" << logger::HRed << *i << logger::HBlue << "'" << Ends;
     if((*i=="'") || (*i=="\""))
-        return { (message::push(message::xclass::error), "error: litteral  cannot be empty") };
+        return { (message::push(message::xclass::error), "error: litteral x.i.o grammar element cannot be empty") };
 
-//     logdebugfn << logger::White << " Checking token: '" << logger::Yellow << *i << logger::White << "'" << Ends;
-     token_t token = token_t::scan(i->c_str());
-     if(token){
-         _rule->a = a;
-         (*_rule) | token.code;
-         a.reset();
-     }
-     else
-         return { (message::push(message::xclass::error), "syntax error '", *i, "' is not a valid xio++ grammar token") };
+    //logdebugfn << logger::White << " Checking token: '" << logger::Yellow << *i << logger::White << "'" << Ends;
+    token_t token = token_t::scan(i->c_str());
+    if(token){
+        _rule->a = a;
+        (*_rule) | token.code;
+        a.reset();
+    }
+    else
+        return {(
+            message::push(message::xclass::error), 
+            "syntax error '", 
+            *i, 
+            "' is not a valid xio++ grammar token"
+        )};
 
 //      logdebugfn << logger::White << "term_t : '" << logger::Yellow << *i << logger::White << "':" << Ends;
-     crs = i;
-     ++crs;
+    crs = i;
+    ++crs;
     if((*crs=="'") || (*crs=="\""))
         ++crs;
     //++crs; // will be on the next token.
@@ -371,7 +389,7 @@ term_t::term_t(type_t::T a_sem, attr a_)
     
 }
 
-term_t::term_t(e_code a_code, attr a_)
+term_t::term_t(mnemonic a_code, attr a_)
 {
     a = a_;
     mem.c = a_code;
@@ -479,6 +497,14 @@ std::string term_t::operator()()
 {
     string_t str;
     str << a();
+    
+    std::map<term_t::type, std::string> _{
+        {term_t::type::rule, logger::attribute(logger::HRed)},
+        {term_t::type::sem,  logger::attribute(logger::HGreen)},
+        {term_t::type::code, logger::attribute(logger::HBlue)}
+    };
+
+    str << _[_type];
     switch (_type) {
         case term_t::type::code:
         {
@@ -499,7 +525,7 @@ std::string term_t::operator()()
             str << "nil";
             break;
     }
-
+    
     return str();
 }
 
@@ -545,7 +571,7 @@ rule_t & rule_t::operator|(type_t::T _t)
     return *this;
 }
 
-rule_t & rule_t::operator|(e_code _t)
+rule_t & rule_t::operator|(mnemonic _t)
 {
     term_t t = term_t(_t);
     t.a = a;
@@ -573,7 +599,7 @@ seq_t & seq_t::operator<<(type_t::T a_t)
     return *this;
 }
 
-seq_t & seq_t::operator<<(e_code a_t)
+seq_t & seq_t::operator<<(mnemonic a_t)
 {
     terms.emplace_back(a_t);
     return *this;

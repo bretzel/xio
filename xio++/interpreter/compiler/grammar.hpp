@@ -130,7 +130,7 @@ struct xio_api term_t {
     union mem_t {
         rule_t* r;
         type_t::T sem;
-        e_code c;
+        mnemonic c;
     }mem = { nullptr };
 
     using list_t = std::vector<term_t>;
@@ -142,7 +142,7 @@ struct xio_api term_t {
     term_t();
     term_t(rule_t* r, attr a_ = { 0,0,0,0,0 });
     term_t(type_t::T a_sem, attr a_ = { 0,0,0,0,0 });
-    term_t(e_code a_code, attr a_ = { 0,0,0,0,0 });
+    term_t(mnemonic a_code, attr a_ = { 0,0,0,0,0 });
 
     term_t(const std::string& a_lexem);
 
@@ -170,7 +170,7 @@ struct xio_api term_t {
 
     static term_t query(const char*);
     static term_t query(type_t::T);
-    static term_t query(e_code);
+    static term_t query(mnemonic);
 
 };
 
@@ -218,7 +218,7 @@ struct  xio_api seq_t {
     
     // Emplace_back:
     seq_t& operator << (type_t::T a_t);
-    seq_t& operator << (e_code a_t);
+    seq_t& operator << (mnemonic a_t);
     seq_t& operator << (rule_t* a_t);
 
 };
@@ -251,7 +251,7 @@ struct xio_api  rule_t {
     rule_t& operator |(rule_t* _r);
     //rule_t& operator |(const char*   _t);
     rule_t& operator |(type_t::T _t);
-    rule_t& operator |(e_code _t);
+    rule_t& operator |(mnemonic _t);
 
     seq_t::const_iterator begin() const { return lists.cbegin(); }
     bool end(seq_t::const_iterator s) const { return s == lists.cend();}

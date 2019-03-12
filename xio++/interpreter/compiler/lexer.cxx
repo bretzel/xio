@@ -119,7 +119,7 @@ done_number:
         }
     }
     Token = {
-        e_code::noop, type_t::number, type_t::number | type_t::leaf | (real ? type_t::real : type_t::u64), // u64: Par defaut. Mais les parsers pourront "squizer" en evaluant la valeur et la comparer avec les limtes u8, u/i16;32;64...
+        mnemonic::noop, type_t::number, type_t::number | type_t::leaf | (real ? type_t::real : type_t::u64), // u64: Par defaut. Mais les parsers pourront "squizer" en evaluant la valeur et la comparer avec les limtes u8, u/i16;32;64...
         opdelta::identifier,
         {cursor.c, bc,cursor.l,cursor.col, static_cast<int>(cursor.c - cursor.b)},
         {1,0},
@@ -201,7 +201,7 @@ lexer_t::result lexer_t::scan_string(xio::token_t & token)
     if (*i && (*i == q)) {
         token.loc.b = cursor.c+1;
         token.loc.e = i-1;
-        token.code = e_code::noop;
+        token.code = mnemonic::noop;
         token.type = type_t::text;
         token.sem = type_t::text | type_t::leaf;
         return { message::code::accepted };
@@ -224,7 +224,7 @@ lexer_t::result lexer_t::scan_identifier(xio::token_t & token)
     if (!(*i)) return {};
 
     token = {
-        e_code::noop, // id's at the lexer phase haven't been qualified to anything, yet.
+        mnemonic::noop, // id's at the lexer phase haven't been qualified to anything, yet.
         type_t::id, type_t::leaf|type_t::id, opdelta::identifier,
         // i - 1 => ?
         {cursor.c, i, cursor.l, cursor.col, static_cast<int>(cursor.c - cursor.b)},
@@ -267,7 +267,7 @@ lexer_t::result lexer_t::scan_hex(xio::token_t & token)
 
 lexer_t::result lexer_t::scan_unary(xio::token_t & token)
 {
-    if ((token.code == e_code::add) || (token.code == e_code::sub))
+    if ((token.code == mnemonic::add) || (token.code == mnemonic::sub))
         if (!scan_sign(token)) return { message::code::accepted };
 
     if (empty()) {
@@ -296,7 +296,7 @@ lexer_t::result lexer_t::scan_sign(xio::token_t & token)
 {
     if (empty()) {
         //... systematically, we have signed unary prefix operator here.
-        token.code = token.code == e_code::add ? e_code::positive : e_code::negative;
+        token.code = token.code == mnemonic::add ? mnemonic::positive : mnemonic::negative;
         token.type = type_t::prefix;
         token.sem = type_t::oper | type_t::prefix | type_t::unary | type_t::sign;
         token.delta = opdelta::prefix;
@@ -310,7 +310,7 @@ lexer_t::result lexer_t::scan_sign(xio::token_t & token)
     if (b_token.is_closingpair())
         return {  };
     if (b_token.is_binary()) {
-        token.code = token.code == e_code::add ? e_code::positive : e_code::negative;
+        token.code = token.code == mnemonic::add ? mnemonic::positive : mnemonic::negative;
         token.type = type_t::prefix;
         token.sem = type_t::oper | type_t::prefix | type_t::unary | type_t::sign;
         token.delta = opdelta::prefix;
@@ -359,7 +359,7 @@ lexer_t::result lexer_t::scan_postfix(xio::token_t & token)
 
 lexer_t::result lexer_t::scan_binary(xio::token_t & token)
 {
-    if ((token.code == e_code::add) || (token.code == e_code::sub)) (void)scan_sign(token);
+    if ((token.code == mnemonic::add) || (token.code == mnemonic::sub)) (void)scan_sign(token);
     return { message::code::accepted };
 }
 
@@ -391,7 +391,7 @@ lexer_t::result lexer_t::scan_factor(xio::token_t & token)
         }
     accepted:
         token.loc.e = cursor.c = token.loc.b;
-        vt = token_t::query(e_code::mul);
+        vt = token_t::query(mnemonic::mul);
         logdebugfn << "accepted: token informations: " << token.informations() << Ends;
         vt.loc = token.loc;
         vt.f.m = 1;
@@ -556,7 +556,7 @@ lexer_t::result lexer_t::exec()
     cursor.l = cursor.col = 1;
     tokens->clear();
     cursor.f = 0;
-    tokens->emplace_back(token_t{ e_code::noop, type_t::null, type_t::null, opdelta::noop, {cursor.b,cursor.e,0}, {0,0} });
+    tokens->emplace_back(token_t{ mnemonic::noop, type_t::null, type_t::null, opdelta::noop, {cursor.b,cursor.e,0}, {0,0} });
 
     if (!cursor.skip_ws())
         return { (message::push(message::xclass::error), " unexpected end of file" ) };

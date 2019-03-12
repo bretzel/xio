@@ -89,7 +89,7 @@ private:
 protected:
 
     using xio_opfn_t = alu(xio_t::*)();
-    using xio_opfn_table_t = std::map<e_code, xio_opfn_t>;
+    using xio_opfn_table_t = std::map<mnemonic, xio_opfn_t>;
     
 
     xio_opfn_t xio_fn = nullptr;

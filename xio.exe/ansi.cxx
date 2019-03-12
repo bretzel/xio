@@ -6,7 +6,7 @@
 #include <xio++/interpreter/compiler/lexer.hpp>
 #include <xio++/expect.hpp>
 #include <xio++/interpreter/kernel/bloc.hpp>
-
+#include <xio++/interpreter/compiler/grammar.hpp>
 
 
 namespace Ansi{
@@ -43,6 +43,10 @@ void CAnsi::End()
 xio::message::code CAnsi::execute()
 {
     
+    
+    xio::xio_grammar gr;
+    gr.build();
+    //gr.dump();
 
     return xio::message::code::accepted;
 }

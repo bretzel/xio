@@ -71,6 +71,9 @@ public:
         context_t& operator ++(int);
 
         bloc_t* query_object(const std::string& oid);
+        context_t& operator << (xio_t* x) { i_seq.push_back(x); return *this; }
+        bool empty() { return i_seq.empty(); }
+        token_t* token() { return &(*cursor); }
         void accepted();
         void rejected();
 
@@ -87,6 +90,8 @@ private:
     static bool validate(const compiler::aeb_t& ab);
 
     parsers_t parsers;
+
+    bool _eof();
 public:
     
     /**
@@ -112,7 +117,7 @@ private:
 
     result __cc__(rule_t* r, std::function<compiler::result(const term_t&)> cc);
 
-    type_t::T get_type(e_code a_code);
+    type_t::T get_type(mnemonic a_code);
 
     void cleanup_ctx();
 
@@ -144,6 +149,7 @@ private:
     result cc_objectid   (rule_t*);
     result cc_function_id(rule_t*);
     result cc_objcfncall (rule_t*);
+
 };
 
 }

@@ -72,6 +72,11 @@ bool xio::compiler::validate(const compiler::aeb_t& ab)
     return false;
 }
 
+bool xio::compiler::_eof()
+{
+    return ctx.cursor == tokens->end();
+}
+
 // -3-3; sign number bin number
 compiler::compiler()
 {
@@ -246,34 +251,36 @@ compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::resul
         }
         ++seq_it;
     }
-    return cb(*tit);
+    return cr;
 }
 
-type_t::T xio::compiler::get_type(e_code a_code)
+type_t::T xio::compiler::get_type(mnemonic a_code)
 {
     token_t t = token_t::query(a_code);
     return
-        a_code == e_code::ku8 ? type_t::u8 :
-        a_code == e_code::ku16 ? type_t::u16 :
-        a_code == e_code::ku32 ? type_t::u32 :
-        a_code == e_code::ku64 ? type_t::u64 :
-        a_code == e_code::ki8 ? type_t::i8 :
-        a_code == e_code::ki16 ? type_t::i16 :
-        a_code == e_code::ki32 ? type_t::i32 :
-        a_code == e_code::ki64 ? type_t::i64 :
-        a_code == e_code::kreal ? type_t::real :
-        a_code == e_code::kstring ? type_t::text : type_t::null;
+        a_code == mnemonic::ku8 ? type_t::u8 :
+        a_code == mnemonic::ku16 ? type_t::u16 :
+        a_code == mnemonic::ku32 ? type_t::u32 :
+        a_code == mnemonic::ku64 ? type_t::u64 :
+        a_code == mnemonic::ki8 ? type_t::i8 :
+        a_code == mnemonic::ki16 ? type_t::i16 :
+        a_code == mnemonic::ki32 ? type_t::i32 :
+        a_code == mnemonic::ki64 ? type_t::i64 :
+        a_code == mnemonic::kreal ? type_t::real :
+        a_code == mnemonic::kstring ? type_t::text : type_t::null;
 }
 
 void xio::compiler::cleanup_ctx()
 {
-`   
+    ctx.rejected();
 }
 
 
 compiler::result xio::compiler::cc_expression(rule_t *r)
 {
-    token_t::cursor start_pos = ctx.cursor;
+    auto cr = __cc__(r, [this](const term_t & t)->result {
+        return {};
+    });
 
     return {  };
 }
@@ -282,7 +289,7 @@ compiler::result xio::compiler::cc_expression(rule_t *r)
 compiler::result xio::compiler::cc_declvar(rule_t *rule)
 {
     compiler::result cr = __cc__(rule, [this](const term_t & t) -> result {
-            
+        return {};
         });
         // not yet finished!
         return { (message::push(message::xclass::internal), message::code::implement) };
@@ -404,25 +411,41 @@ compiler::result xio::compiler::cc_args(rule_t * rule)
     return {  };
 }
 
+
+// static i16 a;
+
+
+static bool _static = false;
 compiler::result xio::compiler::cc_typename(rule_t * rule)
 {
     compiler::result cr = __cc__(rule, [this] (const term_t & t) -> result {
-
-        // ------- If we get explicitly declared the storage class and/or type:
         if (t._type == term_t::type::code) {
-            switch (ctx.cursor->code) {
-                case e_code::kstatic:ctx.st.sstatic = 1; break; // Static storage - no matter where.
-                default:
-                    ctx._type = get_type(t.mem.c); // reject;
+            if (ctx.cursor->code == mnemonic::kstatic )
+            {
+                if (_static) return {/* put descriptive message here */ };
+                _static = true;
+                ctx.st.sstatic = 1;// Static storage - no matter where.
             }
-            return { ctx.cursor };
-        }
+            else
+            {
+ /*               std::vector<mnemonic> _ = { 
+                    mnemonic::ki8,mnemonic::ki16,mnemonic::ki32,mnemonic::ki64,mnemonic::kreal,
+                    mnemonic::ku8,mnemonic::ku16,mnemonic::ku32,mnemonic::ku64,mnemonic::knumber,mnemonic::kstring
+                };
 
+                if(std::find(_.begin(), _.end(), t.mem.c) != _.end())
+                {
+ */                   ctx._type = get_type(t.mem.c);
+                    return { ctx.cursor };
+ //               }
+            }
+        }
         // ---------------------------------------------------------------------------
-        return { ctx.cursor };
+        ///@todo 
+        return { /* put descriptive message here */ };
     });
 
-
+    _static = false;
     return cr;
 }
 
@@ -496,19 +519,28 @@ compiler::result xio::compiler::cc_condexpr(rule_t * rule)
 
 compiler::result xio::compiler::cc_var_id(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t) -> result {
-
-        return { (message::push(message::xclass::internal), message::code::implement) };
-        });
+    variable* v = ctx.bloc->query_variable(ctx.cursor->attribute());
+    if ( v ) {
+        ctx << new xio_t(ctx.bloc, &(*ctx.cursor), v->acc);
+        return { ctx.cursor };
+    }
+    
     return {  };
 }
 
+
 compiler::result xio::compiler::cc_new_var(rule_t * rule)
 {
-    if (!ctx.cursor->is_identifier()) 
-        return{
-            (message::push(message::xclass::error), message::code::syntax, ctx.cursor->mark())
-        };
+    if (!ctx.cursor->is_identifier())
+        return{ (
+            message::push(message::xclass::error), 
+            message::code::syntax, 
+            ": ", 
+            ctx.cursor->attribute(), 
+            " is not an identifier.", 
+            ctx.cursor->mark()
+        )};
+       
     // .. Create new variable
     variable* v = ctx.bloc->query_local_variable(ctx.cursor->attribute());
     if (v) {
@@ -517,24 +549,20 @@ compiler::result xio::compiler::cc_new_var(rule_t * rule)
         };
     }
 
-    /*switch (ctx._type) {
-        case type_t::obj:
-            bloc_t* obj = query_object(ctx.obj_name);
-
-
-    }*/
-    v = new variable(ctx.bloc, &(*ctx.cursor), nullptr);
-    ctx.instruction = v;
-    ctx.i_seq.push_back(v);
+    ctx <<  new variable(ctx.bloc, &(*ctx.cursor), nullptr);
     return { ctx.cursor }; 
 }
 
+
+
 compiler::result xio::compiler::cc_objectid(rule_t * rule)
 {
-    (void)__cc__(rule, [this] (const term_t & t) -> result {
+    auto cr = __cc__(rule, [this] (const term_t & t) -> result {
 
+           
+        
         return { (message::push(message::xclass::internal), message::code::implement) };
-        });
+    });
     return {  };
 }
 
