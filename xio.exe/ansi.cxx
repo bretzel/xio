@@ -6,7 +6,8 @@
 #include <xio++/interpreter/compiler/lexer.hpp>
 #include <xio++/expect.hpp>
 #include <xio++/interpreter/kernel/bloc.hpp>
-#include <xio++/interpreter/compiler/grammar.hpp>
+//#include <xio++/interpreter/compiler/grammar.hpp>
+#include <xio++/interpreter/compiler/compiler.hpp>
 
 
 namespace Ansi{
@@ -42,12 +43,17 @@ void CAnsi::End()
 
 xio::message::code CAnsi::execute()
 {
-    
-    
-    xio::xio_grammar gr;
-    gr.build();
+    //xio::xio_grammar gr;
+    //gr.build();
     //gr.dump();
+    xio::token_t::list_t tokens;
+    xio::compiler cc;
+    cc.config() = {
+        "static u64 a;",
+        &tokens
+    };
 
+    xio::xio_t::result r = cc.compile();
     return xio::message::code::accepted;
 }
 

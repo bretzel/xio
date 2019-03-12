@@ -45,7 +45,15 @@ class xio_api compiler
     using parsers_t = std::map<std::string, compiler::parser_t>;
 
     token_t::list_t* tokens = nullptr; ///< Master Stream;
+
+
 public:
+
+    struct xio_api config_t {
+        const char*         src=nullptr;
+        token_t::list_t* tokens = nullptr;
+    };
+
 
     struct xio_api context_t{
         token_t::cursor cursor;      /// local instance
@@ -77,7 +85,6 @@ public:
         void accepted();
         void rejected();
 
-
         using stack = std::stack<compiler::context_t>;
 
     };
@@ -85,13 +92,14 @@ public:
     
 private:
     context_t ctx;
-    
+    config_t cfg;
+
     static std::vector<aeb_t> aeb_table;
     static bool validate(const compiler::aeb_t& ab);
 
     parsers_t parsers;
-
     bool _eof();
+
 public:
     
     /**
@@ -107,8 +115,8 @@ public:
    
 
     compiler::context_t& context_config() { return ctx; }
-
-
+    compiler::config_t& config() { return cfg; }
+    xio_t::result compile();
 private:
     compiler::context_t::stack ctx_stack;
 

@@ -24,6 +24,7 @@
  */
 
 #include "compiler.hpp"
+#include "lexer.hpp"
 
 using namespace xio;
 
@@ -171,6 +172,33 @@ void xio::compiler::context_t::accepted()
 void xio::compiler::context_t::rejected()
 {
     for (auto x : i_seq) x->discard();
+}
+
+xio_t::result xio::compiler::compile()
+{
+
+    if (!cfg.src) return {
+
+    };
+
+    lexer_t lexer;
+    lexer_t::result l = lexer(cfg.tokens)[cfg.src];
+    
+    if (!l) return { l.notice() };
+
+    tokens = cfg.tokens;
+    xio_grammar gr;
+    xio_grammar::result t = gr.build();
+    if (!t) return { t.notice() };
+    token_t::cursor c = tokens->begin();
+    ++c;
+    return { (
+        message::push(message::xclass::internal),
+        message::code::implement,
+        " Ben ouaip! c'est pas encore pret!\n",
+        c->mark()
+    ) };
+
 }
 
 
