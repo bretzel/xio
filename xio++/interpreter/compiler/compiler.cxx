@@ -151,8 +151,11 @@ compiler::context_t& xio::compiler::context_t::operator++(int)
     // TODO: insérer une instruction return ici
 }
 
+
 bloc_t* xio::compiler::context_t::query_object(const std::string& oid)
 {
+    // If the bloc is null then crash! It cannot be null!
+
     return bloc->query_object(oid);
 }
 
@@ -264,7 +267,7 @@ type_t::T xio::compiler::get_type(e_code a_code)
 
 void xio::compiler::cleanup_ctx()
 {
-
+`   
 }
 
 
