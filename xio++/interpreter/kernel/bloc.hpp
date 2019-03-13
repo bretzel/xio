@@ -142,6 +142,8 @@ protected:
     virtual variable* query_local_variable(const std::string& vid) const;
     virtual variable* query_variable(const std::string& vid) const;
 
+    virtual xio_t* push_variable(token_t* a_token);
+
     virtual bloc_t* query_object(const std::string& oid) const;
 
 

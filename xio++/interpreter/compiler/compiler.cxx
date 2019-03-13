@@ -73,6 +73,48 @@ bool xio::compiler::validate(const compiler::aeb_t& ab)
     return false;
 }
 
+
+
+
+compiler::parsers_t compiler::parsers = {
+    {"stmts"         , &compiler::cc_stmts      },
+    {"statement"     , &compiler::cc_statement  },
+    {"assignstmt"    , &compiler::cc_assignstmt },
+    {"declvar"       , &compiler::cc_declvar    },
+    {"funcsig"       , &compiler::cc_funcsig    },
+    {"declfunc"      , &compiler::cc_declfunc   },
+    {"paramseq"      , &compiler::cc_paramseq   },
+    {"param"         , &compiler::cc_param      },
+    {"params"        , &compiler::cc_params     },
+    {"objcarg"       , &compiler::cc_objcarg    },
+    {"arg"           , &compiler::cc_arg        },
+    {"argseq"        , &compiler::cc_argseq     },
+    {"args"          , &compiler::cc_args       },
+    {"typename"      , &compiler::cc_typename   },
+    {"instruction"   , &compiler::cc_instruction},
+    {"kif"           , &compiler::cc_kif        },
+    {"bloc"          , &compiler::cc_bloc       },
+    {"truebloc"      , &compiler::cc_truebloc   },
+    {"elsebloc"      , &compiler::cc_elsebloc   },
+    {"ifbody"        , &compiler::cc_ifbody     },
+    {"condexpr"      , &compiler::cc_condexpr   },
+    {"expression"    , &compiler::cc_expression },
+    {"var_id"        , &compiler::cc_var_id     },
+    {"new_var"       , &compiler::cc_new_var    },
+    {"objectid"      , &compiler::cc_objectid   },
+    {"function_id"   , &compiler::cc_function_id},
+    {"objcfncall"    , &compiler::cc_objcfncall }
+};
+
+
+
+
+
+
+
+
+
+
 bool xio::compiler::_eof()
 {
     return ctx.cursor == tokens->end();
@@ -165,6 +207,12 @@ bloc_t* xio::compiler::context_t::query_object(const std::string& oid)
     return bloc->query_object(oid);
 }
 
+xio_t* xio::compiler::context_t::asm_expr()
+{
+    
+    return nullptr;
+}
+
 void xio::compiler::context_t::accepted()
 {
 }
@@ -174,7 +222,7 @@ void xio::compiler::context_t::rejected()
     for (auto x : i_seq) x->discard();
 }
 
-xio_t::result xio::compiler::compile()
+xio_t::result xio::compiler::compile(const std::string& rname)
 {
 
     if (!cfg.src) return {
@@ -192,6 +240,11 @@ xio_t::result xio::compiler::compile()
     if (!t) return { t.notice() };
     token_t::cursor c = tokens->begin();
     ++c;
+    std::string start_rule = "stmts";
+    if (rname.empty()) start_rule = rname;
+
+
+
     return { (
         message::push(message::xclass::internal),
         message::code::implement,
@@ -206,14 +259,13 @@ xio_t::result xio::compiler::compile()
 
 message::code xio::compiler::push_context(bloc_t* a_newbloc)
 {
-    if (a_newbloc)
-        ctx_stack.push({ a_newbloc, ctx.cursor });
-    else 
-        ctx_stack.push(ctx);
     
+    ctx_stack.push({ a_newbloc ? a_newbloc : ctx.bloc, ctx.cursor });
     ctx = ctx_stack.top();
     return message::code::accepted;
 }
+
+
 
 message::code xio::compiler::pop_context()
 {
@@ -316,16 +368,17 @@ compiler::result xio::compiler::cc_expression(rule_t *r)
 
 compiler::result xio::compiler::cc_declvar(rule_t *rule)
 {
-    compiler::result cr = __cc__(rule, [this](const term_t & t) -> result {
-        return {};
-        });
-        // not yet finished!
-        return { (message::push(message::xclass::internal), message::code::implement) };
-        //...
+    compiler::result cr = 
+    __cc__(rule, [this](const term_t & t) -> result {
+               
+        return {ctx.cursor};
+    });
 
-        // ...
-        
+    if (!cr)
+        return cr;
 
+
+    return { ctx.cursor };
 }
 
 
@@ -549,11 +602,17 @@ compiler::result xio::compiler::cc_var_id(rule_t * rule)
 {
     variable* v = ctx.bloc->query_variable(ctx.cursor->attribute());
     if ( v ) {
-        ctx << new xio_t(ctx.bloc, &(*ctx.cursor), v->acc);
+        ctx.push_token();
         return { ctx.cursor };
     }
     
-    return {  };
+    return {(
+        message::push(message::xclass::error),
+        "undefined variable '",
+        ctx.cursor->attribute(), "'",
+        ctx.cursor->mark()
+    )};
+
 }
 
 
@@ -577,7 +636,9 @@ compiler::result xio::compiler::cc_new_var(rule_t * rule)
         };
     }
 
-    ctx <<  new variable(ctx.bloc, &(*ctx.cursor), nullptr);
+    /*xio_t* x*/ (void)ctx.bloc->push_variable(ctx.cursor->me());
+    ctx.push_token();
+
     return { ctx.cursor }; 
 }
 

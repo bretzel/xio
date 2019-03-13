@@ -58,9 +58,14 @@ public:
     struct xio_api context_t{
         token_t::cursor cursor;      /// local instance
         bloc_t*         bloc         = nullptr; /// local instance
-        xio_t*          instruction  = nullptr; /// local instance
+        
+        xio_t*          instruction  = nullptr; /// bloc entry instruction
+        xio_t*          aeb          = nullptr; /// Arithmetic binary tree input vertex.
         xio_t::list_t   i_seq;
         xio_t::storage_attr st = { 0,0,0,0 };
+
+        std::vector<token_t*> t_seq; // accumulated token sequence to be "assembled"...
+
         type_t::T _type = type_t::null;
         bloc_t* _object = nullptr;
 
@@ -79,8 +84,13 @@ public:
         context_t& operator ++(int);
 
         bloc_t* query_object(const std::string& oid);
-        context_t& operator << (xio_t* x) { i_seq.push_back(x); return *this; }
+        
+        void push_token() { t_seq.push_back(cursor->me()); }
+
         bool empty() { return i_seq.empty(); }
+
+        xio_t* asm_expr();
+
         token_t* token() { return &(*cursor); }
         void accepted();
         void rejected();
@@ -116,10 +126,12 @@ public:
 
     compiler::context_t& context_config() { return ctx; }
     compiler::config_t& config() { return cfg; }
-    xio_t::result compile();
+    xio_t::result compile(const std::string& rname="");
 private:
+    
+    
     compiler::context_t::stack ctx_stack;
-
+    static parsers_t parsers;
     message::code push_context(bloc_t* a_newbloc=nullptr);
     message::code pop_context();
 

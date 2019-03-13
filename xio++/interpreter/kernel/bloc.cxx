@@ -44,6 +44,15 @@ variable* bloc_t::query_variable(const std::string& vid) const
     return (par ? par->query_variable(vid) : nullptr);
 }
 
+xio_t* bloc_t::push_variable(token_t* a_token)
+{
+    if (!_variables)
+        _variables = new variable::list_t;
+
+    _variables->push_back(new variable(this, a_token));
+    return _variables->back();
+}
+
 bloc_t* bloc_t::query_object(const std::string& oid) const
 {
     if (!_objects) return nullptr;

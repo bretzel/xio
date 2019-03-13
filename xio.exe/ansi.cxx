@@ -49,11 +49,11 @@ xio::message::code CAnsi::execute()
     xio::token_t::list_t tokens;
     xio::compiler cc;
     cc.config() = {
-        "static u64 a;",
+        "static u64 a;", // test/try declvar rule.
         &tokens
     };
 
-    xio::xio_t::result r = cc.compile();
+    xio::xio_t::result r = cc.compile("declvar");
     return xio::message::code::accepted;
 }
 
