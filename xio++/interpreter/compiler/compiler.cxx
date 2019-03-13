@@ -225,9 +225,11 @@ void xio::compiler::context_t::rejected()
 xio_t::result xio::compiler::compile(const std::string& rname)
 {
 
-    if (!cfg.src) return {
-
-    };
+    if (!cfg.src) return {(
+        message::push(message::xclass::error),
+        message::code::empty,
+        " compiler config is empty! DUH!"
+    )};
 
     lexer_t lexer;
     lexer_t::result l = lexer(cfg.tokens)[cfg.src];
@@ -235,6 +237,10 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     if (!l) return { l.notice() };
 
     tokens = cfg.tokens;
+    ctx.cursor = tokens->begin();
+    ctx.bloc = cfg.bloc;
+    ++ctx;
+
     xio_grammar gr;
     xio_grammar::result t = gr.build();
     if (!t) return { t.notice() };
@@ -242,8 +248,9 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     ++c;
     std::string start_rule = "stmts";
     if (rname.empty()) start_rule = rname;
-
-
+    
+    result cr = (this->*parsers[start_rule])(gr[start_rule]);
+    //...
 
     return { (
         message::push(message::xclass::internal),
@@ -280,7 +287,7 @@ message::code xio::compiler::pop_context()
 /*!
     @brief "Compiler" entry.
  */
-compiler::result xio::compiler::__cc__(rule_t * r, std::function<compiler::result(const term_t&)> cb)
+compiler::result xio::compiler::__cc__(const rule_t * r, std::function<compiler::result(const term_t&)> cb)
 {
     auto start_token = ctx.cursor;
     auto seq_it = r->begin();
@@ -356,7 +363,7 @@ void xio::compiler::cleanup_ctx()
 }
 
 
-compiler::result xio::compiler::cc_expression(rule_t *r)
+compiler::result xio::compiler::cc_expression(const rule_t *r)
 {
     auto cr = __cc__(r, [this](const term_t & t)->result {
         return {};
@@ -366,7 +373,7 @@ compiler::result xio::compiler::cc_expression(rule_t *r)
 }
 
 
-compiler::result xio::compiler::cc_declvar(rule_t *rule)
+compiler::result xio::compiler::cc_declvar(const rule_t *rule)
 {
     compiler::result cr = 
     __cc__(rule, [this](const term_t & t) -> result {
@@ -382,7 +389,7 @@ compiler::result xio::compiler::cc_declvar(rule_t *rule)
 }
 
 
-compiler::result xio::compiler::cc_stmts(rule_t * rule)
+compiler::result xio::compiler::cc_stmts(const rule_t * rule)
 {
     
     auto cr =__cc__(rule, [this] (const term_t& t) -> result {
@@ -392,7 +399,7 @@ compiler::result xio::compiler::cc_stmts(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_statement(rule_t * rule)
+compiler::result xio::compiler::cc_statement(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -401,7 +408,7 @@ compiler::result xio::compiler::cc_statement(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_assignstmt(rule_t * rule)
+compiler::result xio::compiler::cc_assignstmt(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -411,7 +418,7 @@ compiler::result xio::compiler::cc_assignstmt(rule_t * rule)
 }
 
 
-compiler::result xio::compiler::cc_funcsig(rule_t * rule)
+compiler::result xio::compiler::cc_funcsig(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -420,7 +427,7 @@ compiler::result xio::compiler::cc_funcsig(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_declfunc(rule_t * rule)
+compiler::result xio::compiler::cc_declfunc(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -429,7 +436,7 @@ compiler::result xio::compiler::cc_declfunc(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_paramseq(rule_t * rule)
+compiler::result xio::compiler::cc_paramseq(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -438,7 +445,7 @@ compiler::result xio::compiler::cc_paramseq(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_param(rule_t * rule)
+compiler::result xio::compiler::cc_param(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -447,7 +454,7 @@ compiler::result xio::compiler::cc_param(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_params(rule_t * rule)
+compiler::result xio::compiler::cc_params(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -456,7 +463,7 @@ compiler::result xio::compiler::cc_params(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_objcarg(rule_t * rule)
+compiler::result xio::compiler::cc_objcarg(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -465,7 +472,7 @@ compiler::result xio::compiler::cc_objcarg(rule_t * rule)
     return { };
 }
 
-compiler::result xio::compiler::cc_arg(rule_t * rule)
+compiler::result xio::compiler::cc_arg(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -474,7 +481,7 @@ compiler::result xio::compiler::cc_arg(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_argseq(rule_t * rule)
+compiler::result xio::compiler::cc_argseq(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -483,7 +490,7 @@ compiler::result xio::compiler::cc_argseq(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_args(rule_t * rule)
+compiler::result xio::compiler::cc_args(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -497,7 +504,7 @@ compiler::result xio::compiler::cc_args(rule_t * rule)
 
 
 static bool _static = false;
-compiler::result xio::compiler::cc_typename(rule_t * rule)
+compiler::result xio::compiler::cc_typename(const rule_t * rule)
 {
     compiler::result cr = __cc__(rule, [this] (const term_t & t) -> result {
         if (t._type == term_t::type::code) {
@@ -531,7 +538,7 @@ compiler::result xio::compiler::cc_typename(rule_t * rule)
 }
 
 
-compiler::result xio::compiler::cc_instruction(rule_t * rule)
+compiler::result xio::compiler::cc_instruction(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -540,7 +547,7 @@ compiler::result xio::compiler::cc_instruction(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_kif(rule_t * rule)
+compiler::result xio::compiler::cc_kif(const rule_t * rule)
 {
     //xio_if kif = new xio_if(ctx.bloc, *ctx.cursor, nullptr);
     //push_context(kif, ctx.cursor);
@@ -552,7 +559,7 @@ compiler::result xio::compiler::cc_kif(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_bloc(rule_t * rule)
+compiler::result xio::compiler::cc_bloc(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -561,7 +568,7 @@ compiler::result xio::compiler::cc_bloc(rule_t * rule)
     return { };
 }
 
-compiler::result xio::compiler::cc_truebloc(rule_t * rule)
+compiler::result xio::compiler::cc_truebloc(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -570,7 +577,7 @@ compiler::result xio::compiler::cc_truebloc(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_elsebloc(rule_t * rule)
+compiler::result xio::compiler::cc_elsebloc(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -579,7 +586,7 @@ compiler::result xio::compiler::cc_elsebloc(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_ifbody(rule_t * rule)
+compiler::result xio::compiler::cc_ifbody(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -588,7 +595,7 @@ compiler::result xio::compiler::cc_ifbody(rule_t * rule)
     return { };
 }
 
-compiler::result xio::compiler::cc_condexpr(rule_t * rule)
+compiler::result xio::compiler::cc_condexpr(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -598,7 +605,7 @@ compiler::result xio::compiler::cc_condexpr(rule_t * rule)
 }
 
 
-compiler::result xio::compiler::cc_var_id(rule_t * rule)
+compiler::result xio::compiler::cc_var_id(const rule_t * rule)
 {
     variable* v = ctx.bloc->query_variable(ctx.cursor->attribute());
     if ( v ) {
@@ -616,7 +623,7 @@ compiler::result xio::compiler::cc_var_id(rule_t * rule)
 }
 
 
-compiler::result xio::compiler::cc_new_var(rule_t * rule)
+compiler::result xio::compiler::cc_new_var(const rule_t * rule)
 {
     if (!ctx.cursor->is_identifier())
         return{ (
@@ -644,7 +651,7 @@ compiler::result xio::compiler::cc_new_var(rule_t * rule)
 
 
 
-compiler::result xio::compiler::cc_objectid(rule_t * rule)
+compiler::result xio::compiler::cc_objectid(const rule_t * rule)
 {
     auto cr = __cc__(rule, [this] (const term_t & t) -> result {
 
@@ -655,7 +662,7 @@ compiler::result xio::compiler::cc_objectid(rule_t * rule)
     return {  };
 }
 
-compiler::result xio::compiler::cc_function_id(rule_t * rule)
+compiler::result xio::compiler::cc_function_id(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 
@@ -664,7 +671,7 @@ compiler::result xio::compiler::cc_function_id(rule_t * rule)
     return {   };
 }
 
-compiler::result xio::compiler::cc_objcfncall(rule_t * rule)
+compiler::result xio::compiler::cc_objcfncall(const rule_t * rule)
 {
     (void)__cc__(rule, [this] (const term_t & t) -> result {
 

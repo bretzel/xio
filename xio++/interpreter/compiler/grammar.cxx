@@ -21,7 +21,7 @@ xio_grammar::dictionary_t xio_grammar::grammar_dictionary = {
 };
 
 rule_t::list_t xio_grammar::_rules;
-
+static bool built = false;
 
 std::string grammar_txt =
 "stmts              : +statement.\n"
@@ -69,6 +69,11 @@ xio_grammar::result xio_grammar::build()
         << logger::Yellow << grammar_txt
         << logger::White << ']'
         << Ends;
+
+    if (built()) return {(
+        message::push(message::xclass::warning),
+        "x.i.o. grammar is already built"
+    )};
 
     _text = grammar_txt;
     std::size_t count = _text.words(tokens, ":;,|.+*?", true);

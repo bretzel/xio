@@ -297,7 +297,7 @@ private:
     static dictionary_t grammar_dictionary;
 public :
     
-    const rule_t* operator[](const std::string& r_id) { 
+    const rule_t* operator[](const std::string& r_id) const { 
         return _rules[r_id];
         //rule_t* r = _rules[r_id]; return (const rule_t*)r; 
     }

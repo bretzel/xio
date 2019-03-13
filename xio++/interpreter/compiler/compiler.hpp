@@ -41,7 +41,7 @@ class xio_api compiler
     
     using aeb_t     = std::pair<type_t::T, type_t::T>;
     using result    = expect<token_t::cursor>;
-    using parser_t  = result(compiler::*)(rule_t*);
+    using parser_t  = result(compiler::*)(const rule_t*);
     using parsers_t = std::map<std::string, compiler::parser_t>;
 
     token_t::list_t* tokens = nullptr; ///< Master Stream;
@@ -52,6 +52,7 @@ public:
     struct xio_api config_t {
         const char*         src=nullptr;
         token_t::list_t* tokens = nullptr;
+        bloc_t* bloc = nullptr;
     };
 
 
@@ -107,7 +108,7 @@ private:
     static std::vector<aeb_t> aeb_table;
     static bool validate(const compiler::aeb_t& ab);
 
-    parsers_t parsers;
+    //parsers_t parsers;
     bool _eof();
 
 public:
@@ -135,40 +136,40 @@ private:
     message::code push_context(bloc_t* a_newbloc=nullptr);
     message::code pop_context();
 
-    result __cc__(rule_t* r, std::function<compiler::result(const term_t&)> cc);
+    result __cc__(const rule_t* r, std::function<compiler::result(const term_t&)> cc);
 
     type_t::T get_type(mnemonic a_code);
 
     void cleanup_ctx();
 
 
-    result cc_stmts      (rule_t*);
-    result cc_statement  (rule_t*);
-    result cc_assignstmt (rule_t*);
-    result cc_declvar    (rule_t*);
-    result cc_funcsig    (rule_t*);
-    result cc_declfunc   (rule_t*);
-    result cc_paramseq   (rule_t*);
-    result cc_param      (rule_t*);
-    result cc_params     (rule_t*);
-    result cc_objcarg    (rule_t*);
-    result cc_arg        (rule_t*);
-    result cc_argseq     (rule_t*);
-    result cc_args       (rule_t*);
-    result cc_typename   (rule_t*);
-    result cc_instruction(rule_t*);
-    result cc_kif        (rule_t*);
-    result cc_bloc       (rule_t*);
-    result cc_truebloc   (rule_t*);
-    result cc_elsebloc   (rule_t*);
-    result cc_ifbody     (rule_t*);
-    result cc_condexpr   (rule_t*);
-    result cc_expression (rule_t*);
-    result cc_var_id     (rule_t*);
-    result cc_new_var    (rule_t*);
-    result cc_objectid   (rule_t*);
-    result cc_function_id(rule_t*);
-    result cc_objcfncall (rule_t*);
+    result cc_stmts      (const rule_t*);
+    result cc_statement  (const rule_t*);
+    result cc_assignstmt (const rule_t*);
+    result cc_declvar    (const rule_t*);
+    result cc_funcsig    (const rule_t*);
+    result cc_declfunc   (const rule_t*);
+    result cc_paramseq   (const rule_t*);
+    result cc_param      (const rule_t*);
+    result cc_params     (const rule_t*);
+    result cc_objcarg    (const rule_t*);
+    result cc_arg        (const rule_t*);
+    result cc_argseq     (const rule_t*);
+    result cc_args       (const rule_t*);
+    result cc_typename   (const rule_t*);
+    result cc_instruction(const rule_t*);
+    result cc_kif        (const rule_t*);
+    result cc_bloc       (const rule_t*);
+    result cc_truebloc   (const rule_t*);
+    result cc_elsebloc   (const rule_t*);
+    result cc_ifbody     (const rule_t*);
+    result cc_condexpr   (const rule_t*);
+    result cc_expression (const rule_t*);
+    result cc_var_id     (const rule_t*);
+    result cc_new_var    (const rule_t*);
+    result cc_objectid   (const rule_t*);
+    result cc_function_id(const rule_t*);
+    result cc_objcfncall (const rule_t*);
 
 };
 

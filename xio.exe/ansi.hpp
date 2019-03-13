@@ -6,7 +6,8 @@
 #endif
 #include <sstream>
 #include <iostream>
-#include <xio++/message.hpp>
+//#include <xio++/message.hpp>
+#include <xio++/interpreter/kernel/bloc.hpp>
 namespace Ansi{
 
 namespace Color{
@@ -88,6 +89,17 @@ public:
 
     virtual ~CAnsi();
 };
+
+class Calculator : public xio::bloc_t {
+    std::string strexpr;
+
+public:
+
+    Calculator() = default;
+
+    xio::alu operator[](const std::string& a_expr);
+};
+
 
 }
 
