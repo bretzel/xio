@@ -564,12 +564,15 @@ std::string token_t::mark()
     if (cc >= b) {
         if ((*cc == '\n') || (*cc == '\r')) ++cc;
         while (*cc && (*cc != '\n') && (*cc != '\r')) str += *cc++;
-        //return str;
     }
     //std::stringstream ostr;
 
     string_t tstr;
-    tstr << str << '\n' << std::setw(loc.c) << '^';
+
+    tstr << str << '\n';
+    for(int x = 1; x<loc.c; x++) tstr << ' ' ;
+    tstr << '^';
+    std::cerr << tstr() << '\n';
     return tstr();
 }
 

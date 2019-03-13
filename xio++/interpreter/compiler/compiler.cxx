@@ -189,14 +189,14 @@ compiler::context_t& xio::compiler::context_t::operator++()
 {
     ++cursor;
     return *this;
-    // TODO: insérer une instruction return ici
+    // TODO: insï¿½rer une instruction return ici
 }
 
 compiler::context_t& xio::compiler::context_t::operator++(int)
 {
     ++cursor;
     return *this;
-    // TODO: insérer une instruction return ici
+    // TODO: insï¿½rer une instruction return ici
 }
 
 
@@ -247,7 +247,7 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     token_t::cursor c = tokens->begin();
     ++c;
     std::string start_rule = "stmts";
-    if (rname.empty()) start_rule = rname;
+    if (!rname.empty()) start_rule = rname;
     
     result cr = (this->*parsers[start_rule])(gr[start_rule]);
     //...
@@ -299,12 +299,16 @@ compiler::result xio::compiler::__cc__(const rule_t * r, std::function<compiler:
         while (!seq_it->end(tit)) {
             
             cr.clear();
-            if (tit->_type == term_t::type::rule)
+            if (tit->_type == term_t::type::rule) {
                 ///@todo check that we have a valid delegate ptr then enter rule 
                 cr = (this->*parsers[tit->mem.r->_id])(tit->mem.r);
-            else
-                if (*tit == *ctx.cursor)
-                    cr = cb(*tit);
+                if(!cr){
+
+                }
+
+            }
+            if (*tit == *ctx.cursor)
+               cr = cb(*tit);
 
             if (!cr) 
             {
@@ -318,6 +322,7 @@ compiler::result xio::compiler::__cc__(const rule_t * r, std::function<compiler:
                 if (!tit->a.is_strict())
                 {
                     ++tit;
+                    rep_ok = false;
                     continue;
                 }
                 // End repeat:
@@ -326,13 +331,11 @@ compiler::result xio::compiler::__cc__(const rule_t * r, std::function<compiler:
                 cleanup_ctx();
                 break;
             }
-
             // Accepted:
-            if ((rep_ok = tit->a.is_repeat())) {
-                ++ctx;
-            }
-            
-            if (tit->a.is_one_of()) // Accept on (first) hit:
+            ++ctx;
+            if ((rep_ok = tit->a.is_repeat())) continue;
+
+            if (tit->a.is_one_of()) // Accept whole rule on (first) hit:
                 return cr;
             ++tit;
         }
@@ -513,6 +516,7 @@ compiler::result xio::compiler::cc_typename(const rule_t * rule)
                 if (_static) return {/* put descriptive message here */ };
                 _static = true;
                 ctx.st.sstatic = 1;// Static storage - no matter where.
+                return { ctx.cursor };
             }
             else
             {
@@ -630,8 +634,8 @@ compiler::result xio::compiler::cc_new_var(const rule_t * rule)
             message::push(message::xclass::error), 
             message::code::syntax, 
             ": ", 
-            ctx.cursor->attribute(), 
-            " is not an identifier.", 
+            ctx.cursor->informations(),
+            " is not an identifier.\n",
             ctx.cursor->mark()
         )};
        
