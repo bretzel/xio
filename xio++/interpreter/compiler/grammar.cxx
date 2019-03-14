@@ -25,7 +25,7 @@ static bool built = false;
 
 std::string grammar_txt =
 "stmts              : +statement.\n"
-"statement          : assignstmt ';', expression ';', instruction ';', ';'.\n"
+"statement          : assignstmt ';', declvar ';', expression ';', instruction ';', ';'.\n"
 "assignstmt         : declvar assign expression, var_id assign expression.\n"
 "declvar            : *typename new_var.\n"
 "funcsig            : *typename function_id '(' *params ')'.\n"

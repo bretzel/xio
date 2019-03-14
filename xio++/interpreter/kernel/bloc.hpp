@@ -45,7 +45,7 @@ class xio_api bloc_t : public xio_t
 
 public:
     class xio_api rt_function : public xio_t {
-        std::string _name; // Sous réserve...L'identificateur de cette fonction devrait être lié au jetton et non défini par stockage locale dupliqué.
+        std::string _name; // Sous rï¿½serve...L'identificateur de cette fonction devrait ï¿½tre liï¿½ au jetton et non dï¿½fini par stockage locale dupliquï¿½.
     public:
         using list_t = std::vector<rt_function*>;
         using map = std::map<std::string, rt_function*>;
@@ -142,7 +142,7 @@ protected:
     virtual variable* query_local_variable(const std::string& vid) const;
     virtual variable* query_variable(const std::string& vid) const;
 
-    virtual xio_t* push_variable(token_t* a_token);
+    virtual xio_t* push_variable(token_t* a_token, bool static_stor=false, type_t::T a_type=type_t::number);
 
     virtual bloc_t* query_object(const std::string& oid) const;
 

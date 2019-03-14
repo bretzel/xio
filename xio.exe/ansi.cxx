@@ -80,6 +80,10 @@ namespace Ansi {
         };
         //TEST!!!! DO NOT cc.compile("expression"), yet!!
         xio::xio_t::result r = cc.compile("declvar");
+        if(_variables){
+            for(auto v : *_variables)
+                logdebugfn << ": " << v->informations() << Ends;
+        }
         return a;
     }
 
@@ -121,7 +125,7 @@ namespace Ansi {
 
         logdebug << Ends;
         logdebug << Ends;
-        logdebugfn << xio::logger::Yellow << " Now testing the stack call to that suposed runtime function:" << Ends;
+        logdebugpfn << xio::logger::Yellow << " Now testing the stack call to that suposed runtime function:" << Ends;
         al = i.jsr_rtf("script-func", params);
         logdebug << Ends;
         logdebug << xio::logger::White << " ret: [" << xio::logger::Yellow << al.value<float>() << xio::logger::White << ']' << Ends;
@@ -151,7 +155,7 @@ namespace Ansi {
         con.execute();
         xio::message::clear([](xio::message & msg) {
             lognotice << msg() << Ends;
-            });
+        });
 
 
         return 0;

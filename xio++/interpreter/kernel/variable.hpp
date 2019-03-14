@@ -19,8 +19,9 @@ public:
     using list_t = std::vector<variable*>;
 
     variable();
-    variable(object* a_parent, token_t* a_token, alu* a_alu = nullptr);
+    variable(object* a_parent, token_t* a_token, alu* a_alu = nullptr, type_t::T a_type = type_t::number, bool a_static=false);
 
+    std::string informations();
     virtual ~variable();
 };
 

@@ -299,28 +299,20 @@ compiler::result xio::compiler::__cc__(const rule_t * r, std::function<compiler:
         while (!seq_it->end(tit)) {
             
             cr.clear();
-            if (tit->_type == term_t::type::rule) {
-                ///@todo check that we have a valid delegate ptr then enter rule 
+            if (tit->_type == term_t::type::rule)
                 cr = (this->*parsers[tit->mem.r->_id])(tit->mem.r);
-                if(!cr){
+            else
+                if (*tit == *ctx.cursor)
+                    cr = cb(*tit);
 
-                }
-
-            }
-            if (*tit == *ctx.cursor)
-               cr = cb(*tit);
-
-            if (!cr) 
-            {
-                if (rep_ok && tit->a.is_repeat())
-                {
+            if (!cr) {
+                if (rep_ok && tit->a.is_repeat()) {
                     ++tit;
                     rep_ok = false;
                     continue;
                 }
 
-                if (!tit->a.is_strict())
-                {
+                if (!tit->a.is_strict()) {
                     ++tit;
                     rep_ok = false;
                     continue;
@@ -332,9 +324,8 @@ compiler::result xio::compiler::__cc__(const rule_t * r, std::function<compiler:
                 break;
             }
             // Accepted:
-            ++ctx;
-            if ((rep_ok = tit->a.is_repeat())) continue;
 
+            if ((rep_ok = tit->a.is_repeat())) continue;
             if (tit->a.is_one_of()) // Accept whole rule on (first) hit:
                 return cr;
             ++tit;
@@ -357,6 +348,7 @@ type_t::T xio::compiler::get_type(mnemonic a_code)
         a_code == mnemonic::ki32 ? type_t::i32 :
         a_code == mnemonic::ki64 ? type_t::i64 :
         a_code == mnemonic::kreal ? type_t::real :
+        a_code == mnemonic::knumber ? type_t::number :
         a_code == mnemonic::kstring ? type_t::text : type_t::null;
 }
 
@@ -516,20 +508,14 @@ compiler::result xio::compiler::cc_typename(const rule_t * rule)
                 if (_static) return {/* put descriptive message here */ };
                 _static = true;
                 ctx.st.sstatic = 1;// Static storage - no matter where.
+                ++ctx;
                 return { ctx.cursor };
             }
             else
             {
- /*               std::vector<mnemonic> _ = { 
-                    mnemonic::ki8,mnemonic::ki16,mnemonic::ki32,mnemonic::ki64,mnemonic::kreal,
-                    mnemonic::ku8,mnemonic::ku16,mnemonic::ku32,mnemonic::ku64,mnemonic::knumber,mnemonic::kstring
-                };
-
-                if(std::find(_.begin(), _.end(), t.mem.c) != _.end())
-                {
- */                   ctx._type = get_type(t.mem.c);
-                    return { ctx.cursor };
- //               }
+                ctx._type = get_type(t.mem.c);
+                ++ctx;
+                return { ctx.cursor };
             }
         }
         // ---------------------------------------------------------------------------
@@ -647,7 +633,8 @@ compiler::result xio::compiler::cc_new_var(const rule_t * rule)
         };
     }
 
-    /*xio_t* x*/ (void)ctx.bloc->push_variable(ctx.cursor->me());
+    (void)ctx.bloc->push_variable(ctx.cursor->me(),ctx.st.sstatic,ctx._type);
+    ++ctx;
     ctx.push_token();
 
     return { ctx.cursor }; 

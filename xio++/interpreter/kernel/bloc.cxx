@@ -44,12 +44,18 @@ variable* bloc_t::query_variable(const std::string& vid) const
     return (par ? par->query_variable(vid) : nullptr);
 }
 
-xio_t* bloc_t::push_variable(token_t* a_token)
+xio_t* bloc_t::push_variable(token_t* a_token, bool static_stor, type_t::T a_type)
 {
     if (!_variables)
         _variables = new variable::list_t;
 
-    _variables->push_back(new variable(this, a_token));
+    variable* v;
+    _variables->push_back(new variable(this, a_token, nullptr, a_type, static_stor));
+    v = _variables->back();
+    if(static_stor)
+        v->mem.sstatic = 1;
+
+
     return _variables->back();
 }
 
