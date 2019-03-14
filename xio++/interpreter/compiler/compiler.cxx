@@ -219,7 +219,10 @@ void xio::compiler::context_t::accepted()
 
 void xio::compiler::context_t::rejected()
 {
-    for (auto x : i_seq) x->discard();
+    for (auto x : i_seq) {
+
+        x->discard();
+    }
 }
 
 xio_t::result xio::compiler::compile(const std::string& rname)
@@ -306,21 +309,22 @@ compiler::result xio::compiler::__cc__(const rule_t * r, std::function<compiler:
                     cr = cb(*tit);
 
             if (!cr) {
+                cleanup_ctx();
                 if (rep_ok && tit->a.is_repeat()) {
                     ++tit;
                     rep_ok = false;
-                    continue;
                 }
-
-                if (!tit->a.is_strict()) {
-                    ++tit;
-                    rep_ok = false;
-                    continue;
-                }
+                else
+                    if (!tit->a.is_strict())
+                    {
+                        ++tit;
+                        rep_ok = false;
+                        continue;
+                    }
                 // End repeat:
                 // reject the sequence:
                 // Cleanup ...
-                cleanup_ctx();
+
                 break;
             }
             // Accepted:

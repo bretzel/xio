@@ -369,6 +369,7 @@ struct xio_api token_t final {
     void*      data = nullptr;
 
     using list_t    = std::vector<token_t>;
+    using seq_t     = std::vector<token_t*>;
     using cursor    = list_t::iterator;
 
     struct xio_api src {

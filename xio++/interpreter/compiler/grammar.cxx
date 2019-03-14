@@ -25,7 +25,7 @@ static bool built = false;
 
 std::string grammar_txt =
 "stmts              : +statement.\n"
-"statement          : assignstmt ';', declvar ';', expression ';', instruction ';', ';'.\n"
+"statement          : assignstmt ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.\n"
 "assignstmt         : declvar assign expression, var_id assign expression.\n"
 "declvar            : *typename new_var.\n"
 "funcsig            : *typename function_id '(' *params ')'.\n"
@@ -39,7 +39,7 @@ std::string grammar_txt =
 "args               : arg *+argseq.\n"
 "typename           : *'static' ?'i8' ?'u8' ?'i16' ?'u16' ?'i32' ?'u32' ?'i64' ?'u64' ?'real' ?'number' ?'string' ?objectid.\n"
 "instruction        : ?'if' ?'switch' ?'for' ?'while' ?'repeat' ?'until' ?'do'.\n" // to be continued.
-"if                 : 'if' condexpr ifbody.\n"
+"if                 : 'if' condexpr ifbody, 'if' '(' condexpr ')' ifbody.\n"
 "bloc               :  '{' stmts '}'.\n"
 "truebloc           : *'then' bloc, *'then' statement.\n"
 "elsebloc           : *'else' bloc, *'else' statement.\n"

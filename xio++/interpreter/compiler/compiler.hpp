@@ -29,7 +29,7 @@
 #include <xio++/interpreter/kernel/bloc.hpp>
 #include <utility>
 #include <stack>
-
+#include <xio++/interpreter/compiler/ast.hpp>
 
 namespace xio {
 
@@ -38,7 +38,11 @@ namespace xio {
  */
 class xio_api compiler
 {
-    
+
+
+    ast*  m_ast     = nullptr;
+    ast*  m_ast_node = nullptr;
+
     using aeb_t     = std::pair<type_t::T, type_t::T>;
     using result    = expect<token_t::cursor>;
     using parser_t  = result(compiler::*)(const rule_t*);
@@ -172,5 +176,6 @@ private:
     result cc_objcfncall (const rule_t*);
 
 };
+
 
 }

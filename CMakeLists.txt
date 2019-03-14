@@ -22,9 +22,7 @@ SHARED
     #xio++/interpreter/interpreter.cxx
     xio++/interpreter/kernel/variable.cxx
     xio++/interpreter/compiler/compiler.cxx
-
-
-
+    xio++/interpreter/compiler/ast.cxx
 )
 
 # Someone kind enough to tell me how to NOT use file(GLOB here ?

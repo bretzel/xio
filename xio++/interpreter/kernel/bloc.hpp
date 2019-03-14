@@ -27,6 +27,7 @@
 #pragma once
 
 #include <xio++/interpreter/kernel/variable.hpp>
+#include <xio++/interpreter/compiler/ast.hpp>
 
 
 namespace xio {
@@ -148,6 +149,7 @@ protected:
 
 
 };
+
 
 }
 
