@@ -146,7 +146,7 @@ private:
 
     void cleanup_ctx();
 
-
+    result build_ast();
     result cc_stmts      (const rule_t*);
     result cc_statement  (const rule_t*);
     result cc_assignstmt (const rule_t*);

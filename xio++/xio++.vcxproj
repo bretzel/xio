@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="interpreter\compiler\ast.hpp" />
     <ClInclude Include="interpreter\kernel\bloc.hpp" />
     <ClInclude Include="dlloader.hpp" />
     <ClInclude Include="expect.hpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="xio++.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="interpreter\compiler\ast.cxx" />
     <ClCompile Include="interpreter\kernel\bloc.cxx" />
     <ClCompile Include="dlloader.cxx" />
     <ClCompile Include="interpreter\compiler\compiler.cxx" />

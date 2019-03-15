@@ -388,6 +388,12 @@ compiler::result xio::compiler::cc_declvar(const rule_t *rule)
 }
 
 
+compiler::result xio::compiler::build_ast()
+{
+
+    return {};
+}
+
 compiler::result xio::compiler::cc_stmts(const rule_t * rule)
 {
     

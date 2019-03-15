@@ -66,6 +66,9 @@
     <ClInclude Include="interpreter\kernel\bloc.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="interpreter\compiler\ast.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="string_t.cxx">
@@ -111,6 +114,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="interpreter\kernel\bloc.cxx">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="interpreter\compiler\ast.cxx">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
