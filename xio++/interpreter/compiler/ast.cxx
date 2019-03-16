@@ -15,6 +15,13 @@ m_cursor(i2)
 {
 }
 
+astnode::astnode(astnode* a_node): object(a_node),
+m_term(a_node->m_term),
+m_cursor(a_node->m_cursor)
+{
+
+}
+
 xioast::~xioast() {
 
     detach();
@@ -29,20 +36,35 @@ xioast::result xioast::build(token_t::list_t* a_tokens)
 }
 
 
-astnode::result xioast::enter_rule(astnode* parent_node, term_t::const_iterator a_term, token_t::cursor a_cursor)
+astnode::result xioast::enter_rule(astnode* parent_node) // , term_t::const_iterator a_term, token_t::cursor a_cursor)
 {
     astnode::result r;
     ///@todo validate rule...
-    auto term_it = a_term;
-    
-    rule_t* rule = a_term->mem.r;
+    rule_t* rule = parent_node->m_term->mem.r;
     auto seq_it = rule->begin();
-
+    astnode::result ar;
+    bool rep = false;
+    
     while (!rule->end(seq_it))
     {
         auto term_it = seq_it->begin();
         while (!seq_it->end(term_it)) 
         {
+            if (term_it->is_rule())
+                ar = enter_rule(new astnode(parent_node, term_it, m_cursor));
+            else
+                if (*term_it == *m_cursor) 
+                {
+                    astnode* n = new astnode(parent_node, term_it, m_cursor);
+                    ar = n;
+                    parent_node->append_child(n);
+                }
+
+            if (!ar) 
+            {
+
+            }
+                
 
         }
     }
@@ -57,10 +79,5 @@ astnode::~astnode()
     detach();
 }
 
-astnode astnode::enter_rule(term_t::const_iterator a_term)
-{
-
-    return astnode();
-}
 
 }
