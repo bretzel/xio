@@ -361,6 +361,12 @@ void xio::compiler::cleanup_ctx()
     ctx.rejected();
 }
 
+compiler::result xio::compiler::buildast(rule_t* a_rule, xioast* a_ast)
+{
+    
+    return {};
+}
+
 
 compiler::result xio::compiler::cc_expression(const rule_t *r)
 {
@@ -388,11 +394,11 @@ compiler::result xio::compiler::cc_declvar(const rule_t *rule)
 }
 
 
-compiler::result xio::compiler::build_ast()
-{
-
-    return {};
-}
+//compiler::result xio::compiler::build_ast(ast* a_ast)
+//{
+//
+//    return {};
+//}
 
 compiler::result xio::compiler::cc_stmts(const rule_t * rule)
 {

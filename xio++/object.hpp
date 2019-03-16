@@ -30,6 +30,7 @@ public:
     bool append_child(object* a_child);
     bool has_child(object* a_child);
     bool remove_child(object* a_child);
+    bool detach();
 
     template<class T> T* type() const { return dynamic_cast<T*>(this); }
     template<class T> T* parent() const { return dynamic_cast<T*>(m_parent); }

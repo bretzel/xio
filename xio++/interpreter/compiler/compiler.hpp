@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <xio++/interpreter/compiler/grammar.hpp>
+//#include <xio++/interpreter/compiler/grammar.hpp>
 #include <xio++/interpreter/kernel/bloc.hpp>
 #include <utility>
 #include <stack>
@@ -40,8 +40,8 @@ class xio_api compiler
 {
 
 
-    ast*  m_ast     = nullptr;
-    ast*  m_ast_node = nullptr;
+    xioast*  m_ast_root = nullptr;
+    xioast*  m_ast_node = nullptr;
 
     using aeb_t     = std::pair<type_t::T, type_t::T>;
     using result    = expect<token_t::cursor>;
@@ -146,7 +146,8 @@ private:
 
     void cleanup_ctx();
 
-    result build_ast();
+    compiler::result buildast(rule_t* a_arule, ast* a_ast=nullptr);
+
     result cc_stmts      (const rule_t*);
     result cc_statement  (const rule_t*);
     result cc_assignstmt (const rule_t*);

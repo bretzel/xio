@@ -167,6 +167,10 @@ struct xio_api term_t {
 
     std::string operator()();
 
+    bool is_rule() const { return _type == type::rule; }
+    bool is_semantic() const { return _type == type::sem; }
+    bool is_mnemonic() const { return _type == type::code; }
+    bool is_null() const { return _type == type::nil; }
 
     static term_t query(const char*);
     static term_t query(type_t::T);

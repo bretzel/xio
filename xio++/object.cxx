@@ -17,8 +17,9 @@ object::object(object * a_parent)
 
 object::~object()
 {
-
+    if (!m_children.empty()) m_children.clear();
 }
+
 
 bool object::append_child(object * a_child)
 {
@@ -43,6 +44,13 @@ bool object::remove_child(object * a_child)
     if (i == end()) return false;
     m_children.erase(i);
     return true;
+}
+
+bool object::detach()
+{
+    if (m_parent)
+        m_parent->remove_child(this);
+    return m_parent != nullptr;
 }
 
 

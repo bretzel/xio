@@ -9,24 +9,58 @@ namespace xio{
 
 
 
-ast::ast(ast *a_ast, term_t* t, token_t *a_token):m_term(t),m_token(a_token)
+astnode::astnode(astnode* a_node, term_t::const_iterator i1, token_t::cursor i2)noexcept :object(a_node),
+m_term(i1), 
+m_cursor(i2)
 {
-    if (a_ast) {
-        a_ast->append(this);
+}
+
+xioast::~xioast() {
+
+    detach();
+    for (auto a : m_children)  delete a;
+}
+
+xioast::result xioast::build(token_t::list_t* a_tokens)
+{
+
+
+    return {};
+}
+
+
+astnode::result xioast::enter_rule(astnode* parent_node, term_t::const_iterator a_term, token_t::cursor a_cursor)
+{
+    astnode::result r;
+    ///@todo validate rule...
+    auto term_it = a_term;
+    
+    rule_t* rule = a_term->mem.r;
+    auto seq_it = rule->begin();
+
+    while (!rule->end(seq_it))
+    {
+        auto term_it = seq_it->begin();
+        while (!seq_it->end(term_it)) 
+        {
+
+        }
     }
+
+    return {};
 }
 
-ast::~ast() {
-    m_children.clear();
-}
 
-void ast::append(ast* a)
+
+astnode::~astnode()
 {
-    a->m_parent = this;
-    m_children.push_back(a);
-
-    // TODO: insérer une instruction return ici
+    detach();
 }
 
+astnode astnode::enter_rule(term_t::const_iterator a_term)
+{
+
+    return astnode();
+}
 
 }
