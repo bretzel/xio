@@ -49,24 +49,29 @@ astnode::result xioast::enter_rule(astnode* parent_node) // , term_t::const_iter
     while (!rule->end(seq_it))
     {
         auto term_it = seq_it->begin();
+		ar.clear();
         while (!seq_it->end(term_it)) 
         {
             if (term_it->is_rule())
                 ar = enter_rule(new astnode(parent_node, term_it, m_cursor));
             else
                 if (*term_it == *m_cursor) 
-                {
-                    astnode* n = new astnode(parent_node, term_it, m_cursor);
-                    ar = n;
-                    parent_node->append_child(n);
-                }
-
+					ar = new astnode(parent_node, term_it, m_cursor);
             if (!ar) 
             {
-
+				if (term_it->a.is_strict() && !rep)
+					break;
+				++term_it;
+				continue;
             }
-                
+			
+			rep = term_it->a.is_repeat();
 
+			if (!rep)
+				++term_it;
+			++m_cursor;
+			
+			if (end(m_cursor)) return ar;
         }
     }
 
