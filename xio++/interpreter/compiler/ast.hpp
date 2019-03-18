@@ -69,7 +69,6 @@ class xio_api xioast : public object{
     astnode* m_rootnode = nullptr;
 
     xioast()=default;
-    xioast();
 
     ~xioast() override;
 

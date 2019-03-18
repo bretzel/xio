@@ -31,6 +31,7 @@ xioast::~xioast() {
 xioast::result xioast::build(token_t::list_t* a_tokens)
 {
 
+	m_tokens = a_tokens;
 
     return {};
 }

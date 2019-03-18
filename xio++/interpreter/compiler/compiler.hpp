@@ -146,7 +146,7 @@ private:
 
     void cleanup_ctx();
 
-    compiler::result buildast(rule_t* a_arule, ast* a_ast=nullptr);
+    compiler::result buildast(rule_t* a_arule, xioast* a_ast=nullptr);
 
     result cc_stmts      (const rule_t*);
     result cc_statement  (const rule_t*);
