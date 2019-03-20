@@ -67,6 +67,12 @@ astnode::result xioast::enter_rule(astnode* parent_node) // , term_t::const_iter
 			
 			rep = term_it->a.is_repeat();
 
+			if (term_it->a.is_one_of())
+			{
+				++m_cursor;
+				return ar;
+			}
+
 			if (!rep)
 				++term_it;
 			++m_cursor;
