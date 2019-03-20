@@ -28,10 +28,13 @@ xioast::~xioast() {
     for (auto a : m_children)  delete a;
 }
 
-xioast::result xioast::build(token_t::list_t* a_tokens)
+xioast::result xioast::build(token_t::list_t* a_tokens, const std::string& start_rule_id)
 {
 
-	m_tokens = a_tokens;
+    m_tokens = a_tokens;
+
+    const rule_t* r = xio_grammar()[start_rule_id];
+    m_rootnode = new astnode(nullptr);
 
     return {};
 }
@@ -49,35 +52,35 @@ astnode::result xioast::enter_rule(astnode* parent_node) // , term_t::const_iter
     while (!rule->end(seq_it))
     {
         auto term_it = seq_it->begin();
-		ar.clear();
+        ar.clear();
         while (!seq_it->end(term_it)) 
         {
             if (term_it->is_rule())
                 ar = enter_rule(new astnode(parent_node, term_it, m_cursor));
             else
                 if (*term_it == *m_cursor) 
-					ar = new astnode(parent_node, term_it, m_cursor);
+                    ar = new astnode(parent_node, term_it, m_cursor);
             if (!ar) 
             {
-				if (term_it->a.is_strict() && !rep)
-					break;
-				++term_it;
-				continue;
+                if (term_it->a.is_strict() && !rep)
+                    break;
+                ++term_it;
+                continue;
             }
-			
-			rep = term_it->a.is_repeat();
 
-			if (term_it->a.is_one_of())
-			{
-				++m_cursor;
-				return ar;
-			}
+            rep = term_it->a.is_repeat();
 
-			if (!rep)
-				++term_it;
-			++m_cursor;
-			
-			if (end(m_cursor)) return ar;
+            if (term_it->a.is_one_of())
+            {
+                ++m_cursor;
+                return ar;
+            }
+
+            if (!rep)
+                ++term_it;
+            ++m_cursor;
+
+            if (end(m_cursor)) return ar;
         }
     }
 

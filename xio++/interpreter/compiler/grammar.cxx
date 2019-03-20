@@ -22,7 +22,7 @@ xio_grammar::dictionary_t xio_grammar::grammar_dictionary = {
 
 rule_t::list_t xio_grammar::_rules;
 static bool built = false;
-
+// Rough, first esquisse / sketch of my rules set for the x.i.o language interpreter.
 std::string grammar_txt =
 "stmts              : +statement.\n"
 "statement          : assignstmt ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.\n"

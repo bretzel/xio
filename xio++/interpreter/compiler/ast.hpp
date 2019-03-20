@@ -8,23 +8,30 @@
 /*
 if statement (rule):
 
+
+
 if condexpr           ifbloc            *elsebloc
       |                  |                  |
       ( expression )   *'then' { stmts }  'else'  {  stmts }
             |                     |                   |           
-          +value               +statment           +statement
-             ...                  ...                 ...
-                                            
+          +value               +statement           +statement
+             ...                  |                    ...
+                              assignstmt   ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.
+                                  |
+                                  |
+                                  |
+                                *typename      new_var      '='   expression
+                                   |              |                  |
+                                [types enum]    cc_new_var         +value
+
+
+
+
+                                 |
  
  
  
- 
- assignstmt
-     |
-   *typename      new_var        =     expression
-      |              |                     | 
-   [types enum]    cc_new_var            +value  
- 
+
  */
 
 #include <xio++/interpreter/compiler/grammar.hpp>
@@ -69,13 +76,15 @@ class xio_api xioast : public object{
     astnode* m_rootnode = nullptr;
 
     xioast()=default;
+    xioast(object* a_parent,token_t::list_t* a_tokens, std::size_t cursor_index=0); // m_cursor - m_tokens->begin(); ... m_cursor = m_tokens->begin() + cursor_index;
 
     ~xioast() override;
 
     xioast& operator =(xioast&& a) = delete;
     xioast& operator =(const xioast& a) = delete;
-   
-    xioast::result build(token_t::list_t* a_tokens);
+
+
+    xioast::result build(token_t::list_t* a_tokens, const std::string& start_rule_id="");
 
     astnode::result enter_rule(astnode* a_node); //, term_t::const_iterator a_term, token_t::cursor a_cursor );
     bool end(token_t::cursor cc) { return cc == m_tokens->end(); }
