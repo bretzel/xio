@@ -28,6 +28,9 @@ xioast::~xioast() {
     for (auto a : m_children)  delete a;
 }
 
+
+
+
 xioast::result xioast::build(token_t::list_t* a_tokens, const std::string& start_rule_id)
 {
 
@@ -35,9 +38,17 @@ xioast::result xioast::build(token_t::list_t* a_tokens, const std::string& start
 
     const rule_t* r = xio_grammar()[start_rule_id];
     m_rootnode = new astnode(nullptr);
+    m_cursor = m_tokens->begin();
+    astnode::result an = enter_rule(m_rootnode);
+    xioast::result ar;
+    if(an)
+        ar = an.value();
+    else
+        ar = an.notice();
 
-    return {};
+    return ar;
 }
+
 
 
 astnode::result xioast::enter_rule(astnode* parent_node) // , term_t::const_iterator a_term, token_t::cursor a_cursor)

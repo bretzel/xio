@@ -76,8 +76,6 @@ class xio_api xioast : public object{
     astnode* m_rootnode = nullptr;
 
     xioast()=default;
-    xioast(object* a_parent,token_t::list_t* a_tokens, std::size_t cursor_index=0); // m_cursor - m_tokens->begin(); ... m_cursor = m_tokens->begin() + cursor_index;
-
     ~xioast() override;
 
     xioast& operator =(xioast&& a) = delete;
