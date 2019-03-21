@@ -32,6 +32,12 @@ public:
     bool remove_child(object* a_child);
     bool detach();
 
+    template<typename T> T* last_child(){
+        if(m_children.empty())
+            return nullptr;
+        return dynamic_cast<T*>(m_children.back());
+    }
+
     template<class T> T* type() const { return dynamic_cast<T*>(this); }
     template<class T> T* parent() const { return dynamic_cast<T*>(m_parent); }
 

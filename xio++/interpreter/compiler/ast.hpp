@@ -62,11 +62,12 @@ public:
     ~astnode() override;
 
 
-
+    astnode *lastin();
 };
 
 class xio_api xioast : public object{
 
+    friend class compiler;
 
     //ast* m_parent = nullptr;
     token_t::list_t* m_tokens = nullptr;
@@ -86,7 +87,7 @@ class xio_api xioast : public object{
 
     astnode::result enter_rule(astnode* a_node); //, term_t::const_iterator a_term, token_t::cursor a_cursor );
     bool end(token_t::cursor cc) { return cc == m_tokens->end(); }
-
+    static void discard_lastin(astnode* parent_node);
     //void append(ast* a )
     
 };

@@ -37,8 +37,10 @@ xioast::result xioast::build(token_t::list_t* a_tokens, const std::string& start
     m_tokens = a_tokens;
 
     const rule_t* r = xio_grammar()[start_rule_id];
-    m_rootnode = new astnode(nullptr);
     m_cursor = m_tokens->begin();
+    seq_t::const_iterator seq_it = r->begin();
+    m_rootnode = new astnode(nullptr, seq_it->begin(), m_cursor);
+
     astnode::result an = enter_rule(m_rootnode);
     xioast::result ar;
     if(an)
@@ -71,10 +73,12 @@ astnode::result xioast::enter_rule(astnode* parent_node) // , term_t::const_iter
             else
                 if (*term_it == *m_cursor) 
                     ar = new astnode(parent_node, term_it, m_cursor);
-            if (!ar) 
-            {
+            if (!ar) {
                 if (term_it->a.is_strict() && !rep)
+                {
+                    xioast::discard_lastin(parent_node);
                     break;
+                }
                 ++term_it;
                 continue;
             }
@@ -95,14 +99,26 @@ astnode::result xioast::enter_rule(astnode* parent_node) // , term_t::const_iter
         }
     }
 
-    return {};
+    return ar;
 }
 
+void xioast::discard_lastin(astnode* parent_node)
+{
+    astnode* n = parent_node->last_child<astnode>();
+    if(!n) return;
+    delete n;
+}
 
 
 astnode::~astnode()
 {
     detach();
+}
+
+astnode *astnode::lastin() {
+    if(m_children.empty())
+        return nullptr;
+    return last_child<astnode>();
 }
 
 

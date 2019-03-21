@@ -40,8 +40,8 @@ class xio_api compiler
 {
 
 
-    xioast*  m_ast_root = nullptr;
-    xioast*  m_ast_node = nullptr;
+    xioast*  m_ast = nullptr;
+    astnode* m_ast_node = nullptr;
 
     using aeb_t     = std::pair<type_t::T, type_t::T>;
     using result    = expect<token_t::cursor>;

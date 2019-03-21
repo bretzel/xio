@@ -251,10 +251,15 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     ++c;
     std::string start_rule = "stmts";
     if (!rname.empty()) start_rule = rname;
-    
-    result cr = (this->*parsers[start_rule])(gr[start_rule]);
-    //...
 
+    m_ast = new xioast();
+    xioast::result ar = m_ast->build(tokens, "declvar");
+    if(!ar)
+        return {ar.notice()};
+
+    m_ast_node = ar.value();
+    //...
+    ++c;++c;
     return { (
         message::push(message::xclass::internal),
         message::code::implement,
