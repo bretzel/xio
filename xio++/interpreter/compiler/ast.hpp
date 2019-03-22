@@ -5,93 +5,72 @@
 #pragma once
 
 
+
+#include <xio++/interpreter/compiler/grammar.hpp>
+#include <xio++/interpreter/kernel/xio.hpp>
+
+namespace xio {
+
+
+
+
 /*
 if statement (rule):
 
 
 
 if condexpr           ifbloc            *elsebloc
-      |                  |                  |
-      ( expression )   *'then' { stmts }  'else'  {  stmts }
-            |                     |                   |           
-          +value               +statement           +statement
-             ...                  |                    ...
-                              assignstmt   ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.
-                                  |
-                                  |
-                                  |
-                                *typename      new_var      '='   expression
-                                   |              |                  |
-                                [types enum]    cc_new_var         +value
-
-
-
-
-                                 |
- 
- 
- 
-
+	  |                  |                  |
+	  ( expression )   *'then' { stmts }  'else'  {  stmts }
+			|                     |                   |
+		  +value               +statement           +statement
+			 ...                  |                    ...
+							  assignstmt   ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.
+								  |
+								  |
+								  |
+								*typename      new_var      '='   expression
+								   |              |                  |
+								[types enum]    cc_new_var         +value
  */
 
-#include <xio++/interpreter/compiler/grammar.hpp>
-#include <xio++/interpreter/kernel/xio.hpp>
+struct astnode : public object 
+{
+	term_t::const_iterator term_it;
+	token_t::cursor m_cursor;
 
-namespace xio{
+	using result = expect<astnode*>;
 
+	astnode() = default;
+	astnode(object* a_parent, term_t::const_iterator a_term_it, token_t::cursor a_cursor);
 
-
-
-
-class astnode: public object {
-
-
-    token_t::cursor m_cursor;
-    term_t::const_iterator m_term;
-    xio_t* x_i_o = nullptr;
-
-    friend class bloc_t;
-    friend class compiler;
-    friend class xioast;
-
-
-public:
-    using result = xio::expect<astnode*>;
-    astnode(astnode* a_node, term_t::const_iterator i1, token_t::cursor i2) noexcept;
-    astnode(astnode* a_node);
-    ~astnode() override;
-
-
-    astnode *lastin();
+	~astnode() override;
 };
 
-class xio_api xioast : public object{
 
-    friend class compiler;
+class xioast : public object
+{
 
-    //ast* m_parent = nullptr;
-    token_t::list_t* m_tokens = nullptr;
-    token_t::cursor  m_cursor;
-    using result = xio::expect<astnode*>;
+	friend class compiler;
 
-    astnode* m_rootnode = nullptr;
+	token_t::list_t* m_tokens = nullptr;
+	token_t::cursor  m_cursor;
+	astnode*         m_rootnode = nullptr;
+	const rule_t*         m_startrule = nullptr;
 
-    xioast()=default;
-    ~xioast() override;
+	xioast() = default;
+	xioast(token_t::list_t* a_tokens, const std::string& rule_id);
 
-    xioast& operator =(xioast&& a) = delete;
-    xioast& operator =(const xioast& a) = delete;
+	~xioast() override;
 
 
-    xioast::result build(token_t::list_t* a_tokens, const std::string& start_rule_id="");
+	astnode* new_node(term_t::const_iterator a_term_it, token_t::cursor a_cursor);
 
-    astnode::result enter_rule(astnode* a_node); //, term_t::const_iterator a_term, token_t::cursor a_cursor );
-    bool end(token_t::cursor cc) { return cc == m_tokens->end(); }
-    static void discard_lastin(astnode* parent_node);
-    //void append(ast* a )
-    
+
+	astnode::result enter_rule(astnode* parent_node, const rule_t* a_rule);
+
 };
+
 
 
 }
-
