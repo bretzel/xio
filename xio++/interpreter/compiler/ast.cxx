@@ -101,7 +101,9 @@ astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
                     {
                         logdebugfn << " " << logger::HBlue << (*term_it)() << logger::White << " is not repeat." << logger::Reset << Ends;
                         ++term_it;
-                        logdebugfn << " Next term: " << logger::HBlue << (*term_it)() << logger::White << " :" << logger::Reset << Ends;
+                        if(!seq_it->end(term_it))
+                            logdebugfn << " Next term: " << logger::HBlue << (*term_it)() << logger::White << " :" << logger::Reset << Ends;
+
                     }
                 }
             }

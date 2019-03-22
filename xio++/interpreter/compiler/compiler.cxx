@@ -259,14 +259,14 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     ctx.ast_node = m_ast.begin();
     m_ast_node = ar.value();
     //...
-    ++c;++c;
+    
     return { (
         message::push(message::xclass::internal),
         message::code::implement,
-        " Ben ouaip! c'est pas encore pret!\n",
-        c->mark()
+        " Ben ouaip! Tout c'est bien passe, mais non! C'est pas encore pret: Analyseurs arretes sur:\n",
+        m_ast_node->m_cursor->mark()
     ) };
-
+    
 }
 
 

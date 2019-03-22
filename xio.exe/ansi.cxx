@@ -47,7 +47,7 @@ namespace Ansi {
         //gr.build();
         //gr.dump();
         Calculator Cal;
-        xio::alu a = Cal["static string;"];
+        xio::alu a = Cal["static real uvf_alu = 0.34;"];
 
         return xio::message::code::accepted;
     }
