@@ -32,11 +32,59 @@ astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
     
     seq_t::const_iterator seq_it    = a_rule->begin();
     term_t::const_iterator term_it  = seq_it->begin();
+    while (!a_rule->end(seq_it))
+    {
+        bool rep = false;
+        while (!seq_it->end(term_it)) 
+        {
+            ar.clear();
+            
+            if (term_it->is_rule())
+            {
+                astnode* node = new astnode(parent_node, term_it, m_cursor);
+                ar = enter_rule(node, xio_grammar()[term_it->mem.r->_id]);
+                if (!ar)
+                    delete node; // auto detach from parent_node. (see astnode::~astnode())
+                else
+                    ++m_cursor;
+            }
+            else
+            {
+                if (*term_it == *m_cursor)
+                {
+                    astnode* node = new astnode(parent_node, term_it, m_cursor);
+                    rep = term_it->a.is_repeat();
+                    ++m_cursor;
+                    if (term_it->a.is_one_of())
+                        return ar;
+                }
+            }
 
+            if (!ar)
+            {
+                if (rep & term_it->a.is_repeat())
+                {
+                    ++term_it;
+                    rep = false; // maybe not necessary because of < bool rep = false on next iteration >... 
+                    continue;
+                }
+                if (!term_it->a.is_strict())
+                {
+                    ++term_it;
+                    continue;
+                }
+
+            }
+
+        }
+    }
 
 }
 
-astnode::~astnode(){}
+astnode::~astnode()
+{
+    (void)detach();
+}
 
 }
 
