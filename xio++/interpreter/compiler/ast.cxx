@@ -128,6 +128,15 @@ astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
             return ar;
         ++seq_it;
     }
+    if (!ar) {
+        return {
+            (message::push(message::xclass::error),
+            m_cursor->location(),
+            message::code::syntax,
+            " error: expected ", (*term_it)(), "\033[0m, got :", type_t::name(m_cursor->type)," instead.\n", 
+            m_cursor->mark())
+        };
+    }
     return ar;
 }
 

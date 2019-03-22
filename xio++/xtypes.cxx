@@ -668,6 +668,14 @@ std::string token_t::informations()
     return buf;
 }
 
+std::string token_t::location()
+{
+    string_t str;
+    str << "%d,%d";
+    str<< loc.l << loc.c;
+    return str();
+}
+
 
 
 token_t token_t::scan(const char* src)

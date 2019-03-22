@@ -427,7 +427,7 @@ struct xio_api token_t final {
 
     std::string attribute();
     std::string informations();
-
+    std::string location();
     static token_t scan(const char* src);
     static token_t query(type_t::T ty);
     static token_t query(lexem::T lx);
