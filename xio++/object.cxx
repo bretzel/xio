@@ -53,6 +53,13 @@ bool object::detach()
     return m_parent != nullptr;
 }
 
+bool object::end(object::iterator it)
+{
+    if ((*it) && (*it)->m_parent != this) return true;
+    
+    return it == m_children.end();
+}
+
 
 object::iterator object::at(object * a_child)
 {

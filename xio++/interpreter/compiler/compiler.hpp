@@ -44,7 +44,7 @@ class xio_api compiler
     astnode*    m_ast_node = nullptr;
 
     using aeb_t     = std::pair<type_t::T, type_t::T>;
-    using result    = expect<token_t::cursor>;
+    using result    = xio_t::result;
     using parser_t  = result(compiler::*)(const rule_t*);
     using parsers_t = std::map<std::string, compiler::parser_t>;
 
@@ -61,16 +61,14 @@ public:
 
 
     struct xio_api context_t{
+        object::iterator ast_node;
+
         token_t::cursor cursor;      /// local instance
-        bloc_t*         bloc         = nullptr; /// local instance
-        
+        bloc_t*         bloc         = nullptr; /// local instance        
         xio_t*          instruction  = nullptr; /// bloc entry instruction
-        xio_t*          aeb          = nullptr; /// Arithmetic binary tree input vertex.
         xio_t::list_t   i_seq;
+
         xio_t::storage_attr st = { 0,0,0,0 };
-
-        std::vector<token_t*> t_seq; // accumulated token sequence to be "assembled"...
-
         type_t::T _type = type_t::null;
         bloc_t* _object = nullptr;
 
@@ -78,7 +76,7 @@ public:
         context_t();
         context_t(context_t&& /* ... */) noexcept;
         context_t(const context_t& );
-        context_t(bloc_t* a_bloc, token_t::cursor a_cursor);
+        context_t(bloc_t* a_bloc, object::iterator a_node);
         
         ~context_t();
 
@@ -89,8 +87,6 @@ public:
         context_t& operator ++(int);
 
         bloc_t* query_object(const std::string& oid);
-        
-        void push_token() { t_seq.push_back(cursor->me()); }
 
         bool empty() { return i_seq.empty(); }
 

@@ -28,50 +28,50 @@
 
 using namespace xio;
 
+//
+//std::vector<compiler::aeb_t> compiler::aeb_table = {
+//    {type_t::binary,   type_t::leftpar},
+//    {type_t::leftpar,  type_t::leaf},
+//    {type_t::leftpar,  type_t::prefix},
+//    {type_t::leftpar,  type_t::binary},
+//    {type_t::prefix,   type_t::leftpar},
+//    {type_t::closepar,  type_t::leaf},
+//    {type_t::closepar,  type_t::binary},
+//    {type_t::closepar,  type_t::postfix},
+//    {type_t::closepar,  type_t::closepar},
+//
+//    {type_t::prefix,   type_t::closepar},
+//    {type_t::leaf,     type_t::closepar},
+//    {type_t::leaf,     type_t::postfix},
+//    {type_t::leaf,     type_t::assign},
+//
+//
+//    {type_t::postfix,  type_t::closepar},
+//    {type_t::leftpar,  type_t::binary},
+//    {type_t::leaf,     type_t::binary},
+//    {type_t::binary,   type_t::binary},
+//    {type_t::binary,   type_t::leaf},
+//    {type_t::prefix,   type_t::binary},
+//    {type_t::binary,   type_t::prefix},
+//    {type_t::prefix,   type_t::leaf},
+//    {type_t::prefix,   type_t::number},
+//    {type_t::sign,     type_t::id},
+//    {type_t::sign,     type_t::number},
+//    {type_t::sign,     type_t::leaf},
+//    {type_t::postfix,  type_t::binary},
+//
+//    {type_t::assign,   type_t::binary},
+//    {type_t::assign,   type_t::leaf},
+//    {type_t::assign,   type_t::prefix},
+//    {type_t::assign,   type_t::postfix}
+//};
 
-std::vector<compiler::aeb_t> compiler::aeb_table = {
-    {type_t::binary,   type_t::leftpar},
-    {type_t::leftpar,  type_t::leaf},
-    {type_t::leftpar,  type_t::prefix},
-    {type_t::leftpar,  type_t::binary},
-    {type_t::prefix,   type_t::leftpar},
-    {type_t::closepar,  type_t::leaf},
-    {type_t::closepar,  type_t::binary},
-    {type_t::closepar,  type_t::postfix},
-    {type_t::closepar,  type_t::closepar},
-
-    {type_t::prefix,   type_t::closepar},
-    {type_t::leaf,     type_t::closepar},
-    {type_t::leaf,     type_t::postfix},
-    {type_t::leaf,     type_t::assign},
-
-
-    {type_t::postfix,  type_t::closepar},
-    {type_t::leftpar,  type_t::binary},
-    {type_t::leaf,     type_t::binary},
-    {type_t::binary,   type_t::binary},
-    {type_t::binary,   type_t::leaf},
-    {type_t::prefix,   type_t::binary},
-    {type_t::binary,   type_t::prefix},
-    {type_t::prefix,   type_t::leaf},
-    {type_t::prefix,   type_t::number},
-    {type_t::sign,     type_t::id},
-    {type_t::sign,     type_t::number},
-    {type_t::sign,     type_t::leaf},
-    {type_t::postfix,  type_t::binary},
-
-    {type_t::assign,   type_t::binary},
-    {type_t::assign,   type_t::leaf},
-    {type_t::assign,   type_t::prefix},
-    {type_t::assign,   type_t::postfix}
-};
-
-bool xio::compiler::validate(const compiler::aeb_t& ab)
-{
-    for( auto t : compiler::aeb_table )
-        if( t == compiler::aeb_t{ ab.first, t.second & ab.second} ) return true;
-    return false;
-}
+//bool xio::compiler::validate(const compiler::aeb_t& ab)
+//{
+//    for( auto t : compiler::aeb_table )
+//        if( t == compiler::aeb_t{ ab.first, t.second & ab.second} ) return true;
+//    return false;
+//}
 
 
 
@@ -117,8 +117,10 @@ compiler::parsers_t compiler::parsers = {
 
 bool xio::compiler::_eof()
 {
-    return ctx.cursor == tokens->end();
+    astnode* node = (*ctx.ast_node)->parent<astnode>();
+    return node ? node->end(ctx.ast_node) : m_ast.end(ctx.ast_node);
 }
+
 
 // -3-3; sign number bin number
 compiler::compiler()
@@ -138,7 +140,7 @@ compiler::context_t::context_t() {
 
 compiler::context_t::context_t(compiler::context_t && ct) noexcept {
     std::swap(bloc, ct.bloc);
-    std::swap(cursor, ct.cursor);
+    std::swap(ast_node, ct.ast_node);
     std::swap(i_seq, ct.i_seq);
     std::swap(instruction, ct.instruction);
     std::swap(_object, ct._object);
@@ -147,16 +149,16 @@ compiler::context_t::context_t(compiler::context_t && ct) noexcept {
 
 compiler::context_t::context_t(const compiler::context_t & ct) {
     bloc = ct.bloc;
-    cursor = ct.cursor;
+    ast_node = ct.ast_node;
     i_seq = ct.i_seq;
     instruction = ct.instruction;
     _object = ct._object;
 }
 
-xio::compiler::context_t::context_t(bloc_t* a_bloc, token_t::cursor a_cursor)
+xio::compiler::context_t::context_t(bloc_t* a_bloc, object::iterator a_astnode)
 {
     bloc = a_bloc;
-    cursor = a_cursor;
+    ast_node = a_astnode;
 }
 
 
@@ -167,7 +169,7 @@ compiler::context_t::~context_t() {
 compiler::context_t & xio::compiler::context_t::operator=(context_t && ct) noexcept
 {
     std::swap(bloc, ct.bloc);
-    std::swap(cursor, ct.cursor);
+    std::swap(ast_node, ct.ast_node);
     std::swap(i_seq, ct.i_seq);
     std::swap(instruction, ct.instruction);
     std::swap(_object, ct._object);
@@ -178,7 +180,7 @@ compiler::context_t & xio::compiler::context_t::operator=(context_t && ct) noexc
 compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct) noexcept
 {
     bloc= ct.bloc;
-    cursor= ct.cursor;
+    ast_node= ct.ast_node;
     i_seq= ct.i_seq;
     instruction= ct.instruction;
     _object = ct._object;
@@ -187,14 +189,14 @@ compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct) 
 
 compiler::context_t& xio::compiler::context_t::operator++()
 {
-    ++cursor;
+    ++ast_node;
     return *this;
     // TODO: ins�rer une instruction return ici
 }
 
 compiler::context_t& xio::compiler::context_t::operator++(int)
 {
-    ++cursor;
+    ++ast_node;
     return *this;
     // TODO: ins�rer une instruction return ici
 }
@@ -240,9 +242,7 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     if (!l) return { l.notice() };
 
     tokens = cfg.tokens;
-    ctx.cursor = tokens->begin();
     ctx.bloc = cfg.bloc;
-    ++ctx;
 
     xio_grammar gr;
     xio_grammar::result t = gr.build();
@@ -256,8 +256,7 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     if(!ar)
         return {ar.notice()};
 
-
-
+    ctx.ast_node = m_ast.begin();
     m_ast_node = ar.value();
     //...
     ++c;++c;
@@ -276,7 +275,7 @@ xio_t::result xio::compiler::compile(const std::string& rname)
 message::code xio::compiler::push_context(bloc_t* a_newbloc)
 {
     
-    ctx_stack.push({ a_newbloc ? a_newbloc : ctx.bloc, ctx.cursor });
+    ctx_stack.push({ a_newbloc ? a_newbloc : ctx.bloc, ctx.ast_node });
     ctx = ctx_stack.top();
     return message::code::accepted;
 }
@@ -298,51 +297,8 @@ message::code xio::compiler::pop_context()
  */
 compiler::result xio::compiler::__cc__(const rule_t * r, std::function<compiler::result(const term_t&)> cb)
 {
-    auto start_token = ctx.cursor;
-    auto seq_it = r->begin();
-    compiler::result cr;
-    // Enter rule's sequences iteration:
-    auto tit = seq_it->begin();
-    while (!r->end(seq_it)) {
-        bool rep_ok = false;
-        while (!seq_it->end(tit)) {
-            
-            cr.clear();
-            if (tit->_type == term_t::type::rule)
-                cr = (this->*parsers[tit->mem.r->_id])(tit->mem.r);
-            else
-                if (*tit == *ctx.cursor)
-                    cr = cb(*tit);
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 
-            if (!cr) {
-                cleanup_ctx();
-                if (rep_ok && tit->a.is_repeat()) {
-                    ++tit;
-                    rep_ok = false;
-                }
-                else
-                    if (!tit->a.is_strict())
-                    {
-                        ++tit;
-                        rep_ok = false;
-                        continue;
-                    }
-                // End repeat:
-                // reject the sequence:
-                // Cleanup ...
-
-                break;
-            }
-            // Accepted:
-
-            if ((rep_ok = tit->a.is_repeat())) continue;
-            if (tit->a.is_one_of()) // Accept whole rule on (first) hit:
-                return cr;
-            ++tit;
-        }
-        ++seq_it;
-    }
-    return cr;
 }
 
 type_t::T xio::compiler::get_type(mnemonic a_code)
@@ -389,14 +345,16 @@ compiler::result xio::compiler::cc_declvar(const rule_t *rule)
     compiler::result cr = 
     __cc__(rule, [this](const term_t & t) -> result {
                
-        return {ctx.cursor};
+        return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+
     });
 
     if (!cr)
         return cr;
 
 
-    return { ctx.cursor };
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+
 }
 
 
@@ -468,6 +426,8 @@ compiler::result xio::compiler::cc_param(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+
     return {  };
 }
 
@@ -477,6 +437,8 @@ compiler::result xio::compiler::cc_params(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+
     return {  };
 }
 
@@ -486,6 +448,8 @@ compiler::result xio::compiler::cc_objcarg(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+
     return { };
 }
 
@@ -495,6 +459,8 @@ compiler::result xio::compiler::cc_arg(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+
     return {  };
 }
 
@@ -504,6 +470,7 @@ compiler::result xio::compiler::cc_argseq(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
     return {  };
 }
 
@@ -513,7 +480,8 @@ compiler::result xio::compiler::cc_args(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
-    return {  };
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+    
 }
 
 
@@ -531,13 +499,15 @@ compiler::result xio::compiler::cc_typename(const rule_t * rule)
                 _static = true;
                 ctx.st.sstatic = 1;// Static storage - no matter where.
                 ++ctx;
-                return { ctx.cursor };
+                return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+
             }
             else
             {
                 ctx._type = get_type(t.mem.c);
                 ++ctx;
-                return { ctx.cursor };
+                return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+
             }
         }
         // ---------------------------------------------------------------------------
@@ -546,7 +516,8 @@ compiler::result xio::compiler::cc_typename(const rule_t * rule)
     });
 
     _static = false;
-    return cr;
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+    
 }
 
 
@@ -556,6 +527,7 @@ compiler::result xio::compiler::cc_instruction(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
     return {  };
 }
 
@@ -568,6 +540,7 @@ compiler::result xio::compiler::cc_kif(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
     return {  };
 }
 
@@ -577,6 +550,7 @@ compiler::result xio::compiler::cc_bloc(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
     return { };
 }
 
@@ -586,7 +560,7 @@ compiler::result xio::compiler::cc_truebloc(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
-    return {  };
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 }
 
 compiler::result xio::compiler::cc_elsebloc(const rule_t * rule)
@@ -595,7 +569,7 @@ compiler::result xio::compiler::cc_elsebloc(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
-    return {  };
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 }
 
 compiler::result xio::compiler::cc_ifbody(const rule_t * rule)
@@ -604,7 +578,7 @@ compiler::result xio::compiler::cc_ifbody(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
-    return { };
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 }
 
 compiler::result xio::compiler::cc_condexpr(const rule_t * rule)
@@ -613,7 +587,7 @@ compiler::result xio::compiler::cc_condexpr(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
-    return {  };
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 }
 
 
@@ -621,8 +595,7 @@ compiler::result xio::compiler::cc_var_id(const rule_t * rule)
 {
     variable* v = ctx.bloc->query_variable(ctx.cursor->attribute());
     if ( v ) {
-        ctx.push_token();
-        return { ctx.cursor };
+        return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
     }
     
     return {(
@@ -657,9 +630,8 @@ compiler::result xio::compiler::cc_new_var(const rule_t * rule)
 
     (void)ctx.bloc->push_variable(ctx.cursor->me(),ctx.st.sstatic,ctx._type);
     ++ctx;
-    ctx.push_token();
 
-    return { ctx.cursor }; 
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 }
 
 
@@ -672,7 +644,7 @@ compiler::result xio::compiler::cc_objectid(const rule_t * rule)
         
         return { (message::push(message::xclass::internal), message::code::implement) };
     });
-    return {  };
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 }
 
 compiler::result xio::compiler::cc_function_id(const rule_t * rule)
@@ -681,7 +653,7 @@ compiler::result xio::compiler::cc_function_id(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
-    return {   };
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 }
 
 compiler::result xio::compiler::cc_objcfncall(const rule_t * rule)
@@ -690,7 +662,7 @@ compiler::result xio::compiler::cc_objcfncall(const rule_t * rule)
 
         return { (message::push(message::xclass::internal), message::code::implement) };
         });
-    return {   };
+    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 }
 
 
