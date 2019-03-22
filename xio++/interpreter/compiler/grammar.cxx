@@ -48,7 +48,7 @@ std::string grammar_txt =
 "expression         : +value.\n" // ???
 "value              : ?var_id ?objectid ?function_id ?number ?string.\n" // ??? 
 "var_id             .\n"
-"new_var            .\n"
+"new_var            : identifier.\n"
 "objectid           .\n"
 "function_id        : '::' functionid, objectid '::' functionid, var_id '.' function_id.\n"
 "objcfncall         : '[' function_id  *args ']'.";
@@ -498,7 +498,7 @@ term_t::~term_t()
 
 }
 
-std::string term_t::operator()()
+std::string term_t::operator()() const
 {
     string_t str;
     str << a();

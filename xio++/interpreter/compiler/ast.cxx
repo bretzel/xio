@@ -1,8 +1,15 @@
 #include "ast.hpp"
+
+#include "../../journal/logger.hpp"
+
 namespace xio {
 
 
 
+#define INC_SRC                 {\
+++m_cursor;\
+if (eof()) return ar;\
+}\
 
 
 astnode::astnode(object * a_parent, term_t::const_iterator a_term_it, token_t::cursor a_cursor) :object(a_parent),
@@ -26,9 +33,32 @@ astnode * xio::xioast::new_node(term_t::const_iterator a_term_it, token_t::curso
 	return n;
 }
 
+
+astnode::result xioast::build(token_t::list_t * a_tokens, const std::string & rule_id)
+{
+    m_tokens    = a_tokens;
+    m_startrule = xio_grammar()[rule_id];
+    m_cursor = m_tokens->begin() + 1;
+    m_rootnode = new astnode(this, m_startrule->begin()->begin(), m_cursor);
+    return enter_rule(m_rootnode, m_startrule);
+}
+
+
+
+
 astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
 {
 	astnode::result ar;
+
+    logdebugfn << " Enter rule: " << logger::HRed << a_rule->_id << logger::Reset << Ends;
+
+
+    if (a_rule->empty())
+    {
+        logdebugfn << " " << logger::HBlue << a_rule->_id << logger::White << "::" << logger::Yellow << m_cursor->attribute() << logger::White
+            << " Empty => Accept and leave: the Parser will further analyzes during the xio generation phase..." << logger::Reset << Ends;
+        return parent_node;
+    }
     
     seq_t::const_iterator seq_it    = a_rule->begin();
     term_t::const_iterator term_it  = seq_it->begin();
@@ -38,15 +68,19 @@ astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
         while (!seq_it->end(term_it)) 
         {
             ar.clear();
-            
+            logdebugfn << " " << logger::HBlue << (*term_it)() << logger::White << "<::>" << logger::Yellow << m_cursor->attribute() << logger::Reset << Ends;
+
             if (term_it->is_rule())
             {
                 astnode* node = new astnode(parent_node, term_it, m_cursor);
-                ar = enter_rule(node, xio_grammar()[term_it->mem.r->_id]);
+                ar = enter_rule(node, term_it->mem.r);
                 if (!ar)
                     delete node; // auto detach from parent_node. (see astnode::~astnode())
                 else
-                    ++m_cursor;
+                {
+                    //INC_SRC
+                        if (!term_it->a.is_repeat()) ++term_it;
+                }
             }
             else
             {
@@ -54,14 +88,27 @@ astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
                 {
                     astnode* node = new astnode(parent_node, term_it, m_cursor);
                     rep = term_it->a.is_repeat();
-                    ++m_cursor;
+                    logdebugfn << " " << logger::HBlue << (*term_it)() << logger::White << "==" << logger::Yellow << m_cursor->attribute() << logger::Reset << Ends;
+                    INC_SRC
+                    ar = node;
                     if (term_it->a.is_one_of())
+                    {
+                        logdebugfn << " " << logger::HBlue << (*term_it)() << logger::White << " is a one hit rule sequence: leaving, the cursor on [" << 
+                            logger::Yellow << m_cursor->attribute() << logger::White << ']' <<  logger::Reset << Ends;
                         return ar;
+                    }
+                    if (!rep) 
+                    {
+                        logdebugfn << " " << logger::HBlue << (*term_it)() << logger::White << " is not repeat." << logger::Reset << Ends;
+                        ++term_it;
+                        logdebugfn << " Next term: " << logger::HBlue << (*term_it)() << logger::White << " :" << logger::Reset << Ends;
+                    }
                 }
             }
 
             if (!ar)
             {
+                logdebugfn << " " << logger::HBlue << (*term_it)() << logger::White << "!=" << logger::Yellow << m_cursor->attribute() << logger::Reset << Ends;
                 if (rep & term_it->a.is_repeat())
                 {
                     ++term_it;
@@ -73,13 +120,18 @@ astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
                     ++term_it;
                     continue;
                 }
-
+                else break;
+            
             }
-
         }
+        if (ar)
+            return ar;
+        ++seq_it;
     }
-
+    return ar;
 }
+
+
 
 astnode::~astnode()
 {

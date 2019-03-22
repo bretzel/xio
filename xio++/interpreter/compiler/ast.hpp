@@ -51,6 +51,8 @@ struct astnode : public object
 class xioast : public object
 {
 
+
+
 	friend class compiler;
 
 	token_t::list_t* m_tokens = nullptr;
@@ -65,10 +67,11 @@ class xioast : public object
 
 
 	astnode* new_node(term_t::const_iterator a_term_it, token_t::cursor a_cursor);
+    bool eof() { return m_cursor == m_tokens->end(); }
 
 
 	astnode::result enter_rule(astnode* parent_node, const rule_t* a_rule);
-
+    astnode::result build(token_t::list_t* a_tokens, const std::string& rule_id);
 };
 
 
