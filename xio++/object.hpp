@@ -38,6 +38,10 @@ public:
             return nullptr;
         return dynamic_cast<T*>(m_children.back());
     }
+    template<class T> T* me()
+    {
+        return dynamic_cast<T*>(this);
+    }
 
     template<class T> T* type() const { return dynamic_cast<T*>(this); }
     template<class T> T* parent() const { return dynamic_cast<T*>(m_parent); }
