@@ -32,7 +32,7 @@ public:
     bool remove_child(object* a_child);
     bool detach();
     bool end(object::iterator it);
-
+    
     template<typename T> T* last_child(){
         if(m_children.empty())
             return nullptr;

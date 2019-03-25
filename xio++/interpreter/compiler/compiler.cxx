@@ -81,7 +81,7 @@ compiler::parsers_t compiler::parsers = {
     //{"stmts"         , &compiler::cc_stmts      },
     //{"statement"     , &compiler::cc_statement  },
     //{"assignstmt"    , &compiler::cc_assignstmt },
-    //{"declvar"       , &compiler::cc_declvar    },
+    {"declvar"       , &compiler::cc_declvar    },
     //{"funcsig"       , &compiler::cc_funcsig    },
     //{"declfunc"      , &compiler::cc_declfunc   },
     //{"paramseq"      , &compiler::cc_paramseq   },
@@ -91,7 +91,7 @@ compiler::parsers_t compiler::parsers = {
     //{"arg"           , &compiler::cc_arg        },
     //{"argseq"        , &compiler::cc_argseq     },
     //{"args"          , &compiler::cc_args       },
-    //{"typename"      , &compiler::cc_typename   },
+    {"typename"      , &compiler::cc_typename   },
     //{"instruction"   , &compiler::cc_instruction},
     //{"kif"           , &compiler::cc_kif        },
     //{"bloc"          , &compiler::cc_bloc       },
@@ -101,7 +101,7 @@ compiler::parsers_t compiler::parsers = {
     //{"condexpr"      , &compiler::cc_condexpr   },
     //{"expression"    , &compiler::cc_expression },
     //{"var_id"        , &compiler::cc_var_id     },
-    //{"new_var"       , &compiler::cc_new_var    },
+    {"new_var"       , &compiler::cc_new_var    },
     //{"objectid"      , &compiler::cc_objectid   },
     //{"function_id"   , &compiler::cc_function_id},
     //{"objcfncall"    , &compiler::cc_objcfncall }
@@ -190,14 +190,14 @@ compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct) 
 
 compiler::context_t& xio::compiler::context_t::operator++()
 {
-    ++ast_node;
+    //++ast_node;
     return *this;
     // TODO: ins�rer une instruction return ici
 }
 
 compiler::context_t& xio::compiler::context_t::operator++(int)
 {
-    ++ast_node;
+    //++ast_node;
     return *this;
     // TODO: ins�rer une instruction return ici
 }
@@ -302,9 +302,30 @@ message::code xio::compiler::pop_context()
 compiler::result xio::compiler::__cc__(astnode* a_node, std::function<compiler::result(const term_t&)> cb)
 {
     object::iterator it = a_node->begin();
-    logdebugfn << (*a_node->term_it)() << "::>" << a_node->m_cursor->attribute() <<  Ends;
+    xio_t::result xr;
+    logdebugfn << logger::White << " entering :" << (*a_node->term_it)() << logger::White << "==>" << logger::Yellow << a_node->m_cursor->attribute() << logger::Reset << Ends;
+    while (!a_node->end(it)) 
+    {
+        astnode* node = (*it)->me<astnode>();
+        logdebugfn << (*node->term_it)() << logger::White << "==>" << logger::Yellow << node->m_cursor->attribute() << logger::Reset << Ends;
 
-    return { (message::push(message::xclass::internal) , message::code::implement,__PRETTY_FUNCTION__,"\n", (*it)->me<astnode>()->m_cursor->mark()) };
+        xr = node->is_rule() ? (this->*parsers[node->rule()->_id])(node) : 
+            cb ? 
+            cb(*node->term_it) : 
+            (
+                message::push(message::xclass::error), 
+                (message::code::unexpected), 
+                " - no parser(s) for: \n",
+                node->m_cursor->mark()
+            );
+
+        if (!xr)
+            return xr;
+        ++it;
+    }
+    
+
+    return { (message::push(message::xclass::internal) , message::code::implement,__FUNCTION__,"\n", (*it)->me<astnode>()->m_cursor->mark()) };
 
 
 }
@@ -333,7 +354,7 @@ void xio::compiler::cleanup_ctx()
 
 
 //
-//compiler::result xio::compiler::cc_expression(const rule_t *r)
+//compiler::result xio::compiler::cc_expression(astnode *node)
 //{
 //    auto cr = __cc__(r, [this](const term_t & t)->result {
 //        return {};
@@ -343,21 +364,14 @@ void xio::compiler::cleanup_ctx()
 //}
 //
 //
-//compiler::result xio::compiler::cc_declvar(const rule_t *rule)
-//{
-//    compiler::result cr = __cc__(rule, [this](const term_t & t) -> result {
-//               
-//        return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
-//
-//    });
-//
-//    if (!cr)
-//        return cr;
-//
-//
-//    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
-//
-//}
+compiler::result xio::compiler::cc_declvar(astnode *node)
+{
+    compiler::result cr = __cc__(node, [this,node](const term_t & t) -> result {       
+        return { nullptr };
+    });
+    //...
+    return cr;
+}
 //
 //
 ////compiler::result xio::compiler::build_ast(ast* a_ast)
@@ -366,7 +380,7 @@ void xio::compiler::cleanup_ctx()
 ////    return {};
 ////}
 //
-//compiler::result xio::compiler::cc_stmts(const rule_t * rule)
+//compiler::result xio::compiler::cc_stmts(astnode *node)
 //{
 //    
 //    auto cr =__cc__(rule, [this] (const term_t& t) -> result {
@@ -376,7 +390,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_statement(const rule_t * rule)
+//compiler::result xio::compiler::cc_statement(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -385,7 +399,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_assignstmt(const rule_t * rule)
+//compiler::result xio::compiler::cc_assignstmt(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -395,7 +409,7 @@ void xio::compiler::cleanup_ctx()
 //}
 //
 //
-//compiler::result xio::compiler::cc_funcsig(const rule_t * rule)
+//compiler::result xio::compiler::cc_funcsig(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -404,7 +418,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_declfunc(const rule_t * rule)
+//compiler::result xio::compiler::cc_declfunc(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -413,7 +427,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_paramseq(const rule_t * rule)
+//compiler::result xio::compiler::cc_paramseq(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -422,7 +436,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_param(const rule_t * rule)
+//compiler::result xio::compiler::cc_param(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -433,7 +447,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_params(const rule_t * rule)
+//compiler::result xio::compiler::cc_params(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -444,7 +458,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_objcarg(const rule_t * rule)
+//compiler::result xio::compiler::cc_objcarg(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -455,7 +469,7 @@ void xio::compiler::cleanup_ctx()
 //    return { };
 //}
 //
-//compiler::result xio::compiler::cc_arg(const rule_t * rule)
+//compiler::result xio::compiler::cc_arg(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -466,7 +480,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_argseq(const rule_t * rule)
+//compiler::result xio::compiler::cc_argseq(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -476,7 +490,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_args(const rule_t * rule)
+//compiler::result xio::compiler::cc_args(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -490,40 +504,40 @@ void xio::compiler::cleanup_ctx()
 //// static i16 a;
 //
 //
-//static bool _static = false;
-//compiler::result xio::compiler::cc_typename(const rule_t * rule)
-//{
-//    compiler::result cr = __cc__(rule, [this] (const term_t & t) -> result {
-//        if (t._type == term_t::type::code) {
-//            if (ctx.cursor->code == mnemonic::kstatic )
-//            {
-//                if (_static) return {/* put descriptive message here */ };
-//                _static = true;
-//                ctx.st.sstatic = 1;// Static storage - no matter where.
-//                ++ctx;
-//                return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
+static bool _static = false;
+compiler::result xio::compiler::cc_typename(astnode *node)
+{
+    compiler::result cr = __cc__(node, [this,node] (const term_t & t) -> result {
+        if (t._type == term_t::type::code) {
+            if (node->m_cursor->code == mnemonic::kstatic )
+            {
+                if (_static) return {(
+                    message::push(message::xclass::error),
+                    message::code::unexpected,"\n",
+                    node->m_cursor->mark()
+                )};
+                _static = true;
+                ctx.st.sstatic = 1;// Static storage - no matter where.
+                return { nullptr };
+            }
+            else
+            {
+                ctx._type = get_type(t.mem.c);
+                return { nullptr };
+            }
+        }
+        // ---------------------------------------------------------------------------
+        ///@todo 
+        return { nullptr };
+    });
+
+    _static = false;
+    return { nullptr };
+}
+
 //
-//            }
-//            else
-//            {
-//                ctx._type = get_type(t.mem.c);
-//                ++ctx;
-//                return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 //
-//            }
-//        }
-//        // ---------------------------------------------------------------------------
-//        ///@todo 
-//        return { /* put descriptive message here */ };
-//    });
-//
-//    _static = false;
-//    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
-//    
-//}
-//
-//
-//compiler::result xio::compiler::cc_instruction(const rule_t * rule)
+//compiler::result xio::compiler::cc_instruction(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -533,7 +547,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_kif(const rule_t * rule)
+//compiler::result xio::compiler::cc_kif(astnode *node)
 //{
 //    //xio_if kif = new xio_if(ctx.bloc, *ctx.cursor, nullptr);
 //    //push_context(kif, ctx.cursor);
@@ -546,7 +560,7 @@ void xio::compiler::cleanup_ctx()
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_bloc(const rule_t * rule)
+//compiler::result xio::compiler::cc_bloc(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -556,7 +570,7 @@ void xio::compiler::cleanup_ctx()
 //    return { };
 //}
 //
-//compiler::result xio::compiler::cc_truebloc(const rule_t * rule)
+//compiler::result xio::compiler::cc_truebloc(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -565,7 +579,7 @@ void xio::compiler::cleanup_ctx()
 //    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 //}
 //
-//compiler::result xio::compiler::cc_elsebloc(const rule_t * rule)
+//compiler::result xio::compiler::cc_elsebloc(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -574,7 +588,7 @@ void xio::compiler::cleanup_ctx()
 //    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 //}
 //
-//compiler::result xio::compiler::cc_ifbody(const rule_t * rule)
+//compiler::result xio::compiler::cc_ifbody(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -583,7 +597,7 @@ void xio::compiler::cleanup_ctx()
 //    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 //}
 //
-//compiler::result xio::compiler::cc_condexpr(const rule_t * rule)
+//compiler::result xio::compiler::cc_condexpr(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -593,7 +607,7 @@ void xio::compiler::cleanup_ctx()
 //}
 //
 //
-//compiler::result xio::compiler::cc_var_id(const rule_t * rule)
+//compiler::result xio::compiler::cc_var_id(astnode *node)
 //{
 //    variable* v = ctx.bloc->query_variable(ctx.cursor->attribute());
 //    if ( v ) {
@@ -610,35 +624,34 @@ void xio::compiler::cleanup_ctx()
 //}
 //
 //
-//compiler::result xio::compiler::cc_new_var(const rule_t * rule)
-//{
-//    if (!ctx.cursor->is_identifier())
-//        return{ (
-//            message::push(message::xclass::error), 
-//            message::code::syntax, 
-//            ": ", 
-//            ctx.cursor->informations(),
-//            " is not an identifier.\n",
-//            ctx.cursor->mark()
-//        )};
-//       
-//    // .. Create new variable
-//    variable* v = ctx.bloc->query_local_variable(ctx.cursor->attribute());
-//    if (v) {
-//        return { 
-//            (message::push(message::xclass::error) , "identifier already exists.", ctx.cursor->mark())
-//        };
-//    }
-//
-//    (void)ctx.bloc->push_variable(ctx.cursor->me(),ctx.st.sstatic,ctx._type);
-//    ++ctx;
-//
-//    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
-//}
-//
+compiler::result xio::compiler::cc_new_var(astnode *node)
+{
+    if (!node->m_cursor->is_identifier())
+        return{ (
+            message::push(message::xclass::error), 
+            message::code::syntax, 
+            ": ", 
+            node->m_cursor->informations(),
+            " is not an identifier.\n",
+            node->m_cursor->mark()
+        )};
+       
+    // .. Create new variable
+    variable* v = ctx.bloc->query_local_variable(node->m_cursor->attribute());
+    if (v) {
+        return { 
+            (message::push(message::xclass::error) , "identifier already exists.", node->m_cursor->mark())
+        };
+    }
+    result xr = { ctx.bloc->push_variable(node->m_cursor->me(),ctx.st.sstatic,ctx._type) };
+    ctx._type = type_t::any; //type_t::number ?
+    ctx.st.sstatic = 0;
+    return xr;
+}
 //
 //
-//compiler::result xio::compiler::cc_objectid(const rule_t * rule)
+//
+//compiler::result xio::compiler::cc_objectid(astnode *node)
 //{
 //    auto cr = __cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -649,7 +662,7 @@ void xio::compiler::cleanup_ctx()
 //    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 //}
 //
-//compiler::result xio::compiler::cc_function_id(const rule_t * rule)
+//compiler::result xio::compiler::cc_function_id(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //
@@ -658,7 +671,7 @@ void xio::compiler::cleanup_ctx()
 //    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 //}
 //
-//compiler::result xio::compiler::cc_objcfncall(const rule_t * rule)
+//compiler::result xio::compiler::cc_objcfncall(astnode *node)
 //{
 //    (void)__cc__(rule, [this] (const term_t & t) -> result {
 //

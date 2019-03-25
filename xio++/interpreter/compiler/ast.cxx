@@ -149,5 +149,16 @@ astnode::~astnode()
     (void)detach();
 }
 
+bool astnode::is_rule() const
+{
+    return term_it->is_rule();
+}
+
+const rule_t * astnode::rule() const
+{
+    if (!is_rule()) return nullptr;
+    return term_it->mem.r;
+}
+
 }
 

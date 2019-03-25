@@ -45,7 +45,7 @@ class xio_api compiler
 
     using aeb_t     = std::pair<type_t::T, type_t::T>;
     using result    = xio_t::result;
-    using parser_t  = result(compiler::*)(const rule_t*);
+    using parser_t  = result(compiler::*)(astnode*);
     using parsers_t = std::map<std::string, compiler::parser_t>;
 
     token_t::list_t* tokens = nullptr; ///< Master Stream;
@@ -97,7 +97,7 @@ public:
         void rejected();
 
         using stack = std::stack<compiler::context_t>;
-
+        astnode* node() { return (*ast_node)->me<astnode>(); }
     };
     
     
@@ -143,33 +143,33 @@ private:
     void cleanup_ctx();
 
 
-    //result cc_stmts      (const rule_t*);
-    //result cc_statement  (const rule_t*);
-    //result cc_assignstmt (const rule_t*);
-    //result cc_declvar    (const rule_t*);
-    //result cc_funcsig    (const rule_t*);
-    //result cc_declfunc   (const rule_t*);
-    //result cc_paramseq   (const rule_t*);
-    //result cc_param      (const rule_t*);
-    //result cc_params     (const rule_t*);
-    //result cc_objcarg    (const rule_t*);
-    //result cc_arg        (const rule_t*);
-    //result cc_argseq     (const rule_t*);
-    //result cc_args       (const rule_t*);
-    //result cc_typename   (const rule_t*);
-    //result cc_instruction(const rule_t*);
-    //result cc_kif        (const rule_t*);
-    //result cc_bloc       (const rule_t*);
-    //result cc_truebloc   (const rule_t*);
-    //result cc_elsebloc   (const rule_t*);
-    //result cc_ifbody     (const rule_t*);
-    //result cc_condexpr   (const rule_t*);
-    //result cc_expression (const rule_t*);
-    //result cc_var_id     (const rule_t*);
-    //result cc_new_var    (const rule_t*);
-    //result cc_objectid   (const rule_t*);
-    //result cc_function_id(const rule_t*);
-    //result cc_objcfncall (const rule_t*);
+    //result cc_stmts      (astnode*);
+    //result cc_statement  (astnode*);
+    //result cc_assignstmt (astnode*);
+    result cc_declvar    (astnode*);
+    //result cc_funcsig    (astnode*);
+    //result cc_declfunc   (astnode*);
+    //result cc_paramseq   (astnode*);
+    //result cc_param      (astnode*);
+    //result cc_params     (astnode*);
+    //result cc_objcarg    (astnode*);
+    //result cc_arg        (astnode*);
+    //result cc_argseq     (astnode*);
+    //result cc_args       (astnode*);
+    result cc_typename   (astnode*);
+    //result cc_instruction(astnode*);
+    //result cc_kif        (astnode*);
+    //result cc_bloc       (astnode*);
+    //result cc_truebloc   (astnode*);
+    //result cc_elsebloc   (astnode*);
+    //result cc_ifbody     (astnode*);
+    //result cc_condexpr   (astnode*);
+    //result cc_expression (astnode*);
+    //result cc_var_id     (astnode*);
+    result cc_new_var    (astnode*);
+    //result cc_objectid   (astnode*);
+    //result cc_function_id(astnode*);
+    //result cc_objcfncall (astnode*);
 
 };
 
