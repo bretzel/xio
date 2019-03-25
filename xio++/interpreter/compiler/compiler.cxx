@@ -299,7 +299,7 @@ message::code xio::compiler::pop_context()
 /*!
     @brief "Compiler" entry.
  */
-compiler::result xio::compiler::__cc__(astnode* a_node, std::function<compiler::result(const term_t&)> cb)
+compiler::result xio::compiler::__cc__(astnode* a_node, std::function<compiler::result(astnode*)> cb)
 {
     object::iterator it = a_node->begin();
     xio_t::result xr;
@@ -309,25 +309,19 @@ compiler::result xio::compiler::__cc__(astnode* a_node, std::function<compiler::
         astnode* node = (*it)->me<astnode>();
         logdebugfn << (*node->term_it)() << logger::White << "==>" << logger::Yellow << node->m_cursor->attribute() << logger::Reset << Ends;
 
-        xr = node->is_rule() ? (this->*parsers[node->rule()->_id])(node) : 
-            cb ? 
-            cb(*node->term_it) : 
-            (
-                message::push(message::xclass::error), 
-                (message::code::unexpected), 
-                " - no parser(s) for: \n",
-                node->m_cursor->mark()
-            );
-
+        xr = node->is_rule()    ? (this->*parsers[node->rule()->_id])(node) : 
+                             cb ? cb(node) : 
+                             (
+                                 message::push(message::xclass::error), 
+                                 (message::code::unexpected), 
+                                 " - no parser(s) for: \n",
+                                 node->m_cursor->mark()
+                             );
         if (!xr)
             return xr;
         ++it;
     }
-    
-
-    return { (message::push(message::xclass::internal) , message::code::implement,__FUNCTION__,"\n", (*it)->me<astnode>()->m_cursor->mark()) };
-
-
+    return xr;
 }
 
 type_t::T xio::compiler::get_type(mnemonic a_code)
@@ -366,7 +360,7 @@ void xio::compiler::cleanup_ctx()
 //
 compiler::result xio::compiler::cc_declvar(astnode *node)
 {
-    compiler::result cr = __cc__(node, [this,node](const term_t & t) -> result {       
+    compiler::result cr = __cc__(node, [this](astnode*) -> result {       
         return { nullptr };
     });
     //...
@@ -507,14 +501,14 @@ compiler::result xio::compiler::cc_declvar(astnode *node)
 static bool _static = false;
 compiler::result xio::compiler::cc_typename(astnode *node)
 {
-    compiler::result cr = __cc__(node, [this,node] (const term_t & t) -> result {
-        if (t._type == term_t::type::code) {
-            if (node->m_cursor->code == mnemonic::kstatic )
+    compiler::result cr = __cc__(node, [this] (astnode* a) -> result {
+        if (a->term_it->_type == term_t::type::code) {
+            if (a->m_cursor->code == mnemonic::kstatic )
             {
                 if (_static) return {(
                     message::push(message::xclass::error),
                     message::code::unexpected,"\n",
-                    node->m_cursor->mark()
+                    a->m_cursor->mark()
                 )};
                 _static = true;
                 ctx.st.sstatic = 1;// Static storage - no matter where.
@@ -522,7 +516,7 @@ compiler::result xio::compiler::cc_typename(astnode *node)
             }
             else
             {
-                ctx._type = get_type(t.mem.c);
+                ctx._type = get_type(a->term_it->mem.c);
                 return { nullptr };
             }
         }

@@ -82,7 +82,7 @@ namespace Ansi {
         xio::xio_t::result r = cc.compile("declvar");
         if(_variables){
             for(auto v : *_variables)
-                logdebugfn << ": " << v->informations() << Ends;
+                logdebugfn << "local vars: " << xio::logger::Yellow <<  v->informations() << Ends;
         }
         return a;
     }

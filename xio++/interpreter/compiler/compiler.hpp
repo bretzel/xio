@@ -136,7 +136,7 @@ private:
     message::code push_context(bloc_t* a_newbloc=nullptr);
     message::code pop_context();
 
-    result __cc__(astnode* a_node, std::function<compiler::result(const term_t&)> cc);
+    result __cc__(astnode* a_node, std::function<compiler::result(astnode*)> cc);
 
     type_t::T get_type(mnemonic a_code);
 

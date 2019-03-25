@@ -55,7 +55,7 @@ bool object::detach()
 
 bool object::end(object::iterator it)
 {
-    if ((*it) && (*it)->m_parent != this) return true;
+    //if ((*it) && (*it)->m_parent != this) return true;
     
     return it == m_children.end();
 }
