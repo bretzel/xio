@@ -80,7 +80,7 @@ using namespace xio;
 compiler::parsers_t compiler::parsers = {
     //{"stmts"         , &compiler::cc_stmts      },
     //{"statement"     , &compiler::cc_statement  },
-    //{"assignstmt"    , &compiler::cc_assignstmt },
+    {"assignstmt"    , &compiler::cc_assignstmt },
     {"declvar"       , &compiler::cc_declvar    },
     //{"funcsig"       , &compiler::cc_funcsig    },
     //{"declfunc"      , &compiler::cc_declfunc   },
@@ -99,8 +99,8 @@ compiler::parsers_t compiler::parsers = {
     //{"elsebloc"      , &compiler::cc_elsebloc   },
     //{"ifbody"        , &compiler::cc_ifbody     },
     //{"condexpr"      , &compiler::cc_condexpr   },
-    //{"expression"    , &compiler::cc_expression },
-    //{"var_id"        , &compiler::cc_var_id     },
+    {"expression"    , &compiler::cc_expression },
+    {"var_id"        , &compiler::cc_var_id     },
     {"new_var"       , &compiler::cc_new_var    },
     //{"objectid"      , &compiler::cc_objectid   },
     //{"function_id"   , &compiler::cc_function_id},
@@ -312,9 +312,9 @@ compiler::result xio::compiler::__cc__(astnode* a_node, std::function<compiler::
         xr = node->is_rule()    ? (this->*parsers[node->rule()->_id])(node) : 
                              cb ? cb(node) : 
                              (
-                                 message::push(message::xclass::error), 
+                                 message::push(message::xclass::internal), 
                                  (message::code::unexpected), 
-                                 " - no parser(s) for: \n",
+                                 " - no allocator(s)/builder(s) for: \n",
                                  node->m_cursor->mark()
                              );
         if (!xr)
@@ -326,7 +326,7 @@ compiler::result xio::compiler::__cc__(astnode* a_node, std::function<compiler::
 
 type_t::T xio::compiler::get_type(mnemonic a_code)
 {
-    token_t t = token_t::query(a_code);
+    //token_t t = token_t::query(a_code);
     return
         a_code == mnemonic::ku8 ? type_t::u8 :
         a_code == mnemonic::ku16 ? type_t::u16 :
@@ -347,24 +347,51 @@ void xio::compiler::cleanup_ctx()
 }
 
 
-//
-//compiler::result xio::compiler::cc_expression(astnode *node)
-//{
-//    auto cr = __cc__(r, [this](const term_t & t)->result {
-//        return {};
-//    });
-//
-//    return {  };
-//}
-//
+
+compiler::result compiler::cc_expression(astnode *node)
+{
+    auto cr = __cc__(node, [this](astnode* a)->result {
+        
+        return { (message::push(message::xclass::internal), message::code::implement) };
+    });
+
+    return { (message::push(message::xclass::internal), message::code::implement) };
+}
+
+compiler::result xio::compiler::cc_value(astnode * node)
+{
+    return __cc__(node, [this](astnode* a)->result {
+        // - Default producer call-back from the parent astnode <node>: {a = operator, number, string...}
+        xio_t* x = new xio_t(ctx.bloc, a->m_cursor->me());
+        ctx.i_seq.push_back(x);
+        return { x };
+    });
+}
+
+compiler::result xio::compiler::cc_var_id(astnode *node)
+{
+    if (compiler::result xr; (xr = ctx.bloc->query_variable(node->m_cursor->attribute())))
+    {
+        ctx.i_seq.push_back(xr.value());
+        return xr;
+    }
+
+    return { (
+        message::push(message::xclass::error),
+        "undefined variable '",
+        node->m_cursor->attribute(), "'\n", ///@todo Get the fucking rid of "\n";
+        node->m_cursor->mark()
+    ) };
+}
+
+
 //
 compiler::result xio::compiler::cc_declvar(astnode *node)
 {
-    compiler::result cr = __cc__(node, [this](astnode*) -> result {       
+    return __cc__(node, [this](astnode*) -> result {       
         return { nullptr };
     });
-    //...
-    return cr;
+
 }
 //
 //
@@ -393,15 +420,14 @@ compiler::result xio::compiler::cc_declvar(astnode *node)
 //    return {  };
 //}
 //
-//compiler::result xio::compiler::cc_assignstmt(astnode *node)
-//{
-//    (void)__cc__(rule, [this] (const term_t & t) -> result {
-//
-//        return { (message::push(message::xclass::internal), message::code::implement) };
-//    });
-//    return {  };
-//}
-//
+compiler::result xio::compiler::cc_assignstmt(astnode *node)
+{
+    return __cc__(node, [this] (astnode* a) -> result {
+
+        return { (message::push(message::xclass::internal), message::code::implement) };
+    });
+}
+
 //
 //compiler::result xio::compiler::cc_funcsig(astnode *node)
 //{
@@ -600,23 +626,8 @@ compiler::result xio::compiler::cc_typename(astnode *node)
 //    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
 //}
 //
-//
-//compiler::result xio::compiler::cc_var_id(astnode *node)
-//{
-//    variable* v = ctx.bloc->query_variable(ctx.cursor->attribute());
-//    if ( v ) {
-//        return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
-//    }
-//    
-//    return {(
-//        message::push(message::xclass::error),
-//        "undefined variable '",
-//        ctx.cursor->attribute(), "'",
-//        ctx.cursor->mark()
-//    )};
-//
-//}
-//
+
+
 //
 compiler::result xio::compiler::cc_new_var(astnode *node)
 {
@@ -642,6 +653,7 @@ compiler::result xio::compiler::cc_new_var(astnode *node)
     ctx.st.sstatic = 0;
     return xr;
 }
+
 //
 //
 //

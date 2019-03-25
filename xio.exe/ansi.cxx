@@ -79,7 +79,7 @@ namespace Ansi {
             this
         };
         //TEST!!!! DO NOT cc.compile("expression"), yet!!
-        xio::xio_t::result r = cc.compile("declvar");
+        xio::xio_t::result r = cc.compile("expression");
         if(_variables){
             for(auto v : *_variables)
                 logdebugfn << "local vars: " << xio::logger::Yellow <<  v->informations() << Ends;

@@ -45,8 +45,8 @@ std::string grammar_txt =
 "elsebloc           : *'else' bloc, *'else' statement.\n"
 "ifbody             : truebloc elsebloc, truebloc.\n"
 "condexpr           : assignstmt, expression.\n"
-"expression         : +value.\n" // ???
-"value              : ?var_id ?objectid ?function_id ?number ?string.\n" // ??? 
+"expression         : +value.\n" // assignstmt ';',
+"value              : ?number ?string ?var_id ?objectid ?function_id ?oper.\n" // ??? 
 "var_id             .\n"
 "new_var            : identifier.\n"
 "objectid           .\n"

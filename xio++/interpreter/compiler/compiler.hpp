@@ -145,7 +145,7 @@ private:
 
     //result cc_stmts      (astnode*);
     //result cc_statement  (astnode*);
-    //result cc_assignstmt (astnode*);
+    result cc_assignstmt (astnode*);
     result cc_declvar    (astnode*);
     //result cc_funcsig    (astnode*);
     //result cc_declfunc   (astnode*);
@@ -164,9 +164,10 @@ private:
     //result cc_elsebloc   (astnode*);
     //result cc_ifbody     (astnode*);
     //result cc_condexpr   (astnode*);
-    //result cc_expression (astnode*);
-    //result cc_var_id     (astnode*);
+    result cc_expression (astnode*);
+    result cc_var_id     (astnode*);
     result cc_new_var    (astnode*);
+    result cc_value      (astnode*);
     //result cc_objectid   (astnode*);
     //result cc_function_id(astnode*);
     //result cc_objcfncall (astnode*);
