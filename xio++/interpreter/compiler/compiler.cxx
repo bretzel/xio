@@ -355,7 +355,7 @@ compiler::result compiler::cc_expression(astnode *node)
         return { (message::push(message::xclass::internal), message::code::implement) };
     });
 
-    return { (message::push(message::xclass::internal), message::code::implement) };
+    return cr;
 }
 
 compiler::result xio::compiler::cc_value(astnode * node)
