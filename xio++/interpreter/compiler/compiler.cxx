@@ -80,6 +80,7 @@ using namespace xio;
 compiler::parsers_t compiler::parsers = {
     //{"stmts"         , &compiler::cc_stmts      },
     //{"statement"     , &compiler::cc_statement  },
+    {"expr_token"    , &compiler::cc_value      },
     {"assignstmt"    , &compiler::cc_assignstmt },
     {"declvar"       , &compiler::cc_declvar    },
     //{"funcsig"       , &compiler::cc_funcsig    },
@@ -253,7 +254,7 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     std::string start_rule = "stmts";
     if (!rname.empty()) start_rule = rname;
     
-    astnode::result ar = m_ast.build(tokens, "declvar");
+    astnode::result ar = m_ast.build(tokens, rname);
     
     if(!ar)
         return {ar.notice()};
@@ -360,12 +361,44 @@ compiler::result compiler::cc_expression(astnode *node)
 
 compiler::result xio::compiler::cc_value(astnode * node)
 {
-    return __cc__(node, [this](astnode* a)->result {
-        // - Default producer call-back from the parent astnode <node>: {a = operator, number, string...}
-        xio_t* x = new xio_t(ctx.bloc, a->m_cursor->me());
-        ctx.i_seq.push_back(x);
-        return { x };
-    });
+    if (!node->m_cursor->f.v)
+    {
+        return {(
+            message::push(message::xclass::error),
+            message::code::syntax,
+            "expected a value token, got:\n",
+            node->m_cursor->mark()
+        )};
+    }
+
+    result xr;
+    variable* v = nullptr;
+
+
+    if (node->m_cursor->type == type_t::id)
+    {
+        v = ctx.bloc->query_local_variable(node->m_cursor->attribute());
+        if (!v)
+            v = ctx.bloc->push_variable(node->m_cursor->me(), ctx.st.sstatic, ctx._type)->me<variable>();
+    }
+    xr = { new xio_t(ctx.bloc, node->m_cursor->me(), v ? v->acc : nullptr) };
+    ctx.i_seq.push_back(xr.value());
+    ctx._type = type_t::any; //type_t::number ?
+    ctx.st.sstatic = 0;
+    return xr;
+    
+
+    //return __cc__(node, [this](astnode* a)->result {
+    //    // - Default producer call-back from the parent astnode <node>: {a = operator, number, string...}
+    //    xio_t* x = new xio_t(ctx.bloc, a->m_cursor->me());
+    //    ctx.i_seq.push_back(x);
+    //    return { x };
+    //});
+}
+
+bool xio::compiler::directive_token(const std::string & d_id, const token_t::cursor & d_token)
+{
+    return false;
 }
 
 compiler::result xio::compiler::cc_var_id(astnode *node)
@@ -384,7 +417,10 @@ compiler::result xio::compiler::cc_var_id(astnode *node)
     ) };
 }
 
-
+/*
+Failed to locate entry file in A:\Dev\Node\Vue\xio.
+Valid entry file should be one of: main.js, index.js, App.vue or app.vue.
+*/
 //
 compiler::result xio::compiler::cc_declvar(astnode *node)
 {

@@ -1,6 +1,7 @@
 #include "ast.hpp"
 
 #include "../../journal/logger.hpp"
+#include "compiler.hpp"
 
 namespace xio {
 
@@ -57,7 +58,16 @@ astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
     {
         logdebugfn << " " << logger::HBlue << a_rule->_id << logger::White << "::" << logger::Yellow << m_cursor->attribute() << logger::White
             << " Empty => Accept and leave: the Parser will further analyzes during the xio generation phase..." << logger::Reset << Ends;
-        return parent_node;
+        if (!compiler::directive_token(a_rule->_id, m_cursor)) {
+            return {(
+                message::push(message::xclass::error),
+                m_cursor->location(),
+                message::code::syntax,
+                " error: expected ", a_rule->_id, "\033[0m, got :", type_t::name(m_cursor->type)," instead.\n",
+                m_cursor->mark()
+            )};
+        }
+        return new astnode(parent_node, term_t::const_iterator(), m_cursor);
     }
     
     seq_t::const_iterator seq_it    = a_rule->begin();

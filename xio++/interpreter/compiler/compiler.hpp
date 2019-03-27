@@ -49,7 +49,7 @@ class xio_api compiler
     using parsers_t = std::map<std::string, compiler::parser_t>;
 
     token_t::list_t* tokens = nullptr; ///< Master Stream;
-
+    friend class xioast;
 
 public:
 
@@ -171,6 +171,7 @@ private:
     //result cc_objectid   (astnode*);
     //result cc_function_id(astnode*);
     //result cc_objcfncall (astnode*);
+    static bool directive_token(const std::string& d_id, const token_t::cursor& d_token);
 
 };
 
