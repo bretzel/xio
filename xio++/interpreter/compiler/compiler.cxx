@@ -74,9 +74,6 @@ using namespace xio;
 //    return false;
 //}
 
-
-
-
 compiler::parsers_t compiler::parsers = {
     //{"stmts"         , &compiler::cc_stmts      },
     //{"statement"     , &compiler::cc_statement  },
@@ -108,36 +105,22 @@ compiler::parsers_t compiler::parsers = {
     //{"objcfncall"    , &compiler::cc_objcfncall }
 };
 
-
-
-
-
-
-
-
-
-
 bool xio::compiler::_eof()
 {
     astnode* node = (*ctx.ast_node)->parent<astnode>();
     return node ? node->end(ctx.ast_node) : m_ast.end(ctx.ast_node);
 }
 
-
 // -3-3; sign number bin number
 compiler::compiler()
 {
-
 }
-
 
 compiler::~compiler()
 {
-
 }
 
 compiler::context_t::context_t() {
-
 }
 
 compiler::context_t::context_t(compiler::context_t && ct) noexcept {
@@ -147,7 +130,6 @@ compiler::context_t::context_t(compiler::context_t && ct) noexcept {
     std::swap(instruction, ct.instruction);
     std::swap(_object, ct._object);
 }
-
 
 compiler::context_t::context_t(const compiler::context_t & ct) {
     bloc = ct.bloc;
@@ -163,7 +145,6 @@ xio::compiler::context_t::context_t(bloc_t* a_bloc, object::iterator a_astnode)
     ast_node = a_astnode;
 }
 
-
 compiler::context_t::~context_t() {
     i_seq.clear();
 }
@@ -176,15 +157,14 @@ compiler::context_t & xio::compiler::context_t::operator=(context_t && ct) noexc
     std::swap(instruction, ct.instruction);
     std::swap(_object, ct._object);
     return *this;
-    
 }
 
 compiler::context_t & xio::compiler::context_t::operator=(const context_t & ct) noexcept
 {
-    bloc= ct.bloc;
-    ast_node= ct.ast_node;
-    i_seq= ct.i_seq;
-    instruction= ct.instruction;
+    bloc = ct.bloc;
+    ast_node = ct.ast_node;
+    i_seq = ct.i_seq;
+    instruction = ct.instruction;
     _object = ct._object;
     return *this;
 }
@@ -203,7 +183,6 @@ compiler::context_t& xio::compiler::context_t::operator++(int)
     // TODO: ins�rer une instruction return ici
 }
 
-
 bloc_t* xio::compiler::context_t::query_object(const std::string& oid)
 {
     // If the bloc is null then crash! It cannot be null!
@@ -213,7 +192,6 @@ bloc_t* xio::compiler::context_t::query_object(const std::string& oid)
 
 xio_t* xio::compiler::context_t::asm_expr()
 {
-    
     return nullptr;
 }
 
@@ -224,23 +202,21 @@ void xio::compiler::context_t::accepted()
 void xio::compiler::context_t::rejected()
 {
     for (auto x : i_seq) {
-
         x->discard();
     }
 }
 
 xio_t::result xio::compiler::compile(const std::string& rname)
 {
-
-    if (!cfg.src) return {(
+    if (!cfg.src) return { (
         message::push(message::xclass::error),
         message::code::empty,
         " compiler config is empty! DUH!"
-    )};
+    ) };
 
     lexer_t lexer;
     lexer_t::result l = lexer(cfg.tokens)[cfg.src];
-    
+
     if (!l) return { l.notice() };
 
     tokens = cfg.tokens;
@@ -253,39 +229,33 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     ++c;
     std::string start_rule = "stmts";
     if (!rname.empty()) start_rule = rname;
-    
+
     astnode::result ar = m_ast.build(tokens, rname);
-    
-    if(!ar)
-        return {ar.notice()};
+
+    if (!ar)
+        return { ar.notice() };
     m_ast_node = ar.value();
-  //  
-  (void)__cc__( (*m_ast.begin())->me<astnode>(), nullptr);
-  ////  (void)__cc__(ar.value(),nullptr);
-  //  
-  //  //...
-  //  
+    //
+    (void)__cc__((*m_ast.begin())->me<astnode>(), nullptr);
+    ////  (void)__cc__(ar.value(),nullptr);
+    //
+    //  //...
+    //
     return { (
         message::push(message::xclass::internal),
         message::code::implement,
         " Ben ouaip! Tout s'est bien passe, mais non! C'est pas encore pret: Analyseurs arretes sur:\n",
         m_ast_node->m_cursor->mark()
     ) };
-  //  
+    //
 }
-
-
-
 
 message::code xio::compiler::push_context(bloc_t* a_newbloc)
 {
-    
     ctx_stack.push({ a_newbloc ? a_newbloc : ctx.bloc, ctx.ast_node });
     ctx = ctx_stack.top();
     return message::code::accepted;
 }
-
-
 
 message::code xio::compiler::pop_context()
 {
@@ -305,19 +275,19 @@ compiler::result xio::compiler::__cc__(astnode* a_node, std::function<compiler::
     object::iterator it = a_node->begin();
     xio_t::result xr;
     logdebugfn << logger::White << " entering :" << (*a_node->term_it)() << logger::White << "==>" << logger::Yellow << a_node->m_cursor->attribute() << logger::Reset << Ends;
-    while (!a_node->end(it)) 
+    while (!a_node->end(it))
     {
         astnode* node = (*it)->me<astnode>();
         logdebugfn << (*node->term_it)() << logger::White << "==>" << logger::Yellow << node->m_cursor->attribute() << logger::Reset << Ends;
 
-        xr = node->is_rule()    ? (this->*parsers[node->rule()->_id])(node) : 
-                             cb ? cb(node) : 
-                             (
-                                 message::push(message::xclass::internal), 
-                                 (message::code::unexpected), 
-                                 " - no allocator(s)/builder(s) for: \n",
-                                 node->m_cursor->mark()
-                             );
+        xr = node->is_rule() ? (this->*parsers[node->rule()->_id])(node) :
+            cb ? cb(node) :
+            (
+                message::push(message::xclass::internal),
+                (message::code::unexpected),
+                " - no allocator(s)/builder(s) for: \n",
+                node->m_cursor->mark()
+                );
         if (!xr)
             return xr;
         ++it;
@@ -347,12 +317,9 @@ void xio::compiler::cleanup_ctx()
     ctx.rejected();
 }
 
-
-
 compiler::result compiler::cc_expression(astnode *node)
 {
     auto cr = __cc__(node, [this](astnode* a)->result {
-        
         return { (message::push(message::xclass::internal), message::code::implement) };
     });
 
@@ -363,17 +330,16 @@ compiler::result xio::compiler::cc_value(astnode * node)
 {
     if (!node->m_cursor->f.v)
     {
-        return {(
+        return { (
             message::push(message::xclass::error),
             message::code::syntax,
             "expected a value token, got:\n",
             node->m_cursor->mark()
-        )};
+        ) };
     }
 
     result xr;
     variable* v = nullptr;
-
 
     if (node->m_cursor->type == type_t::id)
     {
@@ -386,7 +352,6 @@ compiler::result xio::compiler::cc_value(astnode * node)
     ctx._type = type_t::any; //type_t::number ?
     ctx.st.sstatic = 0;
     return xr;
-    
 
     //return __cc__(node, [this](astnode* a)->result {
     //    // - Default producer call-back from the parent astnode <node>: {a = operator, number, string...}
@@ -424,10 +389,9 @@ Valid entry file should be one of: main.js, index.js, App.vue or app.vue.
 //
 compiler::result xio::compiler::cc_declvar(astnode *node)
 {
-    return __cc__(node, [this](astnode*) -> result {       
+    return __cc__(node, [this](astnode*) -> result {
         return { nullptr };
     });
-
 }
 //
 //
@@ -439,9 +403,9 @@ compiler::result xio::compiler::cc_declvar(astnode *node)
 //
 //compiler::result xio::compiler::cc_stmts(astnode *node)
 //{
-//    
+//
 //    auto cr =__cc__(rule, [this] (const term_t& t) -> result {
-//        
+//
 //        return { (message::push(message::xclass::internal), message::code::implement) };
 //    });
 //    return {  };
@@ -458,8 +422,7 @@ compiler::result xio::compiler::cc_declvar(astnode *node)
 //
 compiler::result xio::compiler::cc_assignstmt(astnode *node)
 {
-    return __cc__(node, [this] (astnode* a) -> result {
-
+    return __cc__(node, [this](astnode* a) -> result {
         return { (message::push(message::xclass::internal), message::code::implement) };
     });
 }
@@ -553,7 +516,7 @@ compiler::result xio::compiler::cc_assignstmt(astnode *node)
 //        return { (message::push(message::xclass::internal), message::code::implement) };
 //        });
 //    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
-//    
+//
 //}
 //
 //
@@ -563,15 +526,15 @@ compiler::result xio::compiler::cc_assignstmt(astnode *node)
 static bool _static = false;
 compiler::result xio::compiler::cc_typename(astnode *node)
 {
-    compiler::result cr = __cc__(node, [this] (astnode* a) -> result {
+    compiler::result cr = __cc__(node, [this](astnode* a) -> result {
         if (a->term_it->_type == term_t::type::code) {
-            if (a->m_cursor->code == mnemonic::kstatic )
+            if (a->m_cursor->code == mnemonic::kstatic)
             {
-                if (_static) return {(
+                if (_static) return { (
                     message::push(message::xclass::error),
                     message::code::unexpected,"\n",
                     a->m_cursor->mark()
-                )};
+                ) };
                 _static = true;
                 ctx.st.sstatic = 1;// Static storage - no matter where.
                 return { nullptr };
@@ -583,7 +546,7 @@ compiler::result xio::compiler::cc_typename(astnode *node)
             }
         }
         // ---------------------------------------------------------------------------
-        ///@todo 
+        ///@todo
         return { nullptr };
     });
 
@@ -663,24 +626,23 @@ compiler::result xio::compiler::cc_typename(astnode *node)
 //}
 //
 
-
 //
 compiler::result xio::compiler::cc_new_var(astnode *node)
 {
     if (!node->m_cursor->is_identifier())
         return{ (
-            message::push(message::xclass::error), 
-            message::code::syntax, 
-            ": ", 
+            message::push(message::xclass::error),
+            message::code::syntax,
+            ": ",
             node->m_cursor->informations(),
             " is not an identifier.\n",
             node->m_cursor->mark()
-        )};
-       
+        ) };
+
     // .. Create new variable
     variable* v = ctx.bloc->query_local_variable(node->m_cursor->attribute());
     if (v) {
-        return { 
+        return {
             (message::push(message::xclass::error) , "identifier already exists.", node->m_cursor->mark())
         };
     }
@@ -697,8 +659,8 @@ compiler::result xio::compiler::cc_new_var(astnode *node)
 //{
 //    auto cr = __cc__(rule, [this] (const term_t & t) -> result {
 //
-//           
-//        
+//
+//
 //        return { (message::push(message::xclass::internal), message::code::implement) };
 //    });
 //    return { (message::push(message::xclass::internal) , message::code::implement, ctx.cursor->mark()) };
