@@ -79,7 +79,7 @@ struct xio_api attr {
     int8_t z : 1; ///< Zero or one (optional * )
     int8_t r : 1; ///< Repeat      (        + )
     int8_t l : 1; ///< List        (one of  ~ ?)
-    int8_t x : 1; ///< accepted     ( mutable ) 
+    int8_t x : 1; ///< directive    ( ast direcive ) 
     int8_t s : 8; ///< Litteral List Separator
     attr& operator | (attr const & a)
     {
@@ -92,7 +92,7 @@ struct xio_api attr {
     }
     attr& operator +() { r = 1; return *this; }
     attr& operator *() { z = 1; return *this; }
-    attr& operator !() { x = 1; z = r = 0; return *this; }
+    attr& operator !() { x = 1; return *this; }
     attr& operator ~() { l = 1; return *this; }
     void reset() { z = r = l = x = s = 0; }
     std::string operator()();
@@ -322,6 +322,7 @@ private:
     xio_grammar::result set_optional     (string_t::iterator& crs);
     xio_grammar::result enter_litteral   (string_t::iterator& crs); 
     xio_grammar::result set_oneof        (string_t::iterator& crs);
+    xio_grammar::result set_directive    (string_t::iterator& crs);
 
 };
 

@@ -52,6 +52,13 @@ astnode::result xioast::directive(astnode* a_node, const rule_t * a_rule)
              m_cursor->mark()
         )};
     }
+    return { (
+             message::push(message::xclass::internal),
+             message::code::implement,
+             " unhandled directive:\n",
+             a_rule->_id,":\n",
+             m_cursor->mark()
+        ) };
     
 }
 

@@ -12,13 +12,15 @@ xio_grammar::dictionary_t xio_grammar::grammar_dictionary = {
     {'*', &xio_grammar::set_optional        },
     {'?', &xio_grammar::set_oneof           }, // One of
     {'\'',&xio_grammar::enter_litteral      },
-    {'"' ,&xio_grammar::enter_litteral      }
+    {'"' ,&xio_grammar::enter_litteral      },
+    {'#' ,&xio_grammar::set_directive       },
 };
 
 rule_t::list_t xio_grammar::_rules;
 static bool built = false;
 // Rough, first esquisse / sketch of my rules set for the x.i.o language interpreter.
 std::string grammar_txt =
+"expression         : +#expr_token.\n" // assignstmt ';',
 "stmts              : +statement.\n"
 "statement          : assignstmt ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.\n"
 "assignstmt         : declvar assign expression, var_id assign expression.\n"
@@ -40,7 +42,6 @@ std::string grammar_txt =
 "elsebloc           : *'else' bloc, *'else' statement.\n"
 "ifbody             : truebloc elsebloc, truebloc.\n"
 "condexpr           : assignstmt, expression.\n"
-"expression         : +expr_token.\n" // assignstmt ';',
 "var_id             .\n"
 "new_var            : identifier.\n"
 "objectid           .\n"
@@ -68,7 +69,7 @@ xio_grammar::result xio_grammar::build()
     ) };
 
     _text = grammar_txt;
-    std::size_t count = _text.words(tokens, ":;,|.+*?", true);
+    std::size_t count = _text.words(tokens, ":;,|.+*?#", true);
     string_t::list list;
     for (auto s : tokens) list.push_back(s());
     if (!count)
@@ -240,26 +241,45 @@ xio_grammar::result xio_grammar::end_rule(string_t::iterator & crs)
 
 xio_grammar::result xio_grammar::set_repeat(string_t::iterator & crs)
 {
-    //     logdebug
-    //         << logger::HCyan << __FUNCTION__
-    //         << logger::White << ": ["
-    //         << logger::Yellow << *crs
-    //         << logger::White << ']'
-    //         << Ends;
+         logdebug
+             << logger::HCyan << __FUNCTION__
+             << logger::White << ": ["
+             << logger::Yellow << *crs
+             << logger::White << ']'
+             << Ends;
     _state = st_option;
     +a;
     ++crs;
     return { message::code::accepted };
 }
 
+xio_grammar::result xio_grammar::set_directive(string_t::iterator& crs)
+{
+    !a;
+    _state = st_option;
+    logdebug
+        << logger::HCyan << __FUNCTION__
+        << logger::Yellow << a()
+        << logger::White << ": ["
+        << logger::Yellow << *crs
+        << logger::White << ']'
+        << Ends;
+
+    ++crs;
+    return { message::code::accepted };
+}
+
+
+
+
 xio_grammar::result xio_grammar::set_optional(string_t::iterator & crs)
 {
-    //     logdebug
-    //         << logger::HCyan << __FUNCTION__
-    //         << logger::White << ": ["
-    //         << logger::Yellow << *crs
-    //         << logger::White << ']'
-    //         << Ends;
+         logdebug
+             << logger::HCyan << __FUNCTION__
+             << logger::White << ": ["
+             << logger::Yellow << *crs
+             << logger::White << ']'
+             << Ends;
     *a;
     ++crs;
     _state = st_option;
@@ -589,7 +609,7 @@ std::string attr::operator()()
     if (l)
         str << "?";
     if (x)
-        str << "!";
+        str << "#";
     return str();
 }
 }
