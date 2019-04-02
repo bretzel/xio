@@ -65,7 +65,7 @@ astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
     {
         logdebugfn << " " << logger::HBlue << a_rule->_id << logger::White << "::" << logger::Yellow << m_cursor->attribute() << logger::White
             << " Empty => Accept and leave: the Parser will further analyze during the xio generation phase..." << logger::Reset << Ends;
-        if (!directive(a_rule)) {
+        if (!directive(parent_node,a_rule)) {
             return { (
                 message::push(message::xclass::error),
                 m_cursor->location(),

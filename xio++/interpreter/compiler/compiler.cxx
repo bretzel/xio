@@ -225,7 +225,7 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     xio_grammar gr;
     xio_grammar::result t = gr.build();
     if (!t) return { t.notice() };
-    gr.dump();
+    //gr.dump();
     return { nullptr };
 
     //token_t::cursor c = tokens->begin();
