@@ -62,6 +62,6 @@ class xioast : public object
     astnode::result enter_rule(astnode* parent_node, const rule_t* a_rule);
 
     astnode::result build(token_t::list_t* a_tokens, const std::string& rule_id);
-    astnode::result directive(const rule_t* a_rule);
+    astnode::result directive(astnode* a_node, const rule_t* a_rule);
 };
 }

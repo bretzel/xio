@@ -38,9 +38,21 @@ astnode::result xioast::build(token_t::list_t * a_tokens, const std::string & ru
     return enter_rule(m_rootnode, m_startrule);
 }
 
-astnode::result xioast::directive(const rule_t * a_rule)
+astnode::result xioast::directive(astnode* a_node, const rule_t * a_rule)
 {
-    return astnode::result();
+    // this AST must know what do to with 'directives':
+    if (a_rule->_id == "expr_token") 
+    {
+        if (m_cursor->f.v)
+            return { new astnode(a_node, term_t::const_iterator(), m_cursor) };
+        return  {(
+             message::push(message::xclass::error),
+             message::code::syntax,
+             " expected a value/expression token\n",
+             m_cursor->mark()
+        )};
+    }
+    
 }
 
 astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
@@ -52,8 +64,8 @@ astnode::result xioast::enter_rule(astnode * parent_node, const rule_t * a_rule)
     if (a_rule->empty())
     {
         logdebugfn << " " << logger::HBlue << a_rule->_id << logger::White << "::" << logger::Yellow << m_cursor->attribute() << logger::White
-            << " Empty => Accept and leave: the Parser will further analyzes during the xio generation phase..." << logger::Reset << Ends;
-        if (!compiler::directive_token(a_rule->_id, m_cursor)) {
+            << " Empty => Accept and leave: the Parser will further analyze during the xio generation phase..." << logger::Reset << Ends;
+        if (!directive(a_rule)) {
             return { (
                 message::push(message::xclass::error),
                 m_cursor->location(),

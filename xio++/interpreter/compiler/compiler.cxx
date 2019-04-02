@@ -225,29 +225,32 @@ xio_t::result xio::compiler::compile(const std::string& rname)
     xio_grammar gr;
     xio_grammar::result t = gr.build();
     if (!t) return { t.notice() };
-    token_t::cursor c = tokens->begin();
-    ++c;
-    std::string start_rule = "stmts";
-    if (!rname.empty()) start_rule = rname;
+    gr.dump();
+    return { nullptr };
 
-    astnode::result ar = m_ast.build(tokens, rname);
+    //token_t::cursor c = tokens->begin();
+    //++c;
+    //std::string start_rule = "stmts";
+    //if (!rname.empty()) start_rule = rname;
 
-    if (!ar)
-        return { ar.notice() };
-    m_ast_node = ar.value();
-    //
-    (void)__cc__((*m_ast.begin())->me<astnode>(), nullptr);
-    ////  (void)__cc__(ar.value(),nullptr);
-    //
-    //  //...
-    //
-    return { (
-        message::push(message::xclass::internal),
-        message::code::implement,
-        " Ben ouaip! Tout s'est bien passe, mais non! C'est pas encore pret: Analyseurs arretes sur:\n",
-        m_ast_node->m_cursor->mark()
-    ) };
-    //
+    //astnode::result ar = m_ast.build(tokens, rname);
+
+    //if (!ar)
+    //    return { ar.notice() };
+    //m_ast_node = ar.value();
+    ////
+    //(void)__cc__((*m_ast.begin())->me<astnode>(), nullptr);
+    //////  (void)__cc__(ar.value(),nullptr);
+    ////
+    ////  //...
+    ////
+    //return { (
+    //    message::push(message::xclass::internal),
+    //    message::code::implement,
+    //    " Ben ouaip! Tout s'est bien passe, mais non! C'est pas encore pret: Analyseurs arretes sur:\n",
+    //    m_ast_node->m_cursor->mark()
+    //) };
+    ////
 }
 
 message::code xio::compiler::push_context(bloc_t* a_newbloc)
