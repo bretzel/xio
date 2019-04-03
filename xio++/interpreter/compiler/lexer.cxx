@@ -588,8 +588,7 @@ lexer_t::result lexer_t::exec()
                 if (!scanner)
                     return  { (message::push(message::xclass::error), '(', cursor.l, ',',cursor.col, ')',"lexical analysis : no parser assigned to the token table!\n" + cursor.mark()) };
 
-                if (result r; !(r = (this->*scanner)(token)))
-                    return r; ///@todo handle error...
+                if (result r; !(r = (this->*scanner)(token))) return r;
 
                 cursor.f = 0;
                 token.loc.l = cursor.l;
