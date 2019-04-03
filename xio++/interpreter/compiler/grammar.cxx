@@ -56,12 +56,12 @@ xio_grammar::result xio_grammar::build()
     //        (message::push(message::xclass::error), "rules source code is empty!")
     //    };
 
-    logdebug
-        << logger::HCyan << __FUNCTION__
-        << logger::White << ": [ Building rules :" << logger::brk()
-        << logger::Yellow << grammar_txt
-        << logger::White << ']'
-        << Ends;
+    //logdebug
+    //    << logger::HCyan << __FUNCTION__
+    //    << logger::White << ": [ Building rules :" << logger::brk()
+    //    << logger::Yellow << grammar_txt
+    //    << logger::White << ']'
+    //    << Ends;
 
     if (built()) return { (
         message::push(message::xclass::warning),
@@ -241,12 +241,12 @@ xio_grammar::result xio_grammar::end_rule(string_t::iterator & crs)
 
 xio_grammar::result xio_grammar::set_repeat(string_t::iterator & crs)
 {
-         logdebug
-             << logger::HCyan << __FUNCTION__
-             << logger::White << ": ["
-             << logger::Yellow << *crs
-             << logger::White << ']'
-             << Ends;
+         //logdebug
+         //    << logger::HCyan << __FUNCTION__
+         //    << logger::White << ": ["
+         //    << logger::Yellow << *crs
+         //    << logger::White << ']'
+         //    << Ends;
     _state = st_option;
     +a;
     ++crs;
@@ -257,13 +257,13 @@ xio_grammar::result xio_grammar::set_directive(string_t::iterator& crs)
 {
     !a;
     _state = st_option;
-    logdebug
-        << logger::HCyan << __FUNCTION__
-        << logger::Yellow << a()
-        << logger::White << ": ["
-        << logger::Yellow << *crs
-        << logger::White << ']'
-        << Ends;
+    //logdebug
+    //    << logger::HCyan << __FUNCTION__
+    //    << logger::Yellow << a()
+    //    << logger::White << ": ["
+    //    << logger::Yellow << *crs
+    //    << logger::White << ']'
+    //    << Ends;
 
     ++crs;
     return { message::code::accepted };
@@ -274,12 +274,12 @@ xio_grammar::result xio_grammar::set_directive(string_t::iterator& crs)
 
 xio_grammar::result xio_grammar::set_optional(string_t::iterator & crs)
 {
-         logdebug
-             << logger::HCyan << __FUNCTION__
-             << logger::White << ": ["
-             << logger::Yellow << *crs
-             << logger::White << ']'
-             << Ends;
+         //logdebug
+         //    << logger::HCyan << __FUNCTION__
+         //    << logger::White << ": ["
+         //    << logger::Yellow << *crs
+         //    << logger::White << ']'
+         //    << Ends;
     *a;
     ++crs;
     _state = st_option;

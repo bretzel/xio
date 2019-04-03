@@ -444,12 +444,12 @@ logger& logger::operator<<(logger::Tail til)
 {
     switch (til) {
     case logger::LF:
-        m_text << logger::m_eol;
+        (*this) << logger::m_eol;
         (*logger::m_file) << m_text();
         m_text.clear();
         break;
     case logger::End:
-        m_text << logger::m_eol;
+        (*this) << logger::Reset  << logger::brk();
         (*logger::m_file) << m_text();
         m_text.clear();
         break;

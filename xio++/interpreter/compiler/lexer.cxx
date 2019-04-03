@@ -392,7 +392,7 @@ lexer_t::result lexer_t::scan_factor(xio::token_t & token)
     accepted:
         token.loc.e = cursor.c = token.loc.b;
         vt = token_t::query(mnemonic::mul);
-        logdebugfn << "accepted: token informations: " << token.informations() << Ends;
+        //logdebugfn << "accepted: token informations: " << token.informations() << Ends;
         vt.loc = token.loc;
         vt.f.m = 1;
         tokens->push_back(vt);
@@ -579,7 +579,7 @@ lexer_t::result lexer_t::exec()
                     (void)scan_factor(token); // 4ac(4ac[4ac{
             }
             else {
-                logdebug << "lexer: checking scanner for type" << logger::Yellow << type_t::name(token.type) << Ends;
+                //logdebug << "lexer: checking scanner for type" << logger::Yellow << type_t::name(token.type) << Ends;
                 auto i = lexer_t::scanners.find(token.type);
                 if (i == lexer_t::scanners.end()) {
                     return  { (message::push(message::xclass::error), '(', cursor.l, ',',cursor.col, ')',"lexical analysis : no parser found for  token\n" + cursor.mark())  };
