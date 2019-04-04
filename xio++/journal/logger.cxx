@@ -25,7 +25,7 @@ wchar_t logger::m_arrows[8] = {
 
 
 
-string_t             logger::m_filename = "";    ///< ...filename - empty if stdout is to be used.
+string_t            logger::m_filename = "";    ///< ...filename - empty if stdout is to be used.
 std::ofstream       logger::m_file_output; ///< the instance of file.
 std::ostream*       logger::m_file = 0;        ///< pointer to the ofstream { stdout; or file stream}.
 std::map<int32_t, std::string> logger::m_code_type_dictionary;
@@ -36,14 +36,14 @@ bool                logger::m_code_mode = false;
 bool                logger::m_closed = false;
 
 
-string_t             logger::m_fn_prefix = "";   ///< saved text attributes/style for the function name { __function__ }.
-string_t             logger::m_long_fn_prefix = ""; ///< saved text attributes/style for the long function name. { __pretty_function__ }.
+string_t            logger::m_fn_prefix = "";   ///< saved text attributes/style for the function name { __function__ }.
+string_t            logger::m_long_fn_prefix = ""; ///< saved text attributes/style for the long function name. { __pretty_function__ }.
 
 logger::Mode    	logger::m_mode = logger::Plain;
 
 string_t::list	    logger::m_attr_table;  ///< text attributes/style list built from the mode;
-string_t::list       logger::m_type_table;  ///< message types list including their attributes/style.
-string_t::list       logger::m_objects_prefix_table;
+string_t::list      logger::m_type_table;  ///< message types list including their attributes/style.
+string_t::list      logger::m_objects_prefix_table;
 
 std::string         logger::m_eol = "\n";  ///< line break for the mode.
 int                 logger::m_indent = 0;
@@ -216,8 +216,6 @@ bool logger::close()
     bool r = true;
     if (logger::m_file_output.is_open()) {
         (*logger::m_file) << logger::m_attr_table[(int)logger::Black] << "}" << logger::m_eol << "end" << logger::m_eol;
-        if (logger::m_mode == logger::Mode::Html)
-            (*logger::m_file) << "</body>\n</html>\n";
         if (!logger::m_stdout)
             logger::m_file_output.close();
     }
@@ -655,7 +653,7 @@ void logger::_inithtml()
     logger::m_attr_table.push_back("<span style=\"color : #800980;\">"); // logger::hmagenta
     logger::m_attr_table.push_back("<span style=\"color : #007078;\">"); // logger::hcyan
     logger::m_attr_table.push_back("<span style=\"color : #fff;\">"); // logger::white
-    logger::m_attr_table.push_back("</span>");// logger::reset
+    logger::m_attr_table.push_back("<span style=\"color:black;\"></span></span>");// logger::reset
     logger::m_attr_table.push_back("<span style=\"font-style : italic;\">");// logger::italic
     logger::m_attr_table.push_back("<span style=\"text-style : bold;\">");// logger::strong
     logger::m_attr_table.push_back("<sup>");// logger::sup
@@ -666,24 +664,6 @@ void logger::_inithtml()
     logger::m_attr_table.push_back("</pre>\n</div>");// logger::endcode
 
     logger::m_eol = "<br/>";
-
-    string_t sheet =
-        "<html>\n"
-        "<head>\n"
-        "    <style>\n"
-        "        body{ background-color:#fff;}\n"
-        "        pre{ margin:0px; }\n"
-        "        .code{\n"
-        "            /*min-height : 90px;\n*/"
-        "            margin        :0px;"
-        "            display    : bloc;\n"
-        "            width  : auto;\n"
-        "            /*font-weight: bold;*/\n"
-        "            font-size  : 12pt;\n"
-        "            /*padding    : 5px 5px 5px 5px;*/\n"
-        "            background-color: #fff;\n"
-        "        }\n    </style>\n    </head>\n<body>\n";
-    (*logger::m_file) << sheet() << std::endl;
     if (!logger::m_file->good()) {
         std::cerr << " error : " << strerror(errno) << "\n";
     }
