@@ -25,7 +25,7 @@ std::string variable::informations() {
     if(mem.sstatic)
         str << "static ";
     str << type_t::name(_effective_type) << ' ' << t0->attribute();
-
+   
     return str();
 
 }

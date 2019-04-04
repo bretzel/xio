@@ -14,204 +14,145 @@ namespace xio {
 namespace type_t {
 
 
+    std::map<T, std::string> T_STR = {
+           {null        ,"null"         },
+           {number      ,"number"       },
+           {text        ,"text"         },
+           {voidptr     ,"voidptr"      },
+           {any         ,"any"          },
+           {leaf        ,"leaf"         },
+           {sign        ,"sign"         },
+           {i8          ,"i8"           },
+           {i16         ,"i16"          },
+           {i32         ,"i32"          },
+           {i64         ,"i64"          },
+           {u8          ,"u8"           },
+           {u16         ,"u16"          },
+           {u32         ,"u32"          },
+           {u64         ,"u64"          },
+           {real        ,"real"         },
+           {var         ,"var"          },
+           {bloc        ,"bloc"         },
+           {filo        ,"filo"         },
+           {keyword     ,"keyword"      },
+           {unary       ,"unary"        },
+           {prefix      ,"prefix"       },
+           {postfix     ,"postfix"      },
+           {oper        ,"operator"     },
+           {binary      ,"binary"       },
+           {func        ,"function"     },
+           {funcptr     ,"function ptr" },
+           {obj         ,"object"       },
+           {pointer     ,"pointer"      },
+           {type        ,"type"         },
+           {id          ,"identifier"   },
+           {ref         ,"reference"    },
+           {punctuation ,"punctuation"  },
+           {assign      ,"assign"       },
+           {boolean     ,"boolean"      },
+           {hex         ,"hexadecimal"  },
+           {leftpar     ,"leftpar"      },
+           {closepar    ,"closepar"     },
+           {openabs     ,"openabs"      },
+           {closeabs    ,"closeabs"     },
+           {static_t    ,"static"       }
+    };
+
+    std::map<std::string, T> STR_T = {
+            {"null"          ,null       },
+            {"number"        ,number     },
+            {"text"          ,text       },
+            {"string"        ,text       },
+            {"voidptr"       ,voidptr    },
+            {"void-pointer"  ,voidptr    },
+            {"any"           ,any        },
+            {"leaf"          ,leaf       },
+            {"sign"          ,sign       },
+            {"i8"            ,i8         },
+            {"i16"           ,i16        },
+            {"i32"           ,i32        },
+            {"i64"           ,i64        },
+            {"u8"            ,u8         },
+            {"u16"           ,u16        },
+            {"u32"           ,u32        },
+            {"u64"           ,u64        },
+            {"real"          ,real       },
+            {"var"           ,var        },
+            {"variable"      ,var        },
+            {"bloc"          ,bloc       },
+            {"filo"          ,filo       },
+            {"stack"         ,filo       },
+            {"keyword"       ,keyword    },
+            {"unary"         ,unary      },
+            {"prefix"        ,prefix     },
+            {"postfix"       ,postfix    },
+            {"oper"          ,oper       },
+            {"operator"      ,oper       },
+            {"binary"        ,binary     },
+            {"binary-op"     ,binary     },
+            {"func"          ,func       },
+            {"function"      ,func       },
+            {"funcptr"       ,funcptr    },
+            {"function-pointer",funcptr    },
+            {"obj"           ,obj        },
+            {"object"         ,obj        },
+            {"pointer"       ,pointer    },
+            {"type"          ,type       },
+            {"id"            ,id         },
+            {"identifier"    ,id         },
+            {"ref"           ,ref        },
+            {"reference"     ,ref        },
+            {"punctuation"   ,punctuation},
+            {"assign"        ,assign     },
+            {"boolean"       ,boolean    },
+            {"hex"           ,hex        },
+            {"leftpar"      ,leftpar    },
+            {"closepar"      ,closepar   },
+            {"openabs"      ,openabs    },
+            {"closeabs"      ,closeabs   },
+    };
+
+
 
 
 std::string xio_api name(T ty)
 {
-    std::string str;
-    if (ty == null) return "null";
+    T tbm = ty;
+    string_t str;
 
-    if (ty&number) {
-        if (!str.empty()) str += ':'; str += "number";
+    for (auto t : T_STR) {
+        if (!tbm) break;
+        if (t.first & tbm) {
+            str << ':' << t.second;
+            tbm &= ~tbm;
+        }
     }
-    if (ty&text) {
-        if (!str.empty()) str += ':'; str += "text";
-    }
-    if (ty&voidptr) {
-        if (!str.empty()) str += ':'; str += "voidptr";
-    }
-    if (ty&any) {
-        if (!str.empty()) str += ':'; str += "any";
-    }
-    if (ty&leaf) {
-        if (!str.empty()) str += ':'; str += "leaf";
-    }
-    if (ty&sign) {
-        if (!str.empty()) str += ':'; str += "sign";
-    }
-    if (ty&real) {
-        if (!str.empty()) str += ':'; str += "real";
-    }
-    if (ty&i8) {
-        if (!str.empty()) str += ':'; str += "i8";
-    }
-    if (ty&i16) {
-        if (!str.empty()) str += ':'; str += "i16";
-    }
-    if (ty&i32) {
-        if (!str.empty()) str += ':'; str += "i32";
-    }
-    if (ty&i64) {
-        if (!str.empty()) str += ':'; str += "i64";
-    }
-    if (ty&u8) {
-        if (!str.empty()) str += ':'; str += "u8";
-    }
-    if (ty&u16) {
-        if (!str.empty()) str += ':'; str += "u16";
-    }
-    if (ty&u32) {
-        if (!str.empty()) str += ':'; str += "u32";
-    }
-    if (ty&u64) {
-        if (!str.empty()) str += ':'; str += "u64";
-    }
-    if (ty&var) {
-        if (!str.empty()) str += ':'; str += "var";
-    }
-    if (ty&bloc) {
-        if (!str.empty()) str += ':'; str += "bloc";
-    }
-    if (ty&filo) {
-        if (!str.empty()) str += ':'; str += "stack";
-    }
-    if (ty&keyword) {
-        if (!str.empty()) str += ':'; str += "keyword";
-    }
-    if (ty&unary) {
-        if (!str.empty()) str += ':'; str += "unary";
-    }
-    if (ty&prefix) {
-        if (!str.empty()) str += ':'; str += "prefix";
-    }
-    if (ty&postfix) {
-        if (!str.empty()) str += ':'; str += "postfix";
-    }
-    if (ty&oper) {
-        if (!str.empty()) str += ':'; str += "operator";
-    }
-    if (ty&binary) {
-        if (!str.empty()) str += ':'; str += "binary";
-    }
-    if (ty&func) {
-        if (!str.empty()) str += ':'; str += "function";
-    }
-    if (ty&funcptr) {
-        if (!str.empty()) str += ':'; str += "function pointer";
-    }
-    if (ty&obj) {
-        if (!str.empty()) str += ':'; str += "object";
-    }
-    if (ty&pointer) {
-        if (!str.empty()) str += ':'; str += "pointer";
-    }
-    if (ty&type) {
-        if (!str.empty()) str += ':'; str += "type";
-    }
-    if (ty&id) {
-        if (!str.empty()) str += ':'; str += "identifier";
-    }
-    if (ty&punctuation) {
-        if (!str.empty()) str += ':'; str += "punctuation";
-    }
-    if (ty&ref) {
-        if (!str.empty()) str += ':'; str += "reference";
-    }
-    if (ty&assign) {
-        if (!str.empty()) str += ':'; str += "assign";
-    }
-    if (ty&hex) {
-        if (!str.empty()) str += ':'; str += "hex";
-    }
-    if (ty&leftpar) {
-        if (!str.empty()) str += ':'; str += "leftpar";
-    }
-    if (ty&closepar) {
-        if (!str.empty()) str += ':'; str += "closepar";
-    }
-    if (ty&openabs) {
-        if (!str.empty()) str += ':'; str += "leftabs";
-    }
-    if (ty&closeabs) {
-        if (!str.empty()) str += ':'; str += "closeabs";
-    }
-
-    return str;
-
+    if (str.empty()) str = "nan";
+    return str();
 }
+
+
 
 T xio_api strtotype(const std::string & a_names)
 {
     string_t::word::list list;
     string_t names = a_names;
 
-    std::map<std::string, T> _ = {
-        {"null"          ,null       },
-        {"number"        ,number     },
-        {"text"          ,text       },
-        {"string"        ,text       },
-        {"voidptr"       ,voidptr    },
-        {"void-pointer"  ,voidptr    },
-        {"any"           ,any        },
-        {"leaf"          ,leaf       },
-        {"sign"          ,sign       },
-        {"i8"            ,i8         },
-        {"i16"           ,i16        },
-        {"i32"           ,i32        },
-        {"i64"           ,i64        },
-        {"u8"            ,u8         },
-        {"u16"           ,u16        },
-        {"u32"           ,u32        },
-        {"u64"           ,u64        },
-        {"real"          ,real       },
-        {"var"           ,var        },
-        {"variable"      ,var        },
-        {"bloc"          ,bloc       },
-        {"filo"          ,filo       },
-        {"stack"         ,filo       },
-        {"keyword"       ,keyword    },
-        {"unary"         ,unary      },
-        {"prefix"        ,prefix     },
-        {"postfix"       ,postfix    },
-        {"oper"          ,oper       },
-        {"operator"      ,oper       },
-        {"binary"        ,binary     },
-        {"binary-op"     ,binary     },
-        {"func"          ,func       },
-        {"function"      ,func       },
-        {"funcptr"       ,funcptr    },
-        {"function-pointer",funcptr    },
-        {"obj"           ,obj        },
-        {"object"         ,obj        },
-        {"pointer"       ,pointer    },
-        {"type"          ,type       },
-        {"id"            ,id         },
-        {"identifier"    ,id         },
-        {"ref"           ,ref        },
-        {"reference"     ,ref        },
-        {"punctuation"   ,punctuation},
-        {"assign"        ,assign     },
-        {"boolean"       ,boolean    },
-        {"hex"           ,hex        },
-        {"leftpar"      ,leftpar    },
-        {"closepar"      ,closepar   },
-        {"openabs"      ,openabs    },
-        {"closeabs"      ,closeabs   },
-    };
-
+    
     T result = 0;
     std::size_t count = names.words(list, string_t::use_default_separators(), false);
     if (count > 0) {
         //logdebugfn << " names:[" << a_names << "]:"<< Ends;
         for (auto s : list) {
             std::string txt = s();
-            result |= _[txt];
+            result |= STR_T[txt];
         //    logdebugfn << '`' << txt << "`" <<   Ends;
         }
     }
     
     return result;
 }
+
 
 uint64_t xio_api integral(T Ty)
 {

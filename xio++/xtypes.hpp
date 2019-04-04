@@ -242,6 +242,7 @@ constexpr T  closeabs       = 0x4000000000;
 constexpr T  static_t       = 0x8000000000; ///< Flag set at the parser phase when applicable.
 
 std::string     xio_api name(T ty);
+//std::string     xio_api namel(T ty);
 T               xio_api strtotype(const std::string& names);
 uint64_t        xio_api integral(T Ty);
 
