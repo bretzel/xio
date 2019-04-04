@@ -43,10 +43,10 @@ class xio_api string_t
         std::size_t _delta = 0; // Format length.
         std::size_t _pos = 0; //
         char    _s = 0; // Effective data type
-        char    _format[20]; // Unused yet.
+        //char    _format[20]; // Unused yet.
         const char* _c = nullptr;
 
-        format_t(std::string& _s) : _c(_s.c_str()) {}
+        format_t(std::string& a_s) : _c(a_s.c_str()) {}
         std::string operator()();
 
     };

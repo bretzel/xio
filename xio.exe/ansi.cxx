@@ -8,7 +8,7 @@
 #include <xio++/interpreter/kernel/bloc.hpp>
 //#include <xio++/interpreter/compiler/grammar.hpp>
 #include <xio++/interpreter/compiler/compiler.hpp>
-
+#include <xio++/journal/journal.hpp>
 
 namespace Ansi {
 
@@ -136,6 +136,19 @@ namespace Ansi {
 
 
 
+    int TestJournal()
+    {
+        using xio::TextAttr;
+        // Journal::Log Log = Journal[SomeLogHandle];
+
+
+        std::cout << __PRETTY_FUNCTION__ << ":\n";
+        xio::Journal::Log Log;
+        Log << TextAttr::Italic << 34.001 ^ TextAttr::Italic;
+
+        return 0;
+    }
+
     auto main(int argc, char** argv) -> int {
 
         Ansi::CAnsi con(argc, argv);
@@ -150,14 +163,16 @@ namespace Ansi {
         str << 10;
         logsuccess << str() << Ends;
         loginfo << "test  _type = 16401: " << xio::type_t::name(16401) << ": " << Ends;
+
         //test_xio(con);
+       
         test_rtfc(con);
         con.execute();
         xio::message::clear([](xio::message & msg) {
             lognotice << msg() << Ends;
         });
 
-
+        TestJournal();
         return 0;
     }
 
