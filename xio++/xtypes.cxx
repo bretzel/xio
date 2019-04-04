@@ -123,8 +123,9 @@ std::string xio_api name(T ty)
     for (auto t : T_STR) {
         if (!tbm) break;
         if (t.first & tbm) {
-            str << ':' << t.second;
-            tbm &= ~tbm;
+            str << t.second;
+            tbm &= ~t.first;
+            if (tbm) str << ':';
         }
     }
     if (str.empty()) str = "nan";
