@@ -9,7 +9,7 @@
 
 namespace xio {
 
-// L << Italic << " Je suis en itealique" - Italic 
+// L << Italic << " Je suis en italique" - Italic 
 
     enum class TextAttr : int8_t {
         Italic=1,
@@ -26,6 +26,8 @@ namespace xio {
 
 class xio_api Journal 
 {
+
+
 
 public:
 
@@ -86,7 +88,9 @@ public:
         private:
         };
 
-        struct xio_api Article {
+        struct xio_api Article 
+        {
+            using List = std::map<std::string, Article>;
 
         };
 
@@ -121,6 +125,8 @@ public:
     //Journal::Log& operator[](Journal::Log::LogHandle);
     //Journal::Log& operator||(type_t::T);
 
+private:
+    Log::LogHandle mLH = 1; ///< LastLogHandle ID;
 
 
 };
