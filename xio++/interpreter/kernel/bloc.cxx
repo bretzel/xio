@@ -64,6 +64,7 @@ bloc_t* bloc_t::query_object(const std::string& oid) const
     if (!_objects) return nullptr;
     for (auto o : *_objects)
         if (o->token()->attribute() == oid) return  dynamic_cast<bloc_t*>(o);
+    
     return nullptr;
 }
 

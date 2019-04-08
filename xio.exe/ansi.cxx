@@ -144,7 +144,8 @@ namespace Ansi {
 
         std::cout << __PRETTY_FUNCTION__ << ":\n";
         xio::Journal::Log Log;
-        Log << TextAttr::Italic << 34.001 ^ TextAttr::Italic;
+        //(Log << TextAttr::Italic << 34.001 ^ TextAttr::Italic) << "allo" ;
+        Log << TextAttr::Italic << " printf " << TextAttr::End;
 
         return 0;
     }
