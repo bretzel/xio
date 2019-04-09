@@ -52,6 +52,15 @@ astnode::result xioast::directive(astnode* a_node, const rule_t * a_rule)
              m_cursor->mark()
         )};
     }
+    if (a_rule->_id == "functionid") 
+    {
+        ;
+    }
+    if (a_rule->_id == "objectid") 
+    {
+
+    }
+
     return { (
              message::push(message::xclass::internal),
              message::code::implement,

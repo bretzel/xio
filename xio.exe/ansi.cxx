@@ -143,9 +143,13 @@ namespace Ansi {
 
 
         std::cout << __PRETTY_FUNCTION__ << ":\n";
-        xio::Journal::Log Log;
+        // xio::Journal::Log Log;
         //(Log << TextAttr::Italic << 34.001 ^ TextAttr::Italic) << "allo" ;
-        Log << TextAttr::Italic << " printf " << TextAttr::End << " test: W3CMetro: " << Log[xio::W3CMetro::w3cMetroDarkBlue];
+
+        xio::Journal& Journal = xio::Journal::Instance();
+        xio::Journal::Log& Log = Journal["/Books/Logs"];
+
+        Log << TextAttr::Italic << " printf " << TextAttr::End << " test: W3CMetro: " << Log[xio::W3CMetro::/*w3cMetro*/DarkBlue];
 
         return 0;
     }
@@ -156,6 +160,7 @@ namespace Ansi {
 #ifdef _WIN32
         con.Init();
 #endif
+        
         xio::logger::setfile("xio.log");
         xio::logger::init(xio::logger::Mode::Html, "x.i.o++ framework development.", true);
         xio::logger::resetstamp(), xio::logger::Hour24;

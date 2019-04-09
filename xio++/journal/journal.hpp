@@ -9,7 +9,7 @@
 #include <stack>
 //#include <string_view>
 #include <xio++/journal/w3-colors-metro.hpp>
-
+#include <fstream>
 
 namespace xio {
 
@@ -25,11 +25,7 @@ enum class TextAttr : int8_t {
     End
 };
 
-enum class W3C:uint16_t{
 
-    w3MetroDarkOrange, // "w3-metro-dark-orange" }, // #da532c
-
-};
 
 enum class JournalBookSection : int8_t {
 
@@ -38,6 +34,8 @@ enum class JournalBookSection : int8_t {
 class xio_api Journal 
 {
 
+
+    
 
 
 public:
@@ -78,7 +76,7 @@ public:
         string_t mText;
     };
 
-
+   
 
     struct xio_api Book 
     {
@@ -116,46 +114,65 @@ public:
 
         };
 
-        struct xio_api Errors {
+        struct xio_api Errors : public Journal::Log{
 
         };
 
-        struct xio_api Warnings {
+        struct xio_api Warnings : public Journal::Log {
 
         };
 
-        struct xio_api Debug {
+        struct xio_api Debug : public Journal::Log {
 
         };
 
-        struct xio_api Infos {
+        struct xio_api Infos : public Journal::Log {
 
         };
 
-        struct xio_api Exceptions {
+        struct xio_api Exceptions : public Journal::Log {
 
         };
 
-        struct xio_api Chapter 
+        struct xio_api Chapter : public Journal::Log
         {
             using List = std::vector<Journal::Book::Chapter>;
             std::string mId;
 
 
         };
+
+        struct xio_api Logs
+        {
+
+            Logs() = default;
+            ~Logs();
+
+            Journal::Log::LogHandle mLogHandle=0xFFFFFFFFFFFFFFFF;
+            std::ofstream mOut;
+        };
     };
 
-    std::string_view operator[](W3CMetro K);
+private:
+    Journal();
+public:
+    ~Journal();
 
+    std::string_view operator[](W3CMetro K);
+    //   /Book/Stream
     //Journal::Log& operator[](Journal::Log::LogHandle);
+    Journal::Log& operator[](const std::string& APath);
+
     //Journal::Log& operator||(type_t::T);
 
+    static Journal& Instance();
 private:
-    Log::LogHandle mLH = 1; ///< LastLogHandle ID;
     
-    static w3c::NoW3CSSMap _W3cMetro;
-
-
+    using Loggers = std::map<std::string, Journal::Log>;
+    Journal::Loggers mLoggers;
+    static w3c::W3ClassMap _W3cMetro;
+    static Journal* _Instance;
+    
 };
 
 

@@ -12,23 +12,23 @@ namespace xio {
     */
     enum class W3CMetro :int16_t
     {
-        w3cMetroLightGreen, // #99b433
-        w3cMetroBreen,      // #00a300
-        w3cMetroDarkGreen,  // #1e7145
-        w3cMetroMagenta,    // #ff0097  
-        w3cMetroLightPurple,// #9f00a7
-        w3cMetroPurple,     // #7e3878 
-        w3cMetroDarkPurple, // #603cba 
-        w3cMetroDarken,     // #1d1d1d 
-        w3cMetroTeal,       // #00aba9
-        w3cMetroLightBlue,  // #eff4ff
-        w3cMetroBlue,       // #2d89ef
-        w3cMetroDarkBlue,   // #2b5797
-        w3cMetroYellow,     // #ffc40d
-        w3cMetroOrange,     // #e3a21a
-        w3cMetroDarkOrange, // #da532c
-        w3cMetroRed,        // #ee1111
-        w3cMetroDarkRed     // #b91d47
+        /*w3cMetro*/LightGreen, // #99b433
+        /*w3cMetro*/Breen,      // #00a300
+        /*w3cMetro*/DarkGreen,  // #1e7145
+        /*w3cMetro*/Magenta,    // #ff0097  
+        /*w3cMetro*/LightPurple,// #9f00a7
+        /*w3cMetro*/Purple,     // #7e3878 
+        /*w3cMetro*/DarkPurple, // #603cba 
+        /*w3cMetro*/Darken,     // #1d1d1d 
+        /*w3cMetro*/Teal,       // #00aba9
+        /*w3cMetro*/LightBlue,  // #eff4ff
+        /*w3cMetro*/Blue,       // #2d89ef
+        /*w3cMetro*/DarkBlue,   // #2b5797
+        /*w3cMetro*/Yellow,     // #ffc40d
+        /*w3cMetro*/Orange,     // #e3a21a
+        /*w3cMetro*/DarkOrange, // #da532c
+        /*w3cMetro*/Red,        // #ee1111
+        /*w3cMetro*/DarkRed     // #b91d47
     };
 
 
@@ -55,8 +55,8 @@ namespace xio {
     */
 
     namespace w3c {
-        using NoW3CSS = std::pair<std::string_view, std::string_view>;
-        using NoW3CSSMap = std::map<W3CMetro, NoW3CSS>;
+        using W3Class = std::pair<std::string_view, std::string_view>;
+        using W3ClassMap = std::map<W3CMetro, W3Class>;
     }
 
 }

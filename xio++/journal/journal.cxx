@@ -6,27 +6,27 @@
 namespace xio {
 
 
+    Journal* Journal::_Instance = nullptr;
 
 
-
-    w3c::NoW3CSSMap Journal::_W3cMetro = {
-         {W3CMetro::w3cMetroLightGreen,   {"w3-metro-light-green"  ,"#99b433"}},
-         {W3CMetro::w3cMetroBreen,        {"w3-metro-green"        ,"#00a300"}},
-         {W3CMetro::w3cMetroDarkGreen,    {"w3-metro-dark-green"   ,"#1e7145"}},
-         {W3CMetro::w3cMetroMagenta,      {"w3-metro-magenta"      ,"#ff0097"}},
-         {W3CMetro::w3cMetroLightPurple,  {"w3-metro-light-purple" ,"#9f00a7"}},
-         {W3CMetro::w3cMetroPurple,       {"w3-metro-purple"       ,"#7e3878"}},
-         {W3CMetro::w3cMetroDarkPurple,   {"w3-metro-dark-purple"  ,"#603cba"}},
-         {W3CMetro::w3cMetroDarken,       {"w3-metro-darken"       ,"#1d1d1d"}},
-         {W3CMetro::w3cMetroTeal,         {"w3-metro-teal"         ,"#00aba9"}},
-         {W3CMetro::w3cMetroLightBlue,    {"w3-metro-light-blue"   ,"#eff4ff"}},
-         {W3CMetro::w3cMetroBlue,         {"w3-metro-blue"         ,"#2d89ef"}},
-         {W3CMetro::w3cMetroDarkBlue,     {"w3-metro-dark-blue"    ,"#2b5797"}},
-         {W3CMetro::w3cMetroYellow,       {"w3-metro-yellow"       ,"#ffc40d"}},
-         {W3CMetro::w3cMetroOrange,       {"w3-metro-orange"       ,"#e3a21a"}},
-         {W3CMetro::w3cMetroDarkOrange,   {"w3-metro-dark-orange"  ,"#da532c"}},
-         {W3CMetro::w3cMetroRed,          {"w3-metro-red"          ,"#ee1111"}},
-         {W3CMetro::w3cMetroDarkRed,      {"w3-metro-dark-red"     ,"#b91d47"}}
+    w3c::W3ClassMap Journal::_W3cMetro = {
+         {W3CMetro::/*w3cMetro*/LightGreen,   {"w3-metro-light-green"  ,"#99b433"}},
+         {W3CMetro::/*w3cMetro*/Breen,        {"w3-metro-green"        ,"#00a300"}},
+         {W3CMetro::/*w3cMetro*/DarkGreen,    {"w3-metro-dark-green"   ,"#1e7145"}},
+         {W3CMetro::/*w3cMetro*/Magenta,      {"w3-metro-magenta"      ,"#ff0097"}},
+         {W3CMetro::/*w3cMetro*/LightPurple,  {"w3-metro-light-purple" ,"#9f00a7"}},
+         {W3CMetro::/*w3cMetro*/Purple,       {"w3-metro-purple"       ,"#7e3878"}},
+         {W3CMetro::/*w3cMetro*/DarkPurple,   {"w3-metro-dark-purple"  ,"#603cba"}},
+         {W3CMetro::/*w3cMetro*/Darken,       {"w3-metro-darken"       ,"#1d1d1d"}},
+         {W3CMetro::/*w3cMetro*/Teal,         {"w3-metro-teal"         ,"#00aba9"}},
+         {W3CMetro::/*w3cMetro*/LightBlue,    {"w3-metro-light-blue"   ,"#eff4ff"}},
+         {W3CMetro::/*w3cMetro*/Blue,         {"w3-metro-blue"         ,"#2d89ef"}},
+         {W3CMetro::/*w3cMetro*/DarkBlue,     {"w3-metro-dark-blue"    ,"#2b5797"}},
+         {W3CMetro::/*w3cMetro*/Yellow,       {"w3-metro-yellow"       ,"#ffc40d"}},
+         {W3CMetro::/*w3cMetro*/Orange,       {"w3-metro-orange"       ,"#e3a21a"}},
+         {W3CMetro::/*w3cMetro*/DarkOrange,   {"w3-metro-dark-orange"  ,"#da532c"}},
+         {W3CMetro::/*w3cMetro*/Red,          {"w3-metro-red"          ,"#ee1111"}},
+         {W3CMetro::/*w3cMetro*/DarkRed,      {"w3-metro-dark-red"     ,"#b91d47"}}
     };
 
 
@@ -39,6 +39,8 @@ namespace xio {
 
     Journal::Log::~Log()
     {
+        ///@todo Commit internal buffer `mText` here.
+
         mText.clear();
         std::cout << __PRETTY_FUNCTION__ << "...\n";
     }
@@ -71,9 +73,36 @@ namespace xio {
     }
 
 
+    Journal::Journal()
+    {
+        if (Journal::_Instance) return;
+        Journal::_Instance = this;
+        mLoggers["/Book/Logs"] = Log();
+    }
+
+    Journal::~Journal()
+    {
+    }
+
     std::string_view Journal::operator[](W3CMetro K)
     {
         return Journal::_W3cMetro[K].first;
+    }
+
+    Journal::Log& Journal::operator[](const std::string& APath)
+    {
+        return mLoggers[APath];
+    }
+
+    Journal& Journal::Instance()
+    {
+        if (!Journal::_Instance)
+            Journal();
+        return *Journal::_Instance;
+    }
+
+    Journal::Book::Logs::~Logs()
+    {
     }
 
 }
@@ -93,10 +122,10 @@ void xio::Journal::Log::PushAttr(TextAttr AAttr)
 }
 
 
-xio::Journal::Log& operator^(xio::Journal::Log& l, xio::TextAttr t)
-{
-    //l.PopAttr(t);
-    std::cout << " pop attr quelque chose...";
-    return l;
-
-}
+//xio::Journal::Log& operator^(xio::Journal::Log& l, xio::TextAttr t)
+//{
+//    //l.PopAttr(t);
+//    std::cout << " pop attr quelque chose...";
+//    return l;
+//
+//}

@@ -34,7 +34,7 @@ std::string grammar_txt =
 "arg                : objcarg, expression.\n"
 "argseq             : ',' arg.\n"
 "args               : arg *+argseq.\n"
-"typename           : *'static' ?'i8' ?'u8' ?'i16' ?'u16' ?'i32' ?'u32' ?'i64' ?'u64' ?'real' ?'number' ?'string' ?objectid.\n"
+"typename           : *'static' ?'i8' ?'u8' ?'i16' ?'u16' ?'i32' ?'u32' ?'i64' ?'u64' ?'real' ?'number' ?'string' ?#objectid.\n"
 "instruction        : ?'if' ?'switch' ?'for' ?'while' ?'repeat' ?'until' ?'do'.\n" // to be continued.
 "if                 : 'if' condexpr ifbody, 'if' '(' condexpr ')' ifbody.\n"
 "bloc               :  '{' stmts '}'.\n"
@@ -45,7 +45,7 @@ std::string grammar_txt =
 "var_id             .\n"
 "new_var            : identifier.\n"
 "objectid           .\n"
-"function_id        : '::' functionid, objectid '::' functionid, var_id '.' function_id.\n"
+"function_id        : *'::' #functionid, #objectid '::' #functionid, #var_id '.' #functionid.\n"
 "objcfncall         : '[' function_id  *args ']'.";
 //"function_id        .";
 
