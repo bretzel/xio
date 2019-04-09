@@ -69,6 +69,9 @@
     <ClInclude Include="interpreter\compiler\ast.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="journal\w3-colors-metro.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="string_t.cxx">

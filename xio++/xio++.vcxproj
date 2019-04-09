@@ -147,6 +147,7 @@
     <ClInclude Include="interpreter\kernel\xio.hpp" />
     <ClInclude Include="journal\journal.hpp" />
     <ClInclude Include="journal\logger.hpp" />
+    <ClInclude Include="journal\w3-colors-metro.hpp" />
     <ClInclude Include="message.hpp" />
     <ClInclude Include="object.hpp" />
     <ClInclude Include="string_t.hpp" />

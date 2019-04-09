@@ -7,7 +7,9 @@
 #include <xio++/xtypes.hpp>
 #include <map>
 #include <stack>
-#include <string_view>
+//#include <string_view>
+#include <xio++/journal/w3-colors-metro.hpp>
+
 
 namespace xio {
 
@@ -23,6 +25,11 @@ enum class TextAttr : int8_t {
     End
 };
 
+enum class W3C:uint16_t{
+
+    w3MetroDarkOrange, // "w3-metro-dark-orange" }, // #da532c
+
+};
 
 enum class JournalBookSection : int8_t {
 
@@ -58,10 +65,14 @@ public:
         ~Log();
 
         Journal::Log& operator << (TextAttr A);
+                
+        std::string operator[](W3CMetro K);
+
 
         template<typename T> Journal::Log& operator << (const T& dt)
         {
             mText << dt;
+            std::cout << mText() << '\n';
             return *this;
         }
         string_t mText;
@@ -121,7 +132,9 @@ public:
 
         };
 
+        struct xio_api Exceptions {
 
+        };
 
         struct xio_api Chapter 
         {
@@ -132,12 +145,15 @@ public:
         };
     };
 
+    std::string_view operator[](W3CMetro K);
 
     //Journal::Log& operator[](Journal::Log::LogHandle);
     //Journal::Log& operator||(type_t::T);
 
 private:
     Log::LogHandle mLH = 1; ///< LastLogHandle ID;
+    
+    static w3c::NoW3CSSMap _W3cMetro;
 
 
 };
