@@ -54,7 +54,7 @@ message::message(const message & a_msg)
 
 }
 
-message::message(message && a_msg)
+message::message(message && a_msg) noexcept
 {
     std::swap(mclass, a_msg.mclass);
     std::swap(mtext, a_msg.mtext);

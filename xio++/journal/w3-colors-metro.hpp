@@ -13,7 +13,7 @@ namespace xio {
     enum class W3CMetro :int16_t
     {
         /*w3cMetro*/LightGreen, // #99b433
-        /*w3cMetro*/Breen,      // #00a300
+        /*w3cMetro*/Green,      // #00a300
         /*w3cMetro*/DarkGreen,  // #1e7145
         /*w3cMetro*/Magenta,    // #ff0097  
         /*w3cMetro*/LightPurple,// #9f00a7

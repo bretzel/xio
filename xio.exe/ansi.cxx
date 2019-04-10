@@ -10,12 +10,12 @@
 #include <xio++/interpreter/compiler/compiler.hpp>
 #include <xio++/journal/journal.hpp>
 
-namespace Ansi {
+namespace Ansi
+{
 
 
     CAnsi::CAnsi()
-    {
-    }
+    {}
     CAnsi::CAnsi(int argc, char** argv) :_argc(argc), _argv(argv) {}
 
 
@@ -24,7 +24,8 @@ namespace Ansi {
     {
         hStdIn = GetStdHandle(STD_OUTPUT_HANDLE);
         GetConsoleMode(hStdIn, &mode);
-        if (!SetConsoleMode(hStdIn, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING)) {
+        if (!SetConsoleMode(hStdIn, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING))
+        {
             DWORD Err = GetLastError();
             std::cout << " Error #" << Err << " in:" __FUNCTION__ "\n";
             return Err;
@@ -58,10 +59,10 @@ namespace Ansi {
         //    flush_notices(*this);
         xio::logger::close();
         (*this) << Ansi::Color::HBlue << "Logger closed.\n";
-#ifdef _WIN32
+    #ifdef _WIN32
         if (!F)
             End();
-#endif
+    #endif
 
     }
 
@@ -80,9 +81,10 @@ namespace Ansi {
         };
         //TEST!!!! DO NOT cc.compile("expression"), yet!!
         xio::xio_t::result r = cc.compile("expression");
-        if(_variables){
-            for(auto v : *_variables)
-                logdebugfn << "local vars: " << xio::logger::Yellow <<  v->informations() << Ends;
+        if (_variables)
+        {
+            for (auto v : *_variables)
+                logdebugfn << "local vars: " << xio::logger::Yellow << v->informations() << Ends;
         }
         return a;
     }
@@ -96,90 +98,92 @@ namespace Ansi {
     //}
 
 
-    void test_rtfc(Ansi::CAnsi& ansi)
+void test_rtfc(Ansi::CAnsi& ansi)
+{
+    struct rt_class
     {
-        struct rt_class {
 
-            rt_class() {}
+        rt_class() {}
 
-            double call(int bb, const std::string& text) {
-                std::cout << Ansi::Color::HMagenta << "Let's say that the script is calling this runtime function/method:\n"
-                    << "\033[30mbb = "
-                    << Ansi::Color::Yellow << bb
-                    << Ansi::Color::HCyan << "; text(pretending!)="
-                    << Ansi::Color::Yellow << text << Ansi::Color::Reset << '\n';
-                return 0.25;
-            }
+        double call(int bb, const std::string& text)
+        {
+            std::cout << Ansi::Color::HMagenta << "Let's say that the script is calling this runtime function/method:\n"
+                << "\033[30mbb = "
+                << Ansi::Color::Yellow << bb
+                << Ansi::Color::HCyan << "; text(pretending!)="
+                << Ansi::Color::Yellow << text << Ansi::Color::Reset << '\n';
+            return 0.25;
+        }
 
-            void voidcall(const std::string& message) {
-                logdebugpfn << " message: " << xio::logger::Yellow << message << Ends;
-            }
+        void voidcall(const std::string& message)
+        {
+            logdebugpfn << " message: " << xio::logger::Yellow << message << Ends;
+        }
 
-        };
+    };
 
-        rt_class rt;
-        xio::bloc_t i;
-        xio::alu al;
-        xio::alu::list_t params = { 23.0,std::string("hello, world") };
-        xio::bloc_t::rt_function* rtf = i.bind("script-func", rt, &rt_class::call);
+    rt_class rt;
+    xio::bloc_t i;
+    xio::alu al;
+    xio::alu::list_t params = { 23.0,std::string("hello, world") };
+    xio::bloc_t::rt_function* rtf = i.bind("script-func", rt, &rt_class::call);
 
-        logdebug << Ends;
-        logdebug << Ends;
-        logdebugpfn << xio::logger::Yellow << " Now testing the stack call to that supposed runtime function:" << Ends;
-        al = i.jsr_rtf("script-func", params);
-        logdebug << Ends;
-        logdebug << xio::logger::White << " ret: [" << xio::logger::Yellow << al.value<float>() << xio::logger::White << ']' << Ends;
-        logdebug << Ends;
-
-
-    }
+    logdebug << Ends;
+    logdebug << Ends;
+    logdebugpfn << xio::logger::Yellow << " Now testing the stack call to that supposed runtime function:" << Ends;
+    al = i.jsr_rtf("script-func", params);
+    logdebug << Ends;
+    logdebug << xio::logger::White << " ret: [" << xio::logger::Yellow << al.value<float>() << xio::logger::White << ']' << Ends;
+    logdebug << Ends;
 
 
-
-    int TestJournal()
-    {
-        using xio::TextAttr;
-        // Journal::Log Log = Journal[SomeLogHandle];
+}
 
 
-        std::cout << __PRETTY_FUNCTION__ << ":\n";
-        // xio::Journal::Log Log;
-        //(Log << TextAttr::Italic << 34.001 ^ TextAttr::Italic) << "allo" ;
 
-        xio::Journal& Journal = xio::Journal::Instance();
-        xio::Journal::Log& Log = Journal["/Books/Logs"];
+int TestJournal()
+{
+    using xio::TextAttr;
+    // Journal::Log Log = Journal[SomeLogHandle];
 
-        Log << TextAttr::Italic << " printf " << TextAttr::End << " test: W3CMetro: " << Log[xio::W3CMetro::/*w3cMetro*/DarkBlue];
 
-        return 0;
-    }
+    std::cout << __PRETTY_FUNCTION__ << ":\n";
 
-    auto main(int argc, char** argv) -> int {
+    xio::Journal::Log& Log = xio::Journal::Instance()["/Book/Logs"];
 
-        Ansi::CAnsi con(argc, argv);
+    Log << TextAttr::Italic << " printf " << TextAttr::End << " test: W3CMetro: " << Log[xio::W3CMetro::/*w3cMetro*/DarkBlue];
+    xio::Journal::Close();
+    return 0;
+}
+
+auto main(int argc, char** argv) -> int
+{
+
+    Ansi::CAnsi con(argc, argv);
 #ifdef _WIN32
-        con.Init();
+    con.Init();
 #endif
-        
-        xio::logger::setfile("xio.log");
-        xio::logger::init(xio::logger::Mode::Html, "x.i.o++ framework development.", true);
-        xio::logger::resetstamp(), xio::logger::Hour24;
 
-        string_t str = "Binaire de 10: [%04b]";
-        str << 10;
-        logsuccess << str() << Ends;
-        loginfo << "test  _type = 16401: " << xio::type_t::name(16401) << ": " << Ends;
+    xio::logger::setfile("xio.log");
+    xio::logger::init(xio::logger::Mode::Html, "x.i.o++ framework development.", true);
+    xio::logger::resetstamp(), xio::logger::Hour24;
 
-        //test_xio(con);
-       
-        test_rtfc(con);
-        con.execute();
-        xio::message::clear([](xio::message & msg) {
+    string_t str = "Binaire de 10: [%04b]";
+    str << 10;
+    logsuccess << str() << Ends;
+    loginfo << "test  _type = 16401: " << xio::type_t::name(16401) << ": " << Ends;
+
+    //test_xio(con);
+
+    test_rtfc(con);
+    con.execute();
+    xio::message::clear([](xio::message & msg)
+        {
             lognotice << msg() << Ends;
         });
 
-        TestJournal();
-        return 0;
-    }
+    TestJournal();
+    return 0;
+}
 
 

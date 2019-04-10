@@ -166,6 +166,8 @@ public:
     //Journal::Log& operator||(type_t::T);
 
     static Journal& Instance();
+    static Journal& Init();
+    static int      Close();
 private:
     
     using Loggers = std::map<std::string, Journal::Log>;

@@ -65,7 +65,7 @@ public:
         mclass  = cls;
     }
     message(const message& a_msg);
-    message(message&& a_msg);
+    message(message&& a_msg) noexcept;
 
     message& operator=(const message& a_msg); 
     message& operator=(message&& a_msg);

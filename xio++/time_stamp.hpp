@@ -27,7 +27,7 @@ public:
     time_stamp& operator *();
     std::string text(const std::string& a_format_str = "");
 
-    time_stamp& operator=(time_stamp&& xs);
+    time_stamp& operator=(time_stamp&& xs) noexcept;
     time_stamp& operator=(const time_stamp& xs);
 
 

@@ -11,7 +11,7 @@ namespace xio {
 
     w3c::W3ClassMap Journal::_W3cMetro = {
          {W3CMetro::/*w3cMetro*/LightGreen,   {"w3-metro-light-green"  ,"#99b433"}},
-         {W3CMetro::/*w3cMetro*/Breen,        {"w3-metro-green"        ,"#00a300"}},
+         {W3CMetro::/*w3cMetro*/Green,        {"w3-metro-green"        ,"#00a300"}},
          {W3CMetro::/*w3cMetro*/DarkGreen,    {"w3-metro-dark-green"   ,"#1e7145"}},
          {W3CMetro::/*w3cMetro*/Magenta,      {"w3-metro-magenta"      ,"#ff0097"}},
          {W3CMetro::/*w3cMetro*/LightPurple,  {"w3-metro-light-purple" ,"#9f00a7"}},
@@ -82,6 +82,7 @@ namespace xio {
 
     Journal::~Journal()
     {
+        mLoggers.clear();
     }
 
     std::string_view Journal::operator[](W3CMetro K)
@@ -97,35 +98,44 @@ namespace xio {
     Journal& Journal::Instance()
     {
         if (!Journal::_Instance)
-            Journal();
+            Journal::_Instance  = new Journal();
         return *Journal::_Instance;
+    }
+
+    Journal& Journal::Init()
+    {
+        if (!Journal::_Instance)
+            throw "Oops! Journal::Init called before its constructor (use Journal::Instance() to Instanciate the Journal)";
+        /// ... 
+        return *Journal::_Instance;
+    }
+
+    int Journal::Close()
+    {
+        if (Journal::_Instance)
+        {
+            delete Journal::_Instance;
+            Journal::_Instance = nullptr;
+        }
+        return 0;
     }
 
     Journal::Book::Logs::~Logs()
     {
     }
 
+    TextAttr Journal::Log::PopAttr()
+    {
+        if (mAttrStack.empty())
+            return TextAttr::Nan;
+        TextAttr Att = mAttrStack.top();
+        mAttrStack.pop();
+        return Att;
+    }
+
+    void Journal::Log::PushAttr(TextAttr AAttr)
+    {
+        mAttrStack.push(AAttr);
+    }
+
 }
-
-xio::TextAttr xio::Journal::Log::PopAttr()
-{
-    if(mAttrStack.empty())
-        return TextAttr::Nan;
-    TextAttr Att = mAttrStack.top();
-    mAttrStack.pop();
-    return Att;
-}
-
-void xio::Journal::Log::PushAttr(TextAttr AAttr)
-{
-    mAttrStack.push(AAttr);
-}
-
-
-//xio::Journal::Log& operator^(xio::Journal::Log& l, xio::TextAttr t)
-//{
-//    //l.PopAttr(t);
-//    std::cout << " pop attr quelque chose...";
-//    return l;
-//
-//}
