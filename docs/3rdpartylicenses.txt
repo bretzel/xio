@@ -35,6 +35,9 @@ MIT
 @angular/router
 MIT
 
+angular-particle
+MIT
+
 bootstrap
 MIT
 The MIT License (MIT)
