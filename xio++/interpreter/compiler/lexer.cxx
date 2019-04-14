@@ -44,12 +44,7 @@ void lexer_t::init_scanners()
         scanners[type_t::punctuation] = &lexer_t::scan_punctuation;
     }
 
-
-    //int a, b, c;
-    //a = a * (b = 3);
 }
-
-
 /*
 
             =

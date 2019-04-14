@@ -203,16 +203,27 @@ xio_t::~xio_t()
 
 
 // -------------- ARITHMETIC BINARY TREE INPUT LOGIC IMPLEMENTATION ------------------------------------
+/*
+        a = 32 * (2+3) / 4;
 
+                    =           =               =              =              =            =              =               = <---+           =
+                   / \         / \             / \            / \            / \          / \            / \             / \    |          / \
+                  a  [/]      a   *  <- (     a   *          a   *          a   *        a   *          a   *           a   * <-|         a   /
+                     /  \        /               / \            / \            / \          / \            / \             / \  |            / \
+                    *    4 ;    32              32  ( <- 2     32  (          32  (        32 ( <--+      32  ) <- /      32  + /           *   4;
+                   / \                                            /              /           /     |         /               / \           / \
+                  32  +                                          2 <- +         + <- 3      +      |        +               2   3         32  +
+                     / \                                                       /           / \     +       / \                               / \
+                    2   3                                                     2           2   3 <- )      2   3                             2   3
+
+
+
+*/
 xio_t::result xio_t::tree_input(token_t * a_token, xio_t::allocator_t a_allocator)
 {
     inptr_fn_t pfn = nullptr;
-
-    //std::cerr << "[tree_input] : [" << type_t::name(t0->type) << "'" << t0->loc.b <<  "'] <- [" << type_t::name(a_token->type) << "'" << a_token->loc.b << "']:\n";
-
-    for(auto key : xio_t::tree_input_assoc_table){
-        
-
+    for(auto key : xio_t::tree_input_assoc_table)
+    {    
         if((key.first.first & t0->sem) && (a_token->sem & key.first.second)){
             
             logdebug << logger::White 
@@ -521,22 +532,7 @@ xio_t::result xio_t::tree_lpar_input_binary(xio_t * x)
     return xio_t::result();
 }
 
-/*
-        a = 32 * (2+3) / 4;
-                                                                                                       
-                    =           =               =              =              =            =              =               = <---+           =           
-                   / \         / \             / \            / \            / \          / \            / \             / \    |          / \      
-                  a  [/]      a   *  <- (     a   *          a   *          a   *        a   *          a   *           a   * <-|         a   /          
-                     /  \        /               / \            / \            / \          / \            / \             / \  |            / \         
-                    *    4 ;    32              32  ( <- 2     32  (          32  (        32 ( <--+      32  ) <- /      32  + /           *   4;                
-                   / \                                            /              /           /     |         /               / \           / \                    
-                  32  +                                          2 <- +         + <- 3      +      |        +               2   3         32  +                     
-                     / \                                                       /           / \     +       / \                               / \           
-                    2   3                                                     2           2   3 <- )      2   3                             2   3  
 
-
-
-*/  
 xio_t::result xio_t::tree_input_rpar(xio_t * rpxio)
 {
     logdebug 
