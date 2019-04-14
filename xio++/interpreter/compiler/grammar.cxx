@@ -1,6 +1,4 @@
 #include "grammar.hpp"
-//#include "../xio_module.hpp"
-
 #include "../../journal/logger.hpp"
 
 namespace xio {
