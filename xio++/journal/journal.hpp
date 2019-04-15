@@ -184,3 +184,88 @@ private:
 }
 
 
+/*
+BACKUP
+  <div class="card spc" style="width: 60rem;">
+    <i class="card-img-top fas fa-angle-double-up"></i>
+    <!-- <img src="..." class="card-img-top" alt="..."> -->
+    <div class="card-body">
+      <h5 class="card-title">Lexical Analyser:</h5>
+      <p class="card-text">
+        XIO's lexical and language elements. &lt;fake article...&gt;
+      </p>
+      <a href="https://github.com/bretzel/xio" class="btn btn-primary fab fa-linode txt">
+        <span class="icon-txt">The Source Code</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="card spc" style="width: 60rem;">
+    <!-- <img src="..." class="card-img-top" alt="..."> -->
+    <div class="card-body">
+      <h5 class="card-title">The Syntax Analyser (AST):</h5>
+      <p class="card-text">(Abstract Syntax Tree)</p>
+
+      <p>
+        The XIO::AST involves seven classes/structs in two pairs of header/implementation files:
+      </p>
+
+      <ul>
+        <li>ast.cxx: xioast</li>
+        <li>ast.cxx: astnode</li>
+        <li>grammar.cxx: xio_grammar</li>
+        <li>grammar.cxx: rule_t</li>
+        <li>grammar.cxx: seq_t</li>
+        <li>grammar.cxx: term_t</li>
+        <li>grammar.cxx: attr</li>
+      </ul>
+      <a href="https://github.com/bretzel/xio" class="btn btn-primary fab fa-github txt">
+        <span class="icon-txt">Go to the Discussion</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="margin-top:50px">
+  <div class="card spc" style="width: 60rem;">
+    <i class="card-img-top fas fa-angle-double-up"></i>
+    <!-- <img src="..." class="card-img-top" alt="..."> -->
+    <div class="card-body">
+      <h5 class="card-title">Lexical Analyser:</h5>
+      <p class="card-text">
+        XIO's lexical and language elements. &lt;fake article...&gt;
+      </p>
+      <a href="https://github.com/bretzel/xio" class="btn btn-primary fab fa-linode txt">
+        <span class="icon-txt">The Source Code</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="card spc" style="width: 60rem;">
+    <!-- <img src="..." class="card-img-top" alt="..."> -->
+    <div class="card-body">
+      <h5 class="card-title">The Syntax Analyser (AST):</h5>
+      <p class="card-text">(Abstract Syntax Tree)</p>
+
+      <p>
+        The XIO::AST involves seven classes/structs in two pairs of header/implementation files:
+      </p>
+
+      <ul>
+        <li>ast.cxx: xioast</li>
+        <li>ast.cxx: astnode</li>
+        <li>grammar.cxx: xio_grammar</li>
+        <li>grammar.cxx: rule_t</li>
+        <li>grammar.cxx: seq_t</li>
+        <li>grammar.cxx: term_t</li>
+        <li>grammar.cxx: attr</li>
+      </ul>
+      <a href="https://github.com/bretzel/xio" class="btn btn-primary fab fa-github txt">
+        <span class="icon-txt">Go to the Discussion</span>
+      </a>
+    </div>
+  </div>
+
+
+
+*/
