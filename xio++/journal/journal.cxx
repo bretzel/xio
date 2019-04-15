@@ -82,6 +82,7 @@ namespace xio {
 
     Journal::~Journal()
     {
+        std::cout << __FUNCTION__ << ":Closing, clear loggers...";
         mLoggers.clear();
     }
 
