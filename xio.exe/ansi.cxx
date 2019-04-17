@@ -151,7 +151,7 @@ int TestJournal()
 
     xio::Journal::Log& Log = xio::Journal::Instance()["/Book/Logs"];
 
-    Log << TextAttr::Italic << " printf " << TextAttr::End << " test: W3CMetro: " << Log[xio::W3CMetro::/*w3cMetro*/DarkBlue];
+    Log << TextAttr::Italic << " printf " << TextAttr::End << " test: W3CMetro: " << Log[xio::W3CMetro::DarkBlue];
     xio::Journal::Close();
     return 0;
 }
@@ -165,7 +165,7 @@ auto main(int argc, char** argv) -> int
 #endif
 
     xio::logger::setfile("xio.log");
-    xio::logger::init(xio::logger::Mode::Html, "x.i.o++ framework development.", true);
+    xio::logger::init(xio::logger::Mode::Ansi, "x.i.o++ framework development.", true);
     xio::logger::resetstamp(), xio::logger::Hour24;
 
     string_t str = "Binaire de 10: [%04b]";
