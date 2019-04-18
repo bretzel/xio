@@ -12,9 +12,14 @@
 #include <xio++/journal/w3-colors-metro.hpp>
 #include <fstream>
 
+/*
+    Journal Classes:
+    PascalCase.
+    
+*/
+
 namespace xio {
 
-// L << Italic << " Je suis en italique" - Italic 
 
 enum class TextAttr : int8_t {
     Nan = 0,
@@ -36,7 +41,14 @@ class xio_api Journal
 {
 
 
-    
+    struct OutStr
+    {
+         std::vector<std::string> _Lines;
+         OutStr();
+         ~OutStr();
+         template<typename T> Journal::OutStr& operator << (const T& dt);
+
+    };
 
 
 public:
@@ -82,10 +94,11 @@ public:
     struct xio_api Book 
     {
 
-        struct xio_api TOC 
+        struct xio_api TOC
         {
-            
+
         private:
+            std::ofstream _Out;
             struct xio_api Item
             {
                 std::string mDescription;
@@ -95,44 +108,44 @@ public:
                 using List = std::vector<Journal::Book::TOC::Item>;
             public:
                 Item() {}
-            
+
                 ~Item() {}
             };
 
 
             Journal::Book::TOC::Item::List mEntries;
-            Journal::Log::LogHandle LogHandle=0;
+            Journal::Log::LogHandle LogHandle = 0;
         public:
             TOC();
-        
+
             ~TOC() {}
         private:
-        };
+        }_TOC;
 
         struct xio_api Article 
         {
-            using List = std::map<std::string, Article>;
-
+            using List = std::map<std::string, Journal::Book::Article>;
+            Journal::OutStr _InLine;
         };
 
-        struct xio_api Errors : public Journal::Log{
-
+        struct xio_api Errors {
+            Journal::OutStr _InLine;
         };
 
-        struct xio_api Warnings : public Journal::Log {
-
+        struct xio_api Warnings {
+            using List = std::map<std::string, Journal::Book::Warnings>;
         };
 
-        struct xio_api Debug : public Journal::Log {
-
+        struct xio_api Debug  {
+            using List = std::map<std::string, Journal::Book::Debug>;
         };
 
-        struct xio_api Infos : public Journal::Log {
-
+        struct xio_api Infos  {
+            using List = std::map<std::string, Journal::Book::Infos>;
         };
 
-        struct xio_api Exceptions : public Journal::Log {
-
+        struct xio_api Exception {
+            using List = std::map<std::string, Journal::Book::Exception>;
         };
 
         struct xio_api Chapter : public Journal::Log
@@ -145,14 +158,14 @@ public:
 
         struct xio_api Logs
         {
-
+        private:
             Logs() = default;
             ~Logs();
 
             Journal::Log::LogHandle mLogHandle=0xFFFFFFFFFFFFFFFF;
-            std::ofstream mOut;
-        };
-    };
+            std::ofstream _Out;
+        }_Logs;
+    }_Book;
 
 private:
     Journal();
@@ -180,6 +193,15 @@ private:
 
 
 
+
+template<typename T>
+inline Journal::OutStr& Journal::OutStr::operator<<(const T& dt)
+{
+    string_t str;
+    str << dt;
+    _Lines.push_back(str());
+    return *this;
+}
 
 }
 

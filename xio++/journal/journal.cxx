@@ -139,4 +139,12 @@ namespace xio {
         mAttrStack.push(AAttr);
     }
 
+    Journal::OutStr::OutStr()
+    {}
+
+    Journal::OutStr::~OutStr()
+    {
+        _Lines.clear();
+    }
+
 }
