@@ -215,17 +215,14 @@ xio_t::~xio_t()
                   32  +                                          2 <- +         + <- 3      +      |        +               2   3         32  +
                      / \                                                       /           / \     +       / \                               / \
                     2   3                                                     2           2   3 <- )      2   3                             2   3
-
-
-
 */
-xio_t::result xio_t::tree_input(token_t * a_token, xio_t::allocator_t a_allocator)
+xio_t::result xio_t::tree_input(token_t * a_token, xio_t::allocator_t xio_allocate)
 {
     inptr_fn_t pfn = nullptr;
     for(auto key : xio_t::tree_input_assoc_table)
     {    
-        if((key.first.first & t0->sem) && (a_token->sem & key.first.second)){
-            
+        if((key.first.first & t0->sem) && (a_token->sem & key.first.second))
+        {            
             logdebug << logger::White 
                 << "'" << logger::Yellow 
                 << t0->attribute() 
@@ -244,14 +241,14 @@ xio_t::result xio_t::tree_input(token_t * a_token, xio_t::allocator_t a_allocato
             break;
         }
     }
-    if (pfn) {
-        xio_t * x = a_allocator(a_token);
-        return (this->*pfn)(x);
-    }
-    return {(
+    if (pfn) 
+        return (this->*pfn)(xio_allocate(a_token));
+
+    return 
+    {(
         message::push(message::xclass::error),
         ":(debug): syntax error, unexpected token:",
-        a_token->informations(),
+        a_token->attribute(),
         "\n",
         a_token->mark()
     )};

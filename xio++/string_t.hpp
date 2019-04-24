@@ -358,7 +358,7 @@ template<typename T> string_t& string_t::printf(const T& argf)
     if (n >= c) {
         int t = 0;
         while (n >= c)
-            fmt._w += (*(n--) - '0') * pow(10, t++);
+            fmt._w += (*(n--) - static_cast<int8_t>('0')) * pow(10, t++);
     }
     else
         fmt._w = 0;
@@ -374,7 +374,7 @@ template<typename T> string_t& string_t::printf(const T& argf)
         int t = 0;
         fmt._r = 0;
         while (n >= c)
-            fmt._r += (*(n--) - '0') * pow(10, t++);
+            fmt._r += (*(n--) - static_cast<int8_t>('0')) * pow(10, t++);
         c = l;
     }
     else

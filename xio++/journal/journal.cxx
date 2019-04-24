@@ -121,9 +121,6 @@ namespace xio {
         return 0;
     }
 
-    Journal::Book::Logs::~Logs()
-    {
-    }
 
     TextAttr Journal::Log::PopAttr()
     {

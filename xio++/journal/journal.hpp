@@ -47,7 +47,7 @@ class xio_api Journal
          OutStr();
          ~OutStr();
          template<typename T> Journal::OutStr& operator << (const T& dt);
-
+         
     };
 
 
@@ -91,82 +91,7 @@ public:
 
    
 
-    struct xio_api Book 
-    {
-
-        struct xio_api TOC
-        {
-
-        private:
-            std::ofstream _Out;
-            struct xio_api Item
-            {
-                std::string mDescription;
-                std::string mPGLink;
-                int         mPgNum = -1;
-                using item = std::map<std::string, std::string>;
-                using List = std::vector<Journal::Book::TOC::Item>;
-            public:
-                Item() {}
-
-                ~Item() {}
-            };
-
-
-            Journal::Book::TOC::Item::List mEntries;
-            Journal::Log::LogHandle LogHandle = 0;
-        public:
-            TOC();
-
-            ~TOC() {}
-        private:
-        }_TOC;
-
-        struct xio_api Article 
-        {
-            using List = std::map<std::string, Journal::Book::Article>;
-            Journal::OutStr _InLine;
-        };
-
-        struct xio_api Errors {
-            Journal::OutStr _InLine;
-        };
-
-        struct xio_api Warnings {
-            using List = std::map<std::string, Journal::Book::Warnings>;
-        };
-
-        struct xio_api Debug  {
-            using List = std::map<std::string, Journal::Book::Debug>;
-        };
-
-        struct xio_api Infos  {
-            using List = std::map<std::string, Journal::Book::Infos>;
-        };
-
-        struct xio_api Exception {
-            using List = std::map<std::string, Journal::Book::Exception>;
-        };
-
-        struct xio_api Chapter : public Journal::Log
-        {
-            using List = std::vector<Journal::Book::Chapter>;
-            std::string mId;
-
-
-        };
-
-        struct xio_api Logs
-        {
-        private:
-            Logs() = default;
-            ~Logs();
-
-            Journal::Log::LogHandle mLogHandle=0xFFFFFFFFFFFFFFFF;
-            std::ofstream _Out;
-        }_Logs;
-    }_Book;
-
+    
 private:
     Journal();
 public:
