@@ -7,6 +7,8 @@ namespace xio {
 
 
     Journal* Journal::_Instance = nullptr;
+    ///@todo Keep indexes rank as the W3CMetro enumerator in the other themes/enumators.
+    //----------------------------------------------------------------------------------
 
 
     w3c::W3ClassMap Journal::_W3cMetro = {
