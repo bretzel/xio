@@ -9,7 +9,7 @@
 
 namespace xio {
 /*
-if statement (rule):
+if statement rule:
 
 if condexpr           ifbloc            *elsebloc
       |                  |                  |
@@ -49,7 +49,7 @@ class xioast : public object
     token_t::list_t* m_tokens = nullptr;
     token_t::cursor  m_cursor;
     astnode*         m_rootnode = nullptr;
-    const rule_t*         m_startrule = nullptr;
+    const rule_t*    m_startrule = nullptr;
 
     xioast() = default;
     xioast(token_t::list_t* a_tokens, const std::string& rule_id);
