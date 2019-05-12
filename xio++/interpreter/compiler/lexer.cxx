@@ -113,6 +113,7 @@ done_number:
             };
         }
     }
+    ///@todo Determiner le num value-size
     Token = {
         mnemonic::noop, type_t::number, type_t::number | type_t::leaf | (real ? type_t::real : type_t::u64), // u64: Par defaut. Mais les parsers pourront "squizer" en evaluant la valeur et la comparer avec les limtes u8, u/i16;32;64...
         opdelta::identifier,

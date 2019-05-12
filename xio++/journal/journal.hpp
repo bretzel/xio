@@ -56,7 +56,6 @@ public:
     struct xio_api Log
     {
 
-        
         using LogHandle     = type_t::T;  ///< 0xFFFFFFFF = null/invalid;
         using Dictionary    = std::map<Journal::Log::LogHandle, Log>;
         using HandleNames   = std::map<std::string, Journal::Log::LogHandle>;

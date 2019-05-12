@@ -164,6 +164,7 @@ xio_t::xio_t(object * a_parent, token_t * a_token, alu * a_alu):object(a_parent)
             return;
         case type_t::number:
         {
+            ///@todo Attention enlever le court-circuit du type-size!!!
             double d;
             (string_t(a_token->attribute())) >> d;
             acc = new alu(d);
