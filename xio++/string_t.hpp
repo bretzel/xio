@@ -37,7 +37,7 @@ class xio_api string_t
     struct xio_api format_t {
         uint8_t _f = 0; // Flag ( - + . # 0 )
         uint8_t _w = 0; // Width ( length )
-        uint8_t _r = 0; // Custom flag set if this format requiers floating point spec.
+        uint8_t _r = 0; // Custom flag set if this format requier floating point spec.
         uint8_t _p = 6; // Precision (Same as  default).
         uint8_t _l = 0; // Length modifier ( l,ll,h,hh )
         std::size_t _delta = 0; // Format length.
