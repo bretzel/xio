@@ -291,5 +291,6 @@ __pycache__/
 *.kdev4
 .kdev4/
 build/
-
+gnu_build/
 cmake-*
+
