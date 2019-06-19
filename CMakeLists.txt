@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 # Project name 
 project(xio++ VERSION 0.1.0 LANGUAGES CXX)
 
-add_library(xio++
+add_library(
+    xio++
 SHARED
     xio++/dlloader.cxx
     xio++/message.cxx
@@ -23,6 +24,7 @@ SHARED
     xio++/interpreter/kernel/variable.cxx
     xio++/interpreter/compiler/compiler.cxx
     xio++/interpreter/compiler/ast.cxx
+    xio++/interpreter/kernel/calculus.cxx
 )
 
 # Someone kind enough to tell me how to NOT use file(GLOB here ?
