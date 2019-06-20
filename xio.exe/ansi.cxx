@@ -7,6 +7,8 @@
 #include <xio++/expect.hpp>
 #include <xio++/interpreter/kernel/bloc.hpp>
 //#include <xio++/interpreter/compiler/grammar.hpp>
+#include <xio++/interpreter/kernel/calculus.hpp>
+
 #include <xio++/interpreter/compiler/compiler.hpp>
 #include <xio++/journal/journal.hpp>
 
@@ -44,13 +46,20 @@ namespace Ansi
 
     xio::message::code CAnsi::execute()
     {
-        //xio::xio_grammar gr;
-        //gr.build();
-        //gr.dump();
-        Calculator Cal;
-        xio::alu a = Cal["static real uvf_alu = 0.34;"];
 
-        return xio::message::code::accepted;
+        xio::calculus calc;
+
+
+        xio::xio_grammar gr;
+        gr.build();
+        gr.dump();
+        xio::xio_t::result r = calc["1+1"];
+        return r ? xio::message::code::accepted : r.notice().code_enum() ;
+//
+//        Calculator Cal;
+//        xio::alu a = Cal["static real uvf_alu = 0.34;"];
+//
+//        return xio::message::code::accepted;
     }
 
 
@@ -68,26 +77,26 @@ namespace Ansi
 
 
 
-    xio::alu Calculator::operator[](const std::string& a_expr)
-    {
-        strexpr = a_expr;
-        xio::token_t::list_t tokens;
-        xio::compiler cc;
-        xio::alu a = 0.01;
-        cc.config() = {
-            strexpr.c_str(), // test/try declvar rule.
-            &tokens,
-            this
-        };
-        //TEST!!!! DO NOT cc.compile("expression"), yet!!
-        xio::xio_t::result r = cc.compile("expression");
-        if (_variables)
-        {
-            for (auto v : *_variables)
-                logdebugfn << "local vars: " << xio::logger::Yellow << v->informations() << Ends;
-        }
-        return a;
-    }
+//    xio::alu Calculator::operator[](const std::string& a_expr)
+//    {
+//        strexpr = a_expr;
+//        xio::token_t::list_t tokens;
+//        xio::compiler cc;
+//        xio::alu a = 0.01;
+//        cc.config() = {
+//            strexpr.c_str(), // test/try declvar rule.
+//            &tokens,
+//            this
+//        };
+//        //TEST!!!! DO NOT cc.compile("expression"), yet!!
+//        xio::xio_t::result r = cc.compile("expression");
+//        if (_variables)
+//        {
+//            for (auto v : *_variables)
+//                logdebugfn << "local vars: " << xio::logger::Yellow << v->informations() << Ends;
+//        }
+//        return a;
+//    }
 
 }
 

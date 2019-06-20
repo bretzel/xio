@@ -135,7 +135,7 @@ public:
     }
 
     virtual alu jsr_rtf(const std::string& a_id, const alu::list_t& args);
-    virtual alu jsr();
+    alu jsr() override;
 
 protected:
     friend class compiler;

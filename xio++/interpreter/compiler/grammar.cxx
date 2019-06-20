@@ -22,7 +22,7 @@ std::string grammar_txt =
 "stmts              : +statement.\n"
 "statement          : assignstmt ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.\n"
 "assignstmt         : declvar assign expression, var_id assign expression.\n"
-"declvar            : *typename new_var.\n"
+"declvar            : *typename #newvar .\n" // new_var.\n"
 "funcsig            : *typename function_id '(' *params ')'.\n"
 "declfunc           : funcsig ';', funcsig bloc.\n"
 "paramseq           : ',' param.\n"
@@ -41,7 +41,7 @@ std::string grammar_txt =
 "ifbody             : truebloc *elsebloc, truebloc.\n"
 "condexpr           : assignstmt, expression.\n"
 "var_id             .\n"
-"new_var            : identifier.\n"
+//"new_var            : identifier.\n"
 "objectid           .\n"
 "function_id        : *'::' #functionid, #objectid '::' #functionid, #var_id '.' #functionid.\n"
 "objcfncall         : '[' function_id  *args ']'.";
