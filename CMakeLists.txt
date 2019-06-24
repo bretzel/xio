@@ -4,6 +4,7 @@ project(xio++ VERSION 0.1.0 LANGUAGES CXX)
 
 add_library(
     xio++
+    
 SHARED
     xio++/dlloader.cxx
     xio++/message.cxx
