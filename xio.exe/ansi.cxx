@@ -177,7 +177,7 @@ auto main(int argc, char** argv) -> int
     xio::logger::init(xio::logger::Mode::Ansi, "x.i.o++ framework development.", true);
     xio::logger::resetstamp(), xio::logger::Hour24;
 
-    string_t str = "Binaire de 10: [%04b]";
+    string_t str = "Binaire de 10: [%08b]";
     str << 10;
     logsuccess << str() << Ends;
     loginfo << "test  _type = 16401: " << xio::type_t::name(16401) << ": " << Ends;
