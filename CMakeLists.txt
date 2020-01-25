@@ -1,17 +1,25 @@
 cmake_minimum_required(VERSION 3.10)
 # Project name 
 
-project(XIO++ VERSION 0.1.0 LANGUAGES CXX)
+project(xio VERSION 0.1.0 LANGUAGES CXX)
+
+find_package(lus REQUIRED)
 
 
-#target_compile_features(XIO++ PUBLIC cxx_std_17)
+INCLUDE_DIRECTORIES(${PROJECT_NAME} include)
 
 
 include(GNUInstallDirs)
 
 message("CMake Module Path:" ${CMAKE_MODULE_PATH})
 
-add_library(MineField SHARED IMPORTED)
+add_library(${PROJECT_NAME} SHARED
 
-message("MineField:" ${MINEFIELD_INCLUDES})
+        include/xio/interpreter.c++
+        include/xio/interpreter.h
+)
+
+target_compile_features(xio PUBLIC cxx_std_17)
+
+target_link_libraries(${PROJECT_NAME} lus ${CMAKE_DL_LIBS})
 
