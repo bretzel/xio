@@ -4,14 +4,15 @@
 
 #pragma once
 #include <lus/lexical_scanners.h>
-#include <lus/d
+
+//#include <lus/d
 namespace xio
 {
 
-class interpreter : public
-{
-
-};
+//class interpreter : public lus::lobject
+//{
+//
+//};
 
 //#endif //XIO_INTERPRETER_H
 }

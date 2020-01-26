@@ -15,7 +15,7 @@ message("CMake Module Path:" ${CMAKE_MODULE_PATH})
 
 add_library(${PROJECT_NAME} SHARED
 
-        include/xio/interpreter.c++
+        src/interpreter.c++
         include/xio/interpreter.h
 )
 
