@@ -293,4 +293,5 @@ __pycache__/
 build/
 gnu_build/
 cmake-*
+.clangd/
 
