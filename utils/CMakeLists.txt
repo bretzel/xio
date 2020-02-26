@@ -1,25 +1,25 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 # Project name
 
-project(utils VERSION 0.1.0 LANGUAGES CXX)
+project(xioutils VERSION 0.1.0 LANGUAGES CXX)
 
 
 include(GNUInstallDirs)
 FILE(GLOB HDRS include/${FrameWorkName}/${PROJECT_NAME}/*)
 FILE(GLOB SRCS src/*)
 SET( CMAKE_EXPORT_COMPILE_COMMANDS ON )
-SET(FRAMEWORKDOT "xio.")
+
 
 
 add_library(
-        ${FRAMEWORKDOT}${PROJECT_NAME}
+        ${PROJECT_NAME}
         SHARED
         ${HDRS}
         ${SRCS}
 )
 
-target_compile_definitions(${FRAMEWORKDOT}${PROJECT_NAME} PUBLIC "${FRAMEWORKDOT}${PROJECT_NAME}_DEBUG=$<CONFIG:Debug>")
-target_compile_features(${FRAMEWORKDOT}${PROJECT_NAME} PUBLIC cxx_std_17)
+target_compile_definitions(${PROJECT_NAME} PUBLIC "${PROJECT_NAME}_DEBUG=$<CONFIG:Debug>")
+target_compile_features("${PROJECT_NAME}" PUBLIC cxx_std_17)
 #set(generated_headers "${CMAKE_CURRENT_BINARY_DIR}/generated_headers")
 #set(${PROJECT_NAME}_export "${generated_headers}/${PROJECT_NAME}++/${PROJECT_NAME}_EXPORT.h")
 include(GenerateExportHeader)
@@ -42,7 +42,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         $<INSTALL_INTERFACE:include/${FrameWorkName}/${PROJECT_NAME}>  # <prefix>/include/mylib
         )
 
-target_link_libraries(${FRAMEWORKDOT}${PROJECT_NAME} ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
 
 
 install(DIRECTORY
@@ -51,7 +51,7 @@ install(DIRECTORY
 #        FILES_MATCHING PATTERN "*.h"
 )
 
-install(TARGETS ${PROJECT_NAME} EXPORT ${FRAMEWORKDOT}${PROJECT_NAME}Targets
+install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin

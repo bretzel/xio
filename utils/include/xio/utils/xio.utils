@@ -9,7 +9,9 @@
 //#pragma warning(once: 4251)
 
 
-
+#ifdef xio
+# undef xio
+#endif
 
 
 #ifdef _WIN32
