@@ -1,0 +1,55 @@
+//
+// Created by bretzel on 2020/02/26
+//
+
+//#ifndef PLSC_PLSC_API_H
+//#define PLSC_PLSC_API_H
+#pragma once
+
+//#pragma warning(once: 4251)
+
+
+
+
+
+#ifdef _WIN32
+#pragma warning(disable : 4996)
+	//class __declspec(dllimport) std::thread;
+#define _CRT_SECURE_NO_WARNINGS
+#define _SCL_SECURE_NO_WARNINGS
+
+#ifdef XIOUTILSEXPORT
+#define XIOUTILS_API __declspec(dllexport)
+#else
+#define XIOUTILS_API __declspec(dllimport)
+#endif
+#else
+#define XIOUTILS_API    // Not ms-Windows/MSVC
+#endif
+
+// Mandatory. Globally used where it needs to.
+
+//--------------------------------------------- 
+
+#ifndef DECLOBJ_ID
+#define DECLOBJ_ID \
+	private:\
+        static  const  std::string OBJ_CLASSID; \
+    public:\
+        virtual const std::string& OBJ_CLASSNAME() const noexcept; \
+    private:
+
+#define  CLASSNAME_IMPL(CLASS) \
+         const std::string  CLASS::CLASSID = #CLASS;\
+         const std::string&  CLASS::CLASSNAME() const noexcept{ return CLASS::CLASSID; }
+#endif
+
+#ifndef _WIN32
+#   define _strdup  strdup
+#   include <thread>
+#   include <cstdint>
+#else
+#   define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
+
+//#endif //LSC_API_H
