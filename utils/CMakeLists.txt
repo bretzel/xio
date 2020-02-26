@@ -20,8 +20,7 @@ add_library(
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC "${PROJECT_NAME}_DEBUG=$<CONFIG:Debug>")
 target_compile_features("${PROJECT_NAME}" PUBLIC cxx_std_17)
-#set(generated_headers "${CMAKE_CURRENT_BINARY_DIR}/generated_headers")
-#set(${PROJECT_NAME}_export "${generated_headers}/${PROJECT_NAME}++/${PROJECT_NAME}_EXPORT.h")
+
 include(GenerateExportHeader)
 #generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME ${${PROJECT_NAME}_export})
 

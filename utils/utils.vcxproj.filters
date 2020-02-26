@@ -18,12 +18,44 @@
     <ClCompile Include="src\xstr.cc">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="src\xplugin.cc">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\notification.cc">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xreturn.cc">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xloader.cc">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xchronos.cc">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\xio\utils\xio.utils" />
+    <None Include="include\xio\utils\xreturn" />
+    <None Include="include\xio\utils\xchronos" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\xio\utils\xstr.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xio\utils\xplugin.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xio\utils\notification.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xio\utils\xreturn.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xio\utils\xloader.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xio\utils\xchronos.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
