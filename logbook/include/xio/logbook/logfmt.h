@@ -61,7 +61,7 @@ public:
     {
         none = 0,   ///< unformated.
         plain,      ///< unformated.
-        ansi,       ///< format ainsi standard.
+        ansi,       ///< Ainsi standard format - First TDD: Using utils::notification "stack" for output.
         html,       ///< format html.
         vcell,     ///< format Video Cell Bitmap Bloc  ( ncurses ).
     }_mode = mode::none;

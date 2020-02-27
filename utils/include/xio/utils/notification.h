@@ -23,12 +23,14 @@ struct XIOUTILS_API notification final
         fatal,
         exception,
         information,
-        internal
+        internal,
+        debug,
+        success,
+        fail
     };
     
     enum class code : uint16_t {
         unset = 0,
-        success,
         ok,
         accepted,
         rejected,

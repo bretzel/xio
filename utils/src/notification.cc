@@ -20,13 +20,15 @@ std::map<notification::type, std::string> Types = {
     {notification::type::fatal,        "Fatal"     },
     {notification::type::exception,    "Exception" },
     {notification::type::information,  "Information"},
-    {notification::type::internal,     "Internal"   }
+    {notification::type::internal,     "Internal"   },
+    {notification::type::success,      "Success"},
+    {notification::type::debug,        "Debug"},
+    {notification::type::fail,         "Fail"}
 };
 
 
 std::map<notification::code, std::string> Codes = {
     {notification::code::unset,      "Unset"},
-    {notification::code::success,     "Success"},
     {notification::code::ok,         "ok"},
     {notification::code::accepted,   "Accepted"},
     {notification::code::rejected,   "Rejected"},
