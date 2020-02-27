@@ -92,7 +92,11 @@ notification& notification::operator=(notification&& A) noexcept
 
 void notification::clear(std::function<void(notification&)> LambdaFn)
 {
-    if (notification::_stack.empty()) return;
+    if (notification::_stack.empty())
+    {
+        std::cout << __FUNCTION__ << ": notification stack is empty...\n";
+        return;
+    }
     while (!notification::_stack.empty()) {
         if (LambdaFn)
             LambdaFn(notification::_stack.top());
