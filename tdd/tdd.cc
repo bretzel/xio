@@ -1,6 +1,6 @@
 #include "tdd.h"
 #include <xio/utils/xstr.h>
-#include <xio/sqlite3/sqlitedb.h>
+#include <xio/sqlitedb/sqlitedb.h>
 #include <xio/utils/notification.h>
 #include <xio/logbook/logbook.h>
 

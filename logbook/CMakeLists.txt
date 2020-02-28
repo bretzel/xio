@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 # Project name
 
-project(sqlitedb VERSION 0.1.0 LANGUAGES CXX)
+project(logbook VERSION 0.1.0 LANGUAGES CXX)
 
 
 include(GNUInstallDirs)
@@ -23,6 +23,8 @@ target_compile_features("${PROJECT_NAME}" PUBLIC cxx_std_17)
 
 include(GenerateExportHeader)
 #generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME ${${PROJECT_NAME}_export})
+add_dependencies(${PROJECT_NAME} utils sqlitedb)
+
 
 IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
 	EXECUTE_PROCESS( COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -35,14 +37,13 @@ ENDIF()
 #        SOVERSION
 #        )
 
-add_dependencies(${PROJECT_NAME} utils)
-
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include/${FrameWorkName}/${PROJECT_NAME}>  # <prefix>/include/mylib
+		${XIO_UTILS_INCLUDE_DIR}
         )
 
-target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS} utils)
+target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
 
 
 install(DIRECTORY

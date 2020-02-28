@@ -3,7 +3,7 @@
 #include <xio/logbook/logbookapi.h>
 #include <xio/utils/xstr.h>
 #include <map> // - Oh-yeah!
-#include <xio/sqlite3/sqlitedb.h>
+#include <xio/sqlitedb/sqlitedb.h>
 
 namespace xio::logbook
 {

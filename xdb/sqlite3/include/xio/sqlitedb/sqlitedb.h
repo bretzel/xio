@@ -1,6 +1,6 @@
 #pragma once
 
-#include <xio/sqlite3/sqlite3api.h>
+#include <xio/sqlitedb/sqlite3api.h>
 #include <sqlite3.h>
 #include <string>
 #include <xio/utils/xreturn.h>

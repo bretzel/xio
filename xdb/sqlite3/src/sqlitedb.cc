@@ -1,11 +1,14 @@
-#include <xio/sqlite3/sqlitedb.h>
+#include <xio/sqlitedb/sqlitedb.h>
 #include <xio/utils/xstr.h>
 #include <xio/utils/xreturn>
 
 #ifdef  _WIN32
 #   include <Windows.h>
 #   include <Shlwapi.h>
+#else
+# include <unistd.h>
 #endif
+
 
 namespace xio::xdb
 {
@@ -15,7 +18,7 @@ sqlitedb::sqlitedb(std::string&& a_dbname) noexcept
 {
     utils::xstr str = std::move(a_dbname);
     _dbname = str();
-    str << ".sqlite3";
+    str << ".sqlitedb";
 
     std::cout << __FUNCTION__ << ": db file: [" << str() << "] \n\n";
 
@@ -32,19 +35,28 @@ sqlitedb::~sqlitedb()
 sqlitedb::code sqlitedb::open()
 {
     utils::xstr str = _dbname;
-    str << ".sqlite3";
+    str << ".sqlitedb";
 #ifdef  _WIN32
     if (!PathFileExistsA(str().c_str()))    
         return 
         { 
             (utils::notification::push(), " sqlite3 open db error(", _dbname, ") - no such database file.\n") 
         };
+#else
+    int ok = access(str().c_str(),F_OK) == 0; // Just check if exists.
+    if(!ok)
+    {
+        return {(
+            utils::notification::push(), "error openning database '", _dbname,"' - ",
+            strerror(errno)
+        )};
+    }
 #endif
     int res = sqlite3_open(str().c_str(), &_db);
     if (res != SQLITE_OK)
         return
         {
-            (utils::notification::push(), " sqlite3 open db error(", res, ") - ", sqlite3_errmsg(_db))
+            (utils::notification::push(), " sqlitedb open db error(", res, ") - ", sqlite3_errmsg(_db))
         };
 
     std::cout << "(" << res << ")" << sqlite3_errmsg(_db) << "\n";
@@ -77,7 +89,7 @@ sqlitedb::code sqlitedb::create()
     if (res != SQLITE_OK)
         return
     {
-            (utils::notification::push(), " sqlite3 open db error(", res, ") - ", sqlite3_errmsg(_db))
+            (utils::notification::push(), " sqlitedb open db error(", res, ") - ", sqlite3_errmsg(_db))
     };
 
     return utils::notification::code::ok;
