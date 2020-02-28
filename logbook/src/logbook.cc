@@ -15,11 +15,12 @@ namespace xio::logbook
     
     database schema:
     
-    [table] mode_id
-        [column]colo_id[/column]
-        [column]value  [/column]
-        //[column]style  [/column]
-    [/table]
+    <table name="color">
+        <Primary Key="id"/> 
+        <column name="name"/>
+        <column name="html"/>
+        <column name="ansi"/>
+    </table>
 
 
     logfmt: 
@@ -33,10 +34,10 @@ namespace xio::logbook
 
     logfmt <-> database schema:
 
-    [logfmt::mode  attribute] <-> std::string/xio::utils::xstr <-> [logbookapi] <-> std::string/xio::utils::xstr <-> [database::table name]
-    [logfmt::color attribute] <-> std::string/xio::utils::xstr <-> [logbookapi] <-> std::string/xio::utils::xstr <-> [database::table name::column name]
+    [logfmt::mode  attribute] <-> std::string/xio::utils::xstr <-> [logbookapi] <-> std::string/xio::utils::xstr <-> [database::color_table::column.name{html,ansi}]
+    [logfmt::color attribute] <-> std::string/xio::utils::xstr <-> [logbookapi] <-> std::string/xio::utils::xstr <-> [database::color_table::column.name[id].value{html,ansi}]
 
-
+    
     -------------------------------------------------------------------------------------------------------------------------------------------------
 
 */
