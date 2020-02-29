@@ -31,7 +31,12 @@ sqlitedb::~sqlitedb()
     _dbname.clear();
 }
 
-
+/*!
+ * @brief   Opens the sqlite3 database file.
+ *
+ * @note Do not let sqlite3_open auto-create the file automatically.
+ * @return sqlitedb::code::ok.
+ */
 sqlitedb::code sqlitedb::open()
 {
     utils::xstr str = _dbname;
@@ -43,7 +48,7 @@ sqlitedb::code sqlitedb::open()
             (utils::notification::push(), " sqlite3 open db error(", _dbname, ") - no such database file.\n") 
         };
 #else
-    int ok = access(str().c_str(),F_OK) == 0; // Just check if exists.
+    int ok = access(str().c_str(),F_OK) == 0; // Just check if the db file exists.
     if(!ok)
     {
         return {(
