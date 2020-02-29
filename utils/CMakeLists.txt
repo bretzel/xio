@@ -34,9 +34,10 @@ ENDIF()
 #set_target_properties(${PROJECT_NAME}
 #        SOVERSION
 #        )
-
+SET(XIO_INCLUDE_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/include)
+message("XIO_INCLUDE_PATHS:" ${XIO_INCLUDE_PATHS})
 target_include_directories(${PROJECT_NAME} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+		"$<BUILD_INTERFACE:${XIO_INCLUDE_PATHS}>"
         $<INSTALL_INTERFACE:include/${FrameWorkName}/${PROJECT_NAME}>  # <prefix>/include/mylib
         )
 

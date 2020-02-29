@@ -26,6 +26,7 @@ include(GenerateExportHeader)
 add_dependencies(${PROJECT_NAME} utils sqlitedb)
 
 
+
 IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
 	EXECUTE_PROCESS( COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json
@@ -37,10 +38,12 @@ ENDIF()
 #        SOVERSION
 #        )
 
+list(APPEND XIO_INCLUDE_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/include" "${XIO_ROOT}/utils/include" "${XIO_ROOT}/xdb/sqlite3/include")
+message("XIO_INCLUDE_PATHS:" ${XIO_INCLUDE_PATHS})
+
 target_include_directories(${PROJECT_NAME} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        "$<BUILD_INTERFACE:${XIO_INCLUDE_PATHS}>"
         $<INSTALL_INTERFACE:include/${FrameWorkName}/${PROJECT_NAME}>  # <prefix>/include/mylib
-		${XIO_UTILS_INCLUDE_DIR}
         )
 
 target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
