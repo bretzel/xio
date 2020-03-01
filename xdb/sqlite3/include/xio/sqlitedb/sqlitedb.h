@@ -10,7 +10,23 @@ namespace xio::xdb
 {
 
 
-
+/*!
+ * @brief base support for the sqlite3 C API.
+ *
+ * @note  Personnal note:
+ *
+ * @code
+ *    xdb::Select{
+ *        xdb::Column{
+ *            {"column name"}, {"column name"}, ...
+ *        },
+ *        xdb::From{"TABLE NAME","TABLE NAME",...},
+ *        xdb::Where{
+ *            xdb::Expr{...}
+ *        }
+ *    }
+ * @endcode
+ */
 class xiosqlite3_api sqlitedb
 {
     sqlite3*        _db = nullptr;
