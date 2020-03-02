@@ -17,7 +17,7 @@ namespace xio::logbook
 
     @note logbook is a single instance class!
 */
-class logbook_api logbook
+class logbook_api book
 {
 
     // Testons le stockage static private:
@@ -35,11 +35,11 @@ public:
 
     using result = utils::xreturn<utils::notification::code>;
 
-    logbook() = default;
-    ~logbook();
+    book() = default;
+    ~book();
     static std::string dbname(); // DOH!
 
-    logbook::result open();
+    book::result open();
 
 
 };

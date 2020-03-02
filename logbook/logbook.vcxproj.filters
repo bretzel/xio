@@ -24,12 +24,18 @@
     <ClInclude Include="include\xio\logbook\logbook.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="include\xio\logbook\colors.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\logfmt.cc">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\logbook.cc">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\colors.cc">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,6 +7,9 @@
 
 #pragma once
 
+
+#include <xio/utils/xstr.h>
+
 namespace xio::logbook{
 
 

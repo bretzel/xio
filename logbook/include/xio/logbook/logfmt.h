@@ -5,7 +5,7 @@
 #include <stack>
 #include <vector>
 #include <xio/utils/xreturn>
-
+#include <xio/logbook/colors.h>
 namespace xio::logbook
 {
 class logbook_api logfmt
@@ -22,11 +22,7 @@ public:
         /* html: */ normal, italic, strong, sup, _sup, sub, _sub, pre, endpre ///< styles suppl&eacute;mentaires du texte au format `html`
     };
 
-    enum class color : uint8_t
-    {
-        /* colors*/ black = 0, red = 1, green = 2, amber = 3, blue = 4, magenta = 5, cyan = 6, hgray, dgray, hred, hgreen, yellow, hblue, hmagenta, hcyan, white,
-        /* reset */ reset, ///< remise-&agrave;-z&eacute;ro des attributs.
-    };
+    
 
     enum class object : uint8_t
     {
@@ -102,7 +98,10 @@ public:
 protected: virtual logfmt& operator < (logfmt::mst st);
 public:
 
-    logfmt& operator << (logfmt::color c);
+
+    `logfmt& operator << (logfmt::object obj);
+
+    logfmt& operator << (logbook::webcolor c);
     virtual logfmt& eol();
 
     template<typename T> logfmt& operator << (const T& _d)

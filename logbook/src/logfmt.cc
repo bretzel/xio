@@ -53,8 +53,17 @@ namespace xio::logbook
         //...
         return *this;
     }
+    /*!
+    
+        @brief insert object format.
+    
+    */
+    logfmt& logfmt::operator<<(logfmt::object obj)
+    {
+        // TODO: insérer une instruction return ici
+    }
 
-    logfmt& logfmt::operator<<(logfmt::color c)
+    logfmt& logfmt::operator<<(logbook::webcolor c)
     {
         
         _text << __PRETTY_FUNCTION__ << ": not implemented yet!";

@@ -162,11 +162,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\xio\logbook\colors.h" />
     <ClInclude Include="include\xio\logbook\logbookapi.h" />
     <ClInclude Include="include\xio\logbook\logfmt.h" />
     <ClInclude Include="include\xio\logbook\logbook.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\colors.cc" />
     <ClCompile Include="src\logbook.cc" />
     <ClCompile Include="src\logfmt.cc" />
   </ItemGroup>
