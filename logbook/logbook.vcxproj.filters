@@ -27,9 +27,6 @@
     <ClInclude Include="include\xio\logbook\book.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="include\xio\logbook\writer.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\logfmt.cc">
@@ -39,9 +36,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\book.cc">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\writer.cc">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

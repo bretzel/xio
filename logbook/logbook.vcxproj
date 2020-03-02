@@ -166,13 +166,11 @@
     <ClInclude Include="include\xio\logbook\logbookapi.h" />
     <ClInclude Include="include\xio\logbook\logfmt.h" />
     <ClInclude Include="include\xio\logbook\book.h" />
-    <ClInclude Include="include\xio\logbook\writer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\colors.cc" />
     <ClCompile Include="src\book.cc" />
     <ClCompile Include="src\logfmt.cc" />
-    <ClCompile Include="src\writer.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

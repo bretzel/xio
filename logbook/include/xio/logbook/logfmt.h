@@ -12,6 +12,10 @@
 
 namespace xio::logbook
 {
+
+
+
+
 class logbook_api logfmt
 {
 protected:
@@ -40,6 +44,13 @@ public:
         end
     }_m = mst::noop;
 
+    enum object {
+        code,            ///< enters {basic, supported} code mode (highlighting) using highlighter
+        end,         ///< leave code-mode.
+        p,            ///< param&eagrave;tres : &agrave; consid&eacute;rer.
+        eol,             ///< Explicit End Of Line. Thus, the proper eol code corresponding to the mode, is appended to _text.
+        nil              ///< null object; used as counting/bound/end value ; nulle
+    };
 
 
     using collection = std::vector<logfmt>;
