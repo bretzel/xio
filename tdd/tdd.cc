@@ -1,9 +1,21 @@
 #include "tdd.h"
 #include <xio/utils/xstr.h>
 #include <xio/utils/notification.h>
-#include <xio/logbook/logbook.h>
+#include <xio/logbook/book.h>
 
 
+
+
+/*!
+
+    @code
+
+    int funtion()
+    {
+         logdebug dbug{};
+    }
+
+*/
 
 auto main() -> int {
     xio::utils::xstr str = "Hello, World!\n";

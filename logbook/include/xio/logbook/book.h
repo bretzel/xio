@@ -1,12 +1,10 @@
 #pragma once
 
 #include <xio/logbook/logbookapi.h>
+#include <map>
 #include <xio/utils/xstr.h>
-#include <map> // - Oh-yeah!
 #include <xio/utils/xreturn>
-#include <utility>
-#include <memory>
-//#include <xio/sqlitedb/sqlitedb.h>
+#include <xio/logbook/logfmt.h>
 
 namespace xio::logbook
 {
@@ -22,6 +20,7 @@ class logerror;
 class logwaring;
 class logsucces;
 class lognote;
+class document_element;
 
 /*!
     @brief The Log Book ...  
@@ -40,131 +39,7 @@ class logbook_api book
 
 public:
 
-    class logbook_api doc_element
-    {
-        enum class tag:uint8_t {
-            a,
-            p,
-            div,
-            section,
-            header,
-            abbr,
-            address,
-            area,
-            article,
-            aside,
-            b,
-            base,
-            body,
-            blockquote,
-            br,
-            button,
-            canvas,
-            caption,
-            table,
-            center,
-            cite,
-            code,
-            col,
-            colgroup,
-            data,
-            datalist,
-            dl,
-            dt,
-            fieldset,
-            figcaption,
-            figure,
-            font,
-            footer,
-            form,
-            frame,
-            frameset,
-            h1,h2,h3,h4,h5,h6,
-            head,
-            hr,
-            html,
-            i,
-            iframe,
-            img,
-            input,
-            ins,
-            kbd,
-            label,
-            legend,
-            li,
-            link,
-            main,
-            map,
-            mark,
-            meta,
-            meter,
-            nav,
-            noscript,
-            object,
-            ol,
-            optgroup,
-            option,
-            output,
-            param,
-            picture,
-            pre,
-            progress,
-            q,
-            rp,
-            rt,
-            ruby,
-            s,
-            samp,
-            script,
-            strike,
-            strong,
-            style,
-            sub,
-            summary,
-            sup,
-            svg,
-            table,
-            tbody,
-            td,
-            tmplate,
-            textarea,
-            tfoot,
-            th,
-            thead,
-            time,
-            title,
-            tr,
-            track,
-            u,
-            ul,
-            var,
-            video,
-            wbr
-        };
-
-        
-        public:   
-        using nodeptr_t = std::shared_ptr<doc_element>;
-        private:
-        using collection = std::vector<doc_element::nodeptr_t>;
-        using attr_val_t = std::pair<std::string, std::string>;
-        using attr_list_t = std::vector<attr_val_t>;
-
-        bool             bloc;
-        doc_element::tag tag;
-        public:
-        std::string      text();
-        std::string      begin();
-        std::string      end();
-
-         
-        doc_element::collection _children;
-
-    public:
-
-
-    };
-
+    
     enum class object : uint8_t
     {
         
@@ -201,8 +76,12 @@ public:
     static std::string dbname(); // DOH!
 
     book::result open();
-
+    static document_element& element();
 
 };
+
+
+
+
 
 }
