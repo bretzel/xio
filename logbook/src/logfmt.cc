@@ -39,7 +39,7 @@ namespace xio::logbook
         return false;
     }
 
-    bool logfmt::set_fmt_mode(logfmt::mode m)
+    bool logfmt::set_fmt_mode(book::mode m)
     {
         _mode = m;
         return true;
@@ -58,12 +58,12 @@ namespace xio::logbook
         @brief insert object format.
     
     */
-    logfmt& logfmt::operator<<(logfmt::object obj)
+    logfmt& logfmt::operator<<(book::object obj)
     {
         // TODO: insérer une instruction return ici
     }
 
-    logfmt& logfmt::operator<<(logbook::webcolor c)
+    logfmt& logfmt::operator<<(webcolor c)
     {
         
         _text << __PRETTY_FUNCTION__ << ": not implemented yet!";
