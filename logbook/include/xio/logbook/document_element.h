@@ -125,15 +125,17 @@ public:
         wbr
     };
 
-    using nodeptr_t = std::shared_ptr<document_element>;
+    using nodeptr_t         = std::shared_ptr<document_element>;
+    using collection        = std::vector<document_element::nodeptr_t>;
+    using attr_val_t        = std::pair<std::string, std::string>;
+    using attr_collection_t = std::vector<attr_val_t>;
 private:
-
-    using collection = std::vector<document_element::nodeptr_t>;
-    using attr_val_t = std::pair<std::string, std::string>;
-    using attr_list_t = std::vector<attr_val_t>;
-
     utils::xstr _stream;
     utils::xstr _tag;
+
+    attr_collection_t _attributes;
+
+    document_element::collection _nodes;
 
     struct {
         uint8_t bloc    : 1; ///< this element is a bloc - then has children elements
@@ -143,14 +145,12 @@ private:
     }_params;
 
     document_element::tag tag;
+
 public:
     std::string      text();
     std::string      begin();
     std::string      end();
-
-
-    document_element::collection _children;
-
+    std::size_t      push_attr(document_element::attr_val_t&&);
 
 };
 
