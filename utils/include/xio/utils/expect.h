@@ -17,6 +17,7 @@ namespace xio::utils
 template< class T >class expect
 {
     bool f = false;
+   
     union
     {
         T *v = nullptr;
