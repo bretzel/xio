@@ -77,7 +77,7 @@ public:
     std::string dbname(); // DOH!
 
     book::result open();
-    document_element& element();
+    doc_element& element();
 
 };
 

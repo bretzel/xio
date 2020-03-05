@@ -16,7 +16,7 @@ namespace xio::logbook
 
 
 
-class logbook_api logfmt : public document_element
+class logbook_api logfmt : public doc_element
 {
 
 };

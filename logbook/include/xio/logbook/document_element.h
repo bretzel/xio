@@ -20,7 +20,7 @@ namespace xio::logbook
     @brief Trying to implement rough html doc tag element... 
 
 */
-class logbook_api document_element
+class logbook_api doc_element
 {
 public:
     /*!
@@ -131,8 +131,8 @@ public:
         nil
     };
 
-    using shared         = std::shared_ptr<document_element>;
-    using collection        = std::vector<document_element::shared>;
+    using shared         = std::shared_ptr<doc_element>;
+    using collection        = std::vector<doc_element::shared>;
     using attr_val_t        = std::pair<std::string, std::string>;
     using attr_collection_t = std::vector<attr_val_t>;
     using iterator = collection::iterator;
@@ -142,7 +142,7 @@ private:
 
     attr_collection_t _attributes;
 
-    document_element::collection _nodes;
+    doc_element::collection _nodes;
 
     struct {
         uint8_t bloc    : 1; ///< this element is a bloc - then has children elements
@@ -151,36 +151,36 @@ private:
         uint8_t indent  : 4; ///< 0..15 niveaux d'intentations... Avec ca si y'en a pas asser...
     }_params = { 0 };
 
-    document_element::tag _tag = tag::nil;
-    document_element::shared _parent = nullptr;
+    doc_element::tag _tag = tag::nil;
+    doc_element::shared _parent = nullptr;
 
 
 
 
 protected:
     
-    void append_child(document_element::shared a_child);
-    document_element::iterator query_child(document_element::shared a_child);
+    void append_child(doc_element::shared a_child);
+    doc_element::iterator query_child(doc_element::shared a_child);
     void detach();
-    void detach_child(document_element::shared el);
+    void detach_child(doc_element::shared el);
 
 public:
 
-    document_element() = default;
-    ~document_element();
+    doc_element() = default;
+    ~doc_element();
 
-    document_element(document_element::shared a_parent,document_element::tag a_tag);
-    document_element(document_element::tag a_tag);
+    doc_element(doc_element::shared a_parent,doc_element::tag a_tag);
+    doc_element(doc_element::tag a_tag);
 
-    document_element& parent();
+    doc_element& parent();
 
-    static utils::xstr tagname(document_element::tag a_tag);
-    static document_element null;
+    static utils::xstr tagname(doc_element::tag a_tag);
+    static doc_element null;
     operator bool();
     std::string      text();
-    document_element::iterator     begin();
-    document_element::iterator     end();
-    std::size_t      push_attr(document_element::attr_val_t&&);
+    doc_element::iterator     begin();
+    doc_element::iterator     end();
+    std::size_t      push_attr(doc_element::attr_val_t&&);
 
 };
 
