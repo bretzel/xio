@@ -5,6 +5,7 @@
 #include <xio/utils/xstr.h>
 #include <xio/utils/xreturn>
 #include <xio/logbook/logfmt.h>
+//#include <xio/logbook/document_element.h>
 
 namespace xio::logbook
 {
@@ -20,7 +21,7 @@ class logerror;
 class logwaring;
 class logsucces;
 class lognote;
-class document_element;
+//class document_element;
 
 /*!
     @brief The Log Book ...  
@@ -73,10 +74,10 @@ public:
 
     book() = default;
     ~book();
-    static std::string dbname(); // DOH!
+    std::string dbname(); // DOH!
 
     book::result open();
-    static document_element& element();
+    document_element& element();
 
 };
 

@@ -36,5 +36,11 @@ book::result book::open()
     return notification::code::implement;
 }
 
+document_element& book::element()
+{
+    return document_element::null;
+    // TODO: insérer une instruction return ici
+}
+
 
 }
