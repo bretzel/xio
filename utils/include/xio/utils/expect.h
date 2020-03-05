@@ -14,7 +14,7 @@ namespace xio::utils
 {
 
 
-template< class T >class xreturn
+template< class T >class expect
 {
     bool f = false;
     union
@@ -24,13 +24,13 @@ template< class T >class xreturn
     } u;
 
 public:
-    xreturn()
+    expect()
     {
         //f = false;
         u.m = &notification::Null();
     }
     
-    xreturn(notification &a_msg)
+    expect(notification &a_msg)
     {
         u.m = &a_msg; // new notification();
         // *u.m = a_msg;
@@ -38,21 +38,21 @@ public:
         // std::cout << __PRETTY_FUNCTION__ << ":\n";
     }
     
-    xreturn(const T &dt)
+    expect(const T &dt)
     {
         u.v = new T();
         *u.v = dt;
         f = true;
     }
     
-    xreturn(xreturn &&n) noexcept
+    expect(expect &&n) noexcept
     {
         using std::swap;
         swap(u, n.u);
         swap(f, n.f);
     }
     
-    xreturn(const xreturn & n)
+    expect(const expect & n)
     {
         f = n.f;
         if(f)
@@ -64,7 +64,7 @@ public:
             u.m = n.u.m;
     }
     
-    xreturn &operator=(notification &a_msg)
+    expect &operator=(notification &a_msg)
     {
         if(f) {
             if(u.v) {
@@ -77,7 +77,7 @@ public:
         return *this;
     }
     
-    xreturn &operator=(xreturn &&n) noexcept
+    expect &operator=(expect &&n) noexcept
     {
         using std::swap;
         swap(u, n.u);
@@ -85,7 +85,7 @@ public:
         return *this;
     }
     
-    xreturn &operator=(const xreturn &n)
+    expect &operator=(const expect &n)
     {
         if(&n == this)
             return *this;
@@ -94,7 +94,7 @@ public:
         return *this;
     }
     
-    xreturn &operator=(const T &a_val)
+    expect &operator=(const T &a_val)
     {
         if(!u.v)
             u.v = new T();
@@ -141,7 +141,7 @@ public:
         f = false;
     }
     
-    ~xreturn()
+    ~expect()
     {
         clear();
     }
@@ -160,7 +160,7 @@ public:
             else {
                 str << __PRETTY_FUNCTION__;
                 rr = str.extract_substr("T =", ";");
-                str = " no method given, for textifying this xreturn<T>:[";
+                str = " no method given, for textifying this expect<T>:[";
                 str  << rr << ']';
             }
             return str();

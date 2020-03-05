@@ -3,7 +3,7 @@
 #include <xio/logbook/logbookapi.h>
 #include <map>
 #include <xio/utils/xstr.h>
-#include <xio/utils/xreturn>
+#include <xio/utils/expect>
 #include <xio/logbook/logfmt.h>
 //#include <xio/logbook/document_element.h>
 
@@ -70,7 +70,7 @@ public:
     //private:
     //    static std::map<logbook::color, std::string> _web_colors;
 
-    using result = utils::xreturn<utils::notification::code>;
+    using result = utils::expect<utils::notification::code>;
 
     book() = default;
     ~book();

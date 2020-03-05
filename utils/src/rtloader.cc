@@ -2,7 +2,7 @@
 // Created by bretzel on 20-01-27.
 //
 
-#include <xio/utils/xloader.h>
+#include <xio/utils/rtloader.h>
 
 
 #ifdef _WIN32
@@ -16,7 +16,7 @@ namespace xio::utils
 
 
 #ifdef _WIN32
-std::string xloader::locate()
+std::string rtloader::locate()
 {
     xstr  dll_file = "%s.dll";
     dll_file << _id;
@@ -42,7 +42,7 @@ std::string xloader::locate()
     @author Serge Lussier (bretzelus), lussier.serge@gmail.com
 */
 
-xloader::code xloader::open()
+rtloader::code rtloader::open()
 {
     std::string str_location = locate();
     if (str_location.empty()) {
@@ -107,7 +107,7 @@ xloader::code xloader::open()
         //throw notification::Push(notification::T::error), " Plugin ", id, ": Plugin does not provides exported interface.";
     }
     std::cerr << "Library '" << str_location << "' calling __Export :\n";
-    _interface = xplugin::interface_map(reinterpret_cast<xplugin::interface_map(*)()>(_export_fn)());
+    _interface = rtlx::interface_map(reinterpret_cast<rtlx::interface_map(*)()>(_export_fn)());
     if (_interface.empty()) {
         FreeLibrary(_handle);
         goto LeaveWithNoInterface;
@@ -127,7 +127,7 @@ xloader::code xloader::open()
             //throw notification::Push(notification::T::error), " Plugin ", id, ": exported symbol is unbound: [", ix.first, "]";
         }
     }
-    if ((_plugin = (reinterpret_cast<xplugin * (*)(const char*)>(_interface[CREATE_SYM]))(_id.c_str())) != nullptr) {
+    if ((_plugin = (reinterpret_cast<rtlx * (*)(const char*)>(_interface[CREATE_SYM]))(_id.c_str())) != nullptr) {
         _plugin->set_interface(_interface);
         _interface.clear(); // Do not keep a local copy since the interface data is now owned by the Plugin Instance...
     }
@@ -142,7 +142,7 @@ xloader::code xloader::open()
     return { _plugin };
 }
 
-int xloader::close()
+int rtloader::close()
 {
     if (!_handle) return 0;
     if (_plugin) release();
@@ -151,12 +151,12 @@ int xloader::close()
     return 0;
 }
 
-int xloader::release()
+int rtloader::release()
 {
     if (!_plugin)
         return 0;
 
-    (void) reinterpret_cast<int(*)(xplugin*)>(_plugin->_interface[DELETE_SYM])(_plugin);
+    (void) reinterpret_cast<int(*)(rtlx*)>(_plugin->_interface[DELETE_SYM])(_plugin);
     _plugin = nullptr;
     return 0;
 }
@@ -171,7 +171,7 @@ int xloader::release()
 @return the absolute path and final filename in std::string.
 @author Serge Lussier(bretzelus), lussier.serge@gmail.com
 */
-std::string xloader::locate()
+std::string rtloader::locate()
 {
     xstr::word::collection a_paths;
     std::string str_format = "%s/lib%s.so";
@@ -212,7 +212,7 @@ std::string xloader::locate()
 *    @return pointer to the Plugin base class lobject successfuly initialized and ready to use.
 *    @author Serge Lussier(bretzelus), lussier.serge@gmail.com
 */
-xloader::code xloader::open()
+rtloader::code rtloader::open()
 {
     
     std::string str_location = locate();
@@ -232,7 +232,7 @@ xloader::code xloader::open()
         return {(notification::push(notification::type::error), " Plugin ", _id, ": ", dlerror())};
     }
     
-    _interface = reinterpret_cast<xplugin::interface_map(*)()>(_export_fn)();
+    _interface = reinterpret_cast<rtlx::interface_map(*)()>(_export_fn)();
     if(_interface.empty())
     {
         dlclose(_handle);
@@ -249,7 +249,7 @@ xloader::code xloader::open()
         }
     }
     
-    _plugin = (reinterpret_cast<xplugin *(*)()>(_interface[CREATE_SYM]))();
+    _plugin = (reinterpret_cast<rtlx *(*)()>(_interface[CREATE_SYM]))();
     _plugin->set_interface(_interface);
     _interface.clear();
     return {_plugin};
@@ -260,7 +260,7 @@ xloader::code xloader::open()
 *
 *    @author Serge Lussier(bretzelus), lussier.serge@gmail.com
 */
-int xloader::close()
+int rtloader::close()
 {
     if(!_handle)
         return 0;
@@ -271,12 +271,12 @@ int xloader::close()
     return 0;
 }
 
-int xloader::release()
+int rtloader::release()
 {
     if(!_plugin)
         return 0;
     
-    (void) reinterpret_cast<int (*)(xplugin *)>(_plugin->_interface[DELETE_SYM])(_plugin);
+    (void) reinterpret_cast<int (*)(rtlx *)>(_plugin->_interface[DELETE_SYM])(_plugin);
     _plugin = nullptr;
     
     return 0;

@@ -168,23 +168,23 @@
   <ItemGroup>
     <ClCompile Include="src\notification.cc" />
     <ClCompile Include="src\xchronos.cc" />
-    <ClCompile Include="src\xloader.cc" />
-    <ClCompile Include="src\xreturn.cc" />
+    <ClCompile Include="src\rtloader.cc" />
+    <ClCompile Include="src\expect.cc" />
     <ClCompile Include="src\xstr.cc" />
-    <ClCompile Include="src\xplugin.cc" />
+    <ClCompile Include="src\rtlx.cc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\xio\utils\xchronos" />
     <None Include="include\xio\utils\xio.utils" />
-    <None Include="include\xio\utils\xreturn" />
+    <None Include="include\xio\utils\expect" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\xio\utils\notification.h" />
     <ClInclude Include="include\xio\utils\xchronos.h" />
-    <ClInclude Include="include\xio\utils\xloader.h" />
-    <ClInclude Include="include\xio\utils\xreturn.h" />
+    <ClInclude Include="include\xio\utils\rtloader.h" />
+    <ClInclude Include="include\xio\utils\expect.h" />
     <ClInclude Include="include\xio\utils\xstr.h" />
-    <ClInclude Include="include\xio\utils\xplugin.h" />
+    <ClInclude Include="include\xio\utils\rtlx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

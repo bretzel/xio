@@ -2,7 +2,7 @@
 
 #include<xio/utils/xstr.h>
 #include <map>
-#include <xio/utils/xreturn>
+#include <xio/utils/expect>
 
 #ifdef _WIN32
 #   include <Windows.h>
@@ -25,14 +25,14 @@ namespace xio::utils
 #define CREATE_SYM "create_instance"  // Exported symbol name string.
 #define DELETE_SYM "delete_instance"
 #define EXPORT_SYM "export_symbol"
-#define EXPORT   xplugin::interface_map export_symbols()
-#define CREATE_INSTANCE_C_IMPL xio::utils::xplugin*  create_instance(const std::string &aId)
+#define EXPORT   rtlx::interface_map export_symbols()
+#define CREATE_INSTANCE_C_IMPL xio::utils::rtlx*  create_instance(const std::string &aId)
 #define DELETE_INSTANCE_C_IMPL void  delete_instance(xio::utils::xplugin* _dll_instance)
 
 
  
     /*!
-        * @brief Base class of the external plugin instance for a Very,Very,VERY BASIC plugin framework support.
+        * @brief Base class of the external plugin instance for a Very,Very,VERY BASIC plugin {rtlx: "Runtime Load and Execute"} ) support.
         *
         * Derived xplugin instance are the actual plugin code that is loaded from a dynamic library file.
         *
@@ -42,27 +42,30 @@ namespace xio::utils
         * (teacc.club)
         *
         */
-    class XIOUTILS_API xplugin
+    class XIOUTILS_API rtlx
     {
         std::string _id;
 
-        friend class xloader;
+        friend class rtloader;
 
     public:
         using interface_map = std::map<std::string, void*>;
+        using shared = std::shared_ptr<rtlx>;
+        using unique = std::unique_ptr<rtlx>;
+        using weak   = std::weak_ptr<rtlx>;
 
     protected:
         interface_map _interface;
 
     public:
-        xplugin() = delete;
-        xplugin(const xplugin&) = delete;
-        xplugin(std::string&& a_id) noexcept : _id(std::move(a_id)) {}
-        virtual ~xplugin() {};
+        rtlx() = delete;
+        rtlx(const rtlx&) = delete;
+        rtlx(std::string&& a_id) noexcept : _id(std::move(a_id)) {}
+        virtual ~rtlx() {};
 
-        template<typename _Ret, typename ..._Args> xreturn<_Ret> call_proc(const char* _procid, _Args..._args)
+        template<typename _Ret, typename ..._Args> expect<_Ret> call_proc(const char* _procid, _Args..._args)
         {
-            using F = _Ret(*)(xplugin*, _Args..._args);
+            using F = _Ret(*)(rtlx::shared, _Args..._args);
             auto f = _interface.find(_procid);
             if (f == _interface.end())
                 return { (

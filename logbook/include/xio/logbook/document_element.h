@@ -3,7 +3,7 @@
 #include <xio/logbook/logbookapi.h>
 #include <xio/utils/xstr.h>
 #include <map> // - Oh-yeah!
-#include <xio/utils/xreturn>
+#include <xio/utils/expect>
 #include <utility>
 #include <memory>
 #include <cstdint>

@@ -3,7 +3,7 @@
 #include <xio/sqlitedb/sqlite3api.h>
 #include <sqlite3.h>
 #include <string>
-#include <xio/utils/xreturn.h>
+#include <xio/utils/expect>
 
 
 namespace xio::xdb
@@ -39,7 +39,7 @@ public:
 
     ~sqlitedb();
 
-    using code = utils::xreturn<utils::notification::code>;
+    using code = utils::expect<utils::notification::code>;
 
     sqlitedb::code open();
     sqlitedb::code close();

@@ -1,6 +1,6 @@
 #include <xio/sqlitedb/sqlitedb.h>
 #include <xio/utils/xstr.h>
-#include <xio/utils/xreturn>
+#include <xio/utils/expect>
 
 #ifdef  _WIN32
 #   include <Windows.h>

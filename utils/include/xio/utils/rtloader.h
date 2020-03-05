@@ -4,8 +4,8 @@
 
 
 #pragma once
-#include <xio/utils/xplugin.h>
-#include <xio/utils/xreturn.h>
+#include <xio/utils/rtlx.h>
+#include <xio/utils/expect>
 
 #include <map>
 
@@ -21,24 +21,24 @@ namespace xio::utils
 {
 
 
-class XIOUTILS_API xloader final
+class XIOUTILS_API rtloader final
 {
     HINSTANCE _handle = nullptr;
     std::string _id;
-    static xplugin::interface_map _null;
-    xplugin* _plugin = nullptr;
-    xplugin::interface_map _interface;
+    static rtlx::interface_map _null;
+    rtlx* _plugin = nullptr;
+    rtlx::interface_map _interface;
     
 public:
     
-    using code = xreturn<xplugin*>;
+    using code = expect<rtlx*>;
     
-    xloader() = default;
+    rtloader() = default;
     
-    xloader(std::string&& aId) noexcept : _id(std::move(aId))
+    rtloader(std::string&& aId) noexcept : _id(std::move(aId))
     {}
 
-    ~xloader() = default;
+    ~rtloader() = default;
     std::string locate();
     code open();
     int close();

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <xio/utils/xreturn>
+#include <xio/utils/expect>
 #include <xio/lexer/token_t.h>
 #include <map>
 #include <functional>
@@ -78,8 +78,8 @@ class LEXERAPI lexscanners
     };
 
 public:
-    using code = utils::xreturn<utils::notification::code>;
-    using token_code = utils::xreturn<type::token_t>;
+    using code = utils::expect<utils::notification::code>;
+    using token_code = utils::expect<type::token_t>;
     
     using fn_t = std::function<void(type::token_t&)>;
     using receiver_fn_t = std::function<void(type::token_t&, code)>;
