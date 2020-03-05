@@ -76,7 +76,10 @@ public:
     auto& value()
     {
         if (!_f)
+        {
             _a = T();
+            
+        }
         
         return std::any_cast<T&>(_a);
     }
@@ -106,11 +109,15 @@ auto main() -> int {
     std::cout << "element div : " << div->text() << '\n';
 
     int v = 4040;
-    xyz<int> zyx = 45;
-    std::cout << "zyx::notice() (int v=4040; zyx = 45;):" <<  zyx.notice()() << '\n';
+    using xio::utils::expect;
+
+    expect<int> zyx = 45;
+    expect<int> z2;
+
+    std::cout << "zyx::notice() (int v=4040; zyx = 45;):" <<  zyx.note()() << '\n';
     int& v2 = zyx.value();
     std::cout << "int& v2 = zyx::value() :" << v2 << '\n';
-
+    std::cout << "z2.value()..." << z2.value() << "\n";
 
     xio::utils::notification::clear(
         [](xio::utils::notification& n) 

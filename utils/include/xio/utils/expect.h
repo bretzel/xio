@@ -9,7 +9,9 @@
 
 #include <xio/utils/notification.h>
 
-//#include <memory>
+#include <memory>
+#include <any>
+
 namespace xio::utils
 {
 
@@ -17,72 +19,51 @@ namespace xio::utils
 template< class T >class expect
 {
     bool f = false;
-   
-    union
-    {
-        T *v = nullptr;
-        notification *m;
-    } u;
+    std::any _a;
 
 public:
-    expect()
-    {
-        //f = false;
-        u.m = &notification::Null();
-    }
-    
+    expect() = default;
+
     expect(notification &a_msg)
     {
-        u.m = &a_msg; // new notification();
-        // *u.m = a_msg;
+        _a = a_msg; // new notification();
         f = false;
-        // std::cout << __PRETTY_FUNCTION__ << ":\n";
     }
     
     expect(const T &dt)
     {
-        u.v = new T();
-        *u.v = dt;
+        _a = dt;
         f = true;
     }
     
     expect(expect &&n) noexcept
     {
         using std::swap;
-        swap(u, n.u);
-        swap(f, n.f);
+        _a = std::move(n);
+        f = true;
     }
     
     expect(const expect & n)
     {
         f = n.f;
-        if(f)
-        {
-            u.v = new T();
-            *u.v = *n.u.v;
-        }
-        else
-            u.m = n.u.m;
+        _a = n._a;
     }
     
     expect &operator=(notification &a_msg)
     {
         if(f) {
-            if(u.v) {
-                delete u.v;
-                u.v = nullptr;
-            }
+            _a.reset();
         }
         f = false;
-        u.m = &a_msg;
+        _a = a_msg;
         return *this;
     }
     
     expect &operator=(expect &&n) noexcept
     {
-        using std::swap;
-        swap(u, n.u);
-        swap(f, n.f);
+        _a = std::move(_a);
+        f = std::move(n.f);
+
         return *this;
     }
     
@@ -90,17 +71,17 @@ public:
     {
         if(&n == this)
             return *this;
-        u = n.u;
+        _a.reset();
+        _a = n._a;
         f = n.f;
         return *this;
     }
     
     expect &operator=(const T &a_val)
     {
-        if(!u.v)
-            u.v = new T();
-        
-        *u.v = a_val;
+        if (f)
+            _a.reset();
+        _a = a_val;
         f = true;
         return *this;
     }
@@ -111,42 +92,39 @@ public:
     {
         if(f)
             return notification::Null();
-        return *u.m;
+        return std::any_cast<notification&>(_a);
     }
     
-    T value()
+    auto& value()
     {
-        if(!f)
-            return T();
-        return *u.v;
+        if (!f)
+        {
+            notification::push(), notification::type::error, " expect: attempt to reference a value on a false state.";
+            _a = T();
+        } 
+        return std::any_cast<T&>(_a);
     }
     
-    T operator()()
+    auto& operator()()
     {
-        if(!f)
-            return T();
-        return *u.v;
-    }
-    
-    void clear()
-    {
-        if(f) {
-            if(u.v)
-            {
-                delete u.v;
-                //std::cout << __PRETTY_FUNCTION__ << ":> deleted\n";
-                u.v = nullptr;
-            }
+        if (!f)
+        {
+            _a = notification::push(), "expect: expected value on a false state.";
+            return std::any_cast<notification&>(_a);
         }
-        u.m = nullptr;
+        return std::any_cast<T&>(_a);
+    }
+    
+    void reset()
+    {
+        _a.reset();
         f = false;
     }
     
     ~expect()
     {
-        clear();
-    }
-    
+        reset();
+    }    
     /*!
         @brief  to be verified.
     */
@@ -155,7 +133,7 @@ public:
         if(*this){
             xstr str;
             std::string rr;
-            T v = *u.v;
+            T& v = value();
             if (textify_)
                 return textify_(v);
             else {
@@ -166,7 +144,7 @@ public:
             }
             return str();
         }
-        return (*u.m)();
+        return std::any_cast<notification&>(_a)();
     }
 };
 
