@@ -131,7 +131,7 @@ public:
         nil
     };
 
-    using shared         = std::shared_ptr<doc_element>;
+    using shared            = std::shared_ptr<doc_element>;
     using collection        = std::vector<doc_element::shared>;
     using attr_val_t        = std::pair<std::string, std::string>;
     using attr_collection_t = std::vector<attr_val_t>;
