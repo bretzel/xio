@@ -50,10 +50,10 @@ lexscanners::ScannersTable lexscanners::_Scanners=
 
 
 
-lexscanners::lexscanners(type::token_t::collection& token_stream)
-{
-    _tokens = &token_stream;
-}
+//lexscanners::lexscanners(type::token_t::collection& token_stream)
+//{
+//
+//}
 
 lexscanners::~lexscanners()
 {
@@ -62,22 +62,22 @@ lexscanners::~lexscanners()
 
 bool lexscanners::Empty()
 {
-    return (!_tokens || _tokens->empty());
+    return (_tokens.empty());
 }
 
 lexscanners::code lexscanners::Scan()
 {
     _cursor.b = _cursor.c = _source;
     _cursor.e = _cursor.b + std::strlen(_source) - 1; // important to substract 1 to set e to points at the last valid character.
-    if (!_tokens)
+    if (_tokens.empty())
         return { (notification::push(notification::type::error), " address of the tokens stream is null") };
     if ((_cursor.e < _cursor.b) || (!_source) || (!std::strlen(_source)))
         return { (notification::push(notification::type::error), "[eof] -> source code is empty") };
     
     _cursor.l = _cursor.col = 1;
-    _tokens->clear();
+    _tokens.clear();
     _cursor._F = 0;
-    _tokens->emplace_back(type::token_t{lexem::mnemonic::noop, type::null, type::null, type::delta::noop, {_cursor.c, _cursor.e, -1, -1, -1}, {0, 0, 0}, 0 });
+    _tokens.emplace_back(type::token_t{lexem::mnemonic::noop, type::null, type::null, type::delta::noop, {_cursor.c, _cursor.e, -1, -1, -1}, {0, 0, 0}, 0 });
     
     if (!_cursor.SkipWS())
         return { (notification::push(notification::type::error), " unexpected end of file") };
@@ -141,7 +141,7 @@ lexscanners::code lexscanners::Scan()
 
 lexscanners::code lexscanners::operator[](const char* aSrc)
 {
-    if (!_tokens) {
+    if (_tokens.empty()) {
         return {(
                     notification::push(),
                         notification::type::error,
@@ -515,7 +515,7 @@ lexscanners::code lexscanners::__Unary(type::token_t& a_token)
         return { notification::code::accepted };
     }
     
-    type::token_t prev = _tokens->back();
+    type::token_t prev = _tokens.back();
     
     if (prev.is_operator()) {
         a_token.t = type::prefix;
@@ -540,7 +540,7 @@ lexscanners::code lexscanners::__Sign(type::token_t& a_token)
         return{ notification::code::accepted };
     }
     
-    type::token_t b_token = _tokens->back();
+    type::token_t b_token = _tokens.back();
     // ici, le a_token en queu de liste est teste si le type : prefix, binaire
     // ex.: +++a; ++(+a) 1 - +a; etc...
     if (b_token.is_closing_pair() || b_token.is_leaf() || b_token.is_postfix())
@@ -556,7 +556,7 @@ lexscanners::code lexscanners::__Sign(type::token_t& a_token)
 lexscanners::code lexscanners::__Keyword(type::token_t& a_token)
 {
     if (!Empty()) {
-        type::token_t& pre = _tokens->back();
+        type::token_t& pre = _tokens.back();
         if (!a_token._f.V) {
             if (pre.is_operator()) {
                 return { (
@@ -575,7 +575,7 @@ lexscanners::code lexscanners::__Keyword(type::token_t& a_token)
 lexscanners::code lexscanners::__Prefix(type::token_t& a_token)
 {
     if (!Empty()) {
-        type::token_t* prev = &_tokens->back();
+        type::token_t* prev = &_tokens.back();
         if (prev->is_leaf() || prev->is_identifier())
             return {  };
     }
@@ -585,7 +585,7 @@ lexscanners::code lexscanners::__Prefix(type::token_t& a_token)
 lexscanners::code lexscanners::__Postfix(type::token_t& a_token)
 {
     if (!Empty()) {
-        type::token_t& prev = _tokens->back();
+        type::token_t& prev = _tokens.back();
         if (prev.is_unary() || (prev.is_binary() && !prev.is_closing_pair()))
             return {  };
     }
@@ -667,7 +667,7 @@ lexscanners::code lexscanners::__Factor(type::token_t& a_token)
         vt._loc = a_token._loc;
         //LogDebug << "Arg: " << a_token._loc.pos() << ", VToken: " << vt._loc.pos() << Ends;
         vt._f.M = 1;
-        _tokens->push_back(vt);
+        _tokens.push_back(vt);
         //std::cerr << "[" << vt.attribute() << "] is a Virtual Multiply Operator.\n";
 //        //LogDebugFn
 //            << " Pushed virtual multiply op on '"
@@ -684,7 +684,7 @@ lexscanners::code lexscanners::__Factor(type::token_t& a_token)
         return {  };
     }
     
-    vt = _tokens->back();
+    vt = _tokens.back();
     if (!(vt.is_number())) {
         _cursor._F = false;
         return { notification::code::accepted };
@@ -708,7 +708,7 @@ lexscanners::code lexscanners::__Push(type::token_t& a_token)
     _cursor.c += sz;
     _cursor.col += sz;
     //LogDebugFn << " '" << lus:://Log::color::Yellow << a_token.attribute() << lus:://Log::color::Reset << "'" << Ends;
-    _tokens->push_back(a_token); // copie finale en place; placement of final copy.
+    _tokens.push_back(a_token); // copie finale en place; placement of final copy.
     _cursor.SkipWS();
     //std::cerr << "[" << token_t.informations() << "]\n";
     return { notification::code::accepted };
@@ -717,7 +717,7 @@ lexscanners::code lexscanners::__Push(type::token_t& a_token)
 lexscanners::code lexscanners::__Assign_rs(type::token_t& a_token)
 {
     std::cout << __PRETTY_FUNCTION__ << '\n';
-    type::token_t prev = Empty() ? type::token_t::_null : _tokens->back();
+    type::token_t prev = Empty() ? type::token_t::_null : _tokens.back();
     if ((!prev) || _cursor._F) {
         return { (
                      notification::push(),
@@ -749,7 +749,7 @@ lexscanners::code lexscanners::debug(lexscanners::fn_t fn)
             notification::push(), notification::type::warning, " - tokens stream is empty"
         )};
     
-    for(auto tk : *_tokens) fn(tk);
+    for(auto tk : _tokens) fn(tk);
     
     return notification::code::ok;
 }
@@ -961,7 +961,7 @@ void lexscanners::reset()
 {
     _cursor.b = _cursor.c = _source;
     _cursor.e = _cursor.b + std::strlen(_source) - 1; // important to substract 1 to set e to points at the last valid character.
-    if (!_tokens)
+    if (_tokens.empty())
     {
         notification::push(notification::type::error), " address of the tokens stream is null";
         return;
@@ -972,9 +972,9 @@ void lexscanners::reset()
         return;
     }
     _cursor.l = _cursor.col = 1;
-    _tokens->clear();
+    _tokens.clear();
     _cursor._F = 0;
-    _tokens->emplace_back(type::token_t{lexem::mnemonic::noop, type::null, type::null, type::delta::noop, {_cursor.c, _cursor.e, -1, -1, -1}, {0, 0, 0}, 0 });
+    _tokens.emplace_back(type::token_t{lexem::mnemonic::noop, type::null, type::null, type::delta::noop, {_cursor.c, _cursor.e, -1, -1, -1}, {0, 0, 0}, 0 });
     
     if (!_cursor.SkipWS())
         notification::push(notification::type::error), " unexpected end of file";

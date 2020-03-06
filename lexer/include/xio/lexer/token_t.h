@@ -367,7 +367,7 @@ struct LEXERAPI token_t
     token_t& operator=(token_t&& a_token)noexcept;
     token_t& operator=(const token_t& a_token);
     token_t  operator[](lexem::mnemonic CC);
-    token_t* ptr() { return this; }
+    //token_t* ptr() { return this; }
     utils::xstr mark();
     
     operator bool() { return _loc.begin != nullptr; }

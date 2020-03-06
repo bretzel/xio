@@ -19,7 +19,7 @@ namespace xio::lexer
 
 class LEXERAPI lexscanners
 {
-    type::token_t::collection* _tokens = nullptr;
+    type::token_t::collection _tokens;
     
     const char*      _source = nullptr;
     
@@ -84,7 +84,7 @@ public:
     using fn_t = std::function<void(type::token_t&)>;
     using receiver_fn_t = std::function<void(type::token_t&, code)>;
     lexscanners() = default;
-    lexscanners(type::token_t::collection& token_stream);
+    //lexscanners(type::token_t::collection& token_stream);
     ~lexscanners();
     
     bool Empty();
@@ -93,7 +93,7 @@ public:
     
     code debug(fn_t fn);
     const char*& source() { return _source; }
-    type::token_t::collection*& tokens() { return _tokens; }
+    type::token_t::collection& tokens() { return _tokens; }
 private:
     using ScannerFnPtr  = lexscanners::code(lexscanners::*)(type::token_t&);
     using ScannersTable = std::map<type::T, ScannerFnPtr>;
