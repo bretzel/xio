@@ -19,17 +19,16 @@
 */
 
 
+using xio::logbook::doc_element;
 
 auto main() -> int {
     xio::utils::xstr str = "Hello, World!\n";
     std::cout << str();
     std::cout << "xio::logbook::document_element::tagname(xio::logbook::document_element::tag::div): " << xio::logbook::doc_element::tagname(xio::logbook::doc_element::tag::div)() << '\n';
 
-    //xio::logbook::doc_element::shared e     = std::make_shared<xio::logbook::doc_element>(xio::logbook::doc_element::tag::head);
-    xio::logbook::doc_element::shared e     = xio::logbook::book::create_element(nullptr,xio::logbook::doc_element::tag::head);
-    //xio::logbook::doc_element::shared div   = std::make_shared<xio::logbook::doc_element>(e,xio::logbook::doc_element::tag::div);
-    xio::logbook::doc_element::shared div   = xio::logbook::book::create_element(e,xio::logbook::doc_element::tag::div);
-    xio::logbook::doc_element& head = div->parent();
+    doc_element::shared e     = xio::logbook::book::create_element(nullptr,xio::logbook::doc_element::tag::head);
+    doc_element::shared div   = xio::logbook::book::create_element(e,xio::logbook::doc_element::tag::div);
+    doc_element& head         = div->parent();
     
     std::cout << "element e : " << e->text() << '\n';
     std::cout << "element head=div(e).parent(): " << head.text() << '\n';
