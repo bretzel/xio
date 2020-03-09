@@ -79,6 +79,8 @@ public:
     book::result open();
     doc_element& element();
 
+    static doc_element::shared create_element(doc_element::shared, doc_element::tag tg);
+
 };
 
 

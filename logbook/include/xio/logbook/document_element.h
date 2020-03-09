@@ -136,6 +136,8 @@ public:
     using attr_val_t        = std::pair<std::string, std::string>;
     using attr_collection_t = std::vector<attr_val_t>;
     using iterator = collection::iterator;
+
+    static doc_element::shared create(doc_element::shared, doc_element::tag tg);
 private:
     utils::xstr _stream;
     utils::xstr _tagstr;

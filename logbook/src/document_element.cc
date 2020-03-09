@@ -183,5 +183,12 @@ std::string  doc_element::text()
     return _stream();
 }
 
+
+
+doc_element::shared doc_element::create(doc_element::shared a_parent, doc_element::tag tg)
+{
+    return std::make_shared<doc_element>(a_parent, tg);
+}
+
 }
 

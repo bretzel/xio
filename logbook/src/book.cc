@@ -39,7 +39,13 @@ book::result book::open()
 doc_element& book::element()
 {
     return doc_element::null;
-    // TODO: insérer une instruction return ici
+    // TODO: insÃ©rer une instruction return ici
+}
+
+
+doc_element::shared book::create_element(doc_element::shared a_parent, doc_element::tag tg)
+{
+    return std::make_shared<doc_element>(a_parent, tg);
 }
 
 
