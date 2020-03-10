@@ -209,10 +209,10 @@ std::string rtloader::locate()
 /*!
  * @brief Opens the library at the found location into the filesystem.
 *
-*    @return pointer to the Plugin base class lobject successfuly initialized and ready to use.
+*    @return pointer to the Plugin base class successfuly initialized and ready to use.
 *    @author Serge Lussier(bretzelus), lussier.serge@gmail.com
 */
-rtloader::code rtloader::open()
+rtloader::ret rtloader::open()
 {
     
     std::string str_location = locate();
@@ -249,7 +249,7 @@ rtloader::code rtloader::open()
         }
     }
     
-    _plugin = (reinterpret_cast<rtlx *(*)()>(_interface[CREATE_SYM]))();
+    _plugin = (reinterpret_cast<rtlx::shared(*)()>(_interface[CREATE_SYM]))();
     _plugin->set_interface(_interface);
     _interface.clear();
     return {_plugin};
@@ -271,13 +271,21 @@ int rtloader::close()
     return 0;
 }
 
+
+/*!
+ * @brief
+ *
+ * @note Je sais pas encore vraiment comment travailler avec les smart ptr...
+ * @return int
+ */
+
 int rtloader::release()
 {
     if(!_plugin)
         return 0;
     
-    (void) reinterpret_cast<int (*)(rtlx *)>(_plugin->_interface[DELETE_SYM])(_plugin);
-    _plugin = nullptr;
+    (void) reinterpret_cast<int (*)(rtlx::shared)>(_plugin->_interface[DELETE_SYM])(_plugin);
+    //_plugin = nullptr;
     
     return 0;
 }

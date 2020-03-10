@@ -43,7 +43,7 @@ auto main() -> int {
     std::cout << "xio::utils::expect::notice() (int v=4040; zyx = 45;):" <<  zyx.note()() << '\n';
     int& v2 = zyx.value();
     std::cout << "int& v2 = zyx::value() :" << v2 << '\n';
-    std::cout << "z2.value()..." << z2.value() << "\n";
+    std::cout << " Call z2.value() - Uninitialized :..." << z2.value() << "\n";
 
     xio::utils::notification::clear(
         [](xio::utils::notification& n) 

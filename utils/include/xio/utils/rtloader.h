@@ -26,12 +26,12 @@ class XIOUTILS_API rtloader final
     HINSTANCE _handle = nullptr;
     std::string _id;
     static rtlx::interface_map _null;
-    rtlx* _plugin = nullptr;
+    rtlx::shared _plugin = nullptr;
     rtlx::interface_map _interface;
     
 public:
     
-    using code = expect<rtlx*>;
+    using ret = expect<rtlx::shared>;
     
     rtloader() = default;
     
@@ -40,7 +40,7 @@ public:
 
     ~rtloader() = default;
     std::string locate();
-    code open();
+    ret open();
     int close();
     int release();
 };

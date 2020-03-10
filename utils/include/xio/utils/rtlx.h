@@ -25,9 +25,9 @@ namespace xio::utils
 #define CREATE_SYM "create_instance"  // Exported symbol name string.
 #define DELETE_SYM "delete_instance"
 #define EXPORT_SYM "export_symbol"
-#define EXPORT   rtlx::interface_map export_symbols()
-#define CREATE_INSTANCE_C_IMPL xio::utils::rtlx*  create_instance(const std::string &aId)
-#define DELETE_INSTANCE_C_IMPL void  delete_instance(xio::utils::xplugin* _dll_instance)
+#define EXPORT   xio::utils::rtlx::interface_map export_symbols()
+#define CREATE_INSTANCE_C_IMPL xio::utils::rtlx::shared  create_instance(const std::string &aId)
+#define DELETE_INSTANCE_C_IMPL void  delete_instance(xio::utils::rtlx::shared _dll_instance)
 
 
  
@@ -60,7 +60,7 @@ namespace xio::utils
     public:
         rtlx() = delete;
         rtlx(const rtlx&) = delete;
-        rtlx(std::string&& a_id) noexcept : _id(std::move(a_id)) {}
+        explicit rtlx(const std::string& a_id) : _id(a_id) {}
         virtual ~rtlx() {};
 
         template<typename _Ret, typename ..._Args> expect<_Ret> call_proc(const char* _procid, _Args..._args)
