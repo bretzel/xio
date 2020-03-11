@@ -157,10 +157,10 @@ doc_element::doc_element(doc_element::tag a_tag) : _tag(a_tag)
     _tagstr = doc_element::tagname(_tag);
 }
 
-doc_element& doc_element::parent()
+doc_element::shared doc_element::parent()
 {
-    if (!_parent) return doc_element::null;
-    return *_parent;
+    if (!_parent) return nullptr;
+    return _parent;
 }
 
 utils::xstr doc_element::tagname(doc_element::tag a_tag)

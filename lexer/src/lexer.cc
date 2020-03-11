@@ -224,10 +224,10 @@ lexscanners::num::state lexscanners::num::update_state()
 {
     
     numbase base = numeric_base();
-    if(base == numbase::none)
+
+    if((base == numbase::none) || ((base == hex) && literal))
     {
-        std::cout << __PRETTY_FUNCTION__ << ": No digit '" << *c << "'\n";
-        state::bad;
+        st = state::bad;
         return st;
     }
     
@@ -281,23 +281,33 @@ lexer::type::T lexscanners::num::operator()()
 }
 
 
-bool lexscanners::num::ok(){ return ((c<=eos) && (update_state() == state::good)); }
+bool lexscanners::num::ok(bool l)
+{
+    literal = l;
+    bool k =  ((c<=eos) && (update_state() == state::good));
+    literal = false;
+    return k;
+}
 
 /*!
  * @brief ...
  * @param a_token
+ *
+ * @todo Do not force-scan hexadecimal/octal/decimal in "auto-scan mode" ...
  * @return
  */
-lexscanners::code lexscanners::__Number(type::token_t& a_token)
+lexscanners::code lexscanners::__Number(type::token_t& a_token, bool literal)
 {
     
     type::T btype=type::u64;
-    
+    // -------------------------------------------
     num number(_cursor.c, _cursor.e);
-    while(number.ok()) number++;
+    while(number.ok(literal)) number++;
     if(number)
         a_token.s = number() | (number.real ? type::real : 0);
-
+    
+    if(number.numeric_base() == num::none) return notification::code::rejected;
+    
     btype = number();
     
     ///@todo Determiner le num value-size

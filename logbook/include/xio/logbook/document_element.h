@@ -135,7 +135,7 @@ public:
     using collection        = std::vector<doc_element::shared>;
     using attr_val_t        = std::pair<std::string, std::string>;
     using attr_collection_t = std::vector<attr_val_t>;
-    using iterator = collection::iterator;
+    using iterator          = collection::iterator;
 
     static doc_element::shared create(doc_element::shared, doc_element::tag tg);
 private:
@@ -174,7 +174,7 @@ public:
     doc_element(doc_element::shared a_parent,doc_element::tag a_tag);
     doc_element(doc_element::tag a_tag);
 
-    doc_element& parent();
+    doc_element::shared parent();
 
     static utils::xstr tagname(doc_element::tag a_tag);
     static doc_element null;

@@ -718,6 +718,31 @@ std::string xstr::extract_substr(const std::string &first_lhs, const std::string
     return _s.substr(lhs_pos, rhs_pos-lhs_pos);
 }
 
+
+/*!
+ * @brief Try to extract the "template" type from the \c func_desc that normally shall be given by __PRETTY_FUNCTION__ at the call location.
+ *
+ * template parameter assumed to be "T" ...for now.
+ *
+ * @param func_desc
+ *
+ * @note This function has no control of the proper format and (function) prototype data.
+ * @return the resulting type text
+ */
+std::string xstr::type_of_T(string &&func_desc)// , const std::string& _T) -> _T is the class to search.
+{
+    xstr text = std::move(func_desc);
+    xstr::word::collection w;
+    
+    std::size_t count = text.words(w);
+    for(auto s : w)
+    {
+        std::cout  << s() << '\n';
+    }
+    return "finish to implement, please\n";
+}
+
+
 std::string xstr::prv_format::operator()()
 {
     std::ostringstream str;

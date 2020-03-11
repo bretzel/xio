@@ -10,32 +10,47 @@
 
 using xio::utils::expect;
 using xio::utils::notification;
-
 using xio::logbook::doc_element;
-
+using xio::logbook::book;
+using xio::utils::xstr;
 
 expect<notification::code> tdd_lexer(const std::string& a_src)
 {
     xio::lexer::lexscanners lexer;
     xio::lexer::lexscanners::code code = lexer[a_src.c_str()];
     if(!code) return code.note();
+    
+    for(auto t : lexer.tokens())
+    {
+        std::cout << t.attribute() << " : " << xio::lexer::type::to_s(t.s) << '\n';
+    }
     //...
+    xio::lexer::type::token_t::collection tokens = lexer.tokens(); // deep copy.
+    lexer.tokens().clear();
+    
+    //  Bypass auto scan.
+    //  Manual scan  ( step ).
+    
     return notification::code::ok;
 }
 
-
+template<typename T> int test_T()
+{
+    std::cout << xstr::type_of_T(__PRETTY_FUNCTION__);
+    return 0;
+}
 
 auto main() -> int {
-    xio::utils::xstr str = "Hello, World!\n";
+    xstr str = "Hello, World!\n";
     std::cout << str();
-    std::cout << "xio::logbook::document_element::tagname(xio::logbook::document_element::tag::div): " << xio::logbook::doc_element::tagname(xio::logbook::doc_element::tag::div)() << '\n';
+    std::cout << "xio::logbook::document_element::tagname(xio::logbook::document_element::tag::div): " << doc_element::tagname(doc_element::tag::div)() << '\n';
 
-    doc_element::shared e     = xio::logbook::book::create_element(nullptr,xio::logbook::doc_element::tag::head);
-    doc_element::shared div   = xio::logbook::book::create_element(e,xio::logbook::doc_element::tag::div);
-    doc_element& head         = div->parent();
-    
+    doc_element::shared e     = book::create_element(nullptr,doc_element::tag::head);
+    doc_element::shared div   = book::create_element(e,doc_element::tag::div);
+    auto head         = div->parent();
+    // ...
     std::cout << "element e : " << e->text() << '\n';
-    std::cout << "element head=div(e).parent(): " << head.text() << '\n';
+    std::cout << "element head=div(e).parent(): " << head->text() << '\n';
     std::cout << "element div : " << div->text() << '\n';
 
     int v = 4040;
@@ -49,11 +64,8 @@ auto main() -> int {
     std::cout << " Call z2.value() - Uninitialized :..." << z2.value() << "\n";
 
     expect<notification::code> cc = tdd_lexer("a=0;");
-    if(cc)
-    {
-        std::cout << "lexer test returned ok\n";
-        //...
-    }
+    std::cout << test_T<std::string>() << '\n';
+    
     xio::utils::notification::clear(
         [](xio::utils::notification& n) 
         {

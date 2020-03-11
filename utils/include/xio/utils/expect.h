@@ -2,9 +2,6 @@
 // Created by bretzel on 20-01-27.
 //
 
-//#ifndef PLSC_RETURNT_H
-//#define PLSC_RETURNT_H
-
 #pragma once
 
 #include <xio/utils/notification.h>
@@ -38,7 +35,6 @@ public:
     
     expect(expect &&n) noexcept
     {
-        using std::swap;
         _a = std::move(n);
         f = true;
     }
@@ -99,7 +95,7 @@ public:
     {
         if (!f)
         {
-            notification::push(), notification::type::error, " expect: attempt to reference a value on a false state.";
+            notification::push(), notification::type::error, __PRETTY_FUNCTION__, " : Cannot reference to the expected value.";
             _a = T();
         } 
         return std::any_cast<T&>(_a);

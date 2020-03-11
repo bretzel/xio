@@ -313,6 +313,9 @@ public:
         return *this;
     }
     
+    
+    static std::string type_of_T(std::string&& func_desc);
+    
     template<typename T> static std::string tobinary(T __arg, bool padd = false, int f = 128)
     {
         uint8_t seq;

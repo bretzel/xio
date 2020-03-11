@@ -51,6 +51,9 @@ class LEXERAPI lexscanners
         const char* c;
         const char* eos;
         bool  real = false;
+        
+        bool  literal = true; ///< scan literal digits - do not validate hexadecimal...
+        
         enum numbase
         {
             none, bin, oct,dec,hex,/* ..., */ //  FUCK!!!
@@ -69,7 +72,7 @@ class LEXERAPI lexscanners
         
         bool operator++();
         bool operator++(int);
-        bool ok();
+        bool ok(bool l);
         operator bool () { return st==good; }
         state update_state();
         
