@@ -4,22 +4,26 @@
 #include <xio/logbook/book.h>
 #include <xio/lexer/lexer.h>
 
-#include <any>
+//#include <any>
 
 
-/*!
 
-    @code
-
-    int funtion()
-    {
-         logdebug dbug{};
-    }
-
-*/
-
+using xio::utils::expect;
+using xio::utils::notification;
 
 using xio::logbook::doc_element;
+
+
+expect<notification::code> tdd_lexer(const std::string& a_src)
+{
+    xio::lexer::lexscanners lexer;
+    xio::lexer::lexscanners::code code = lexer[a_src.c_str()];
+    if(!code) return code.note();
+    //...
+    return notification::code::ok;
+}
+
+
 
 auto main() -> int {
     xio::utils::xstr str = "Hello, World!\n";
@@ -35,7 +39,6 @@ auto main() -> int {
     std::cout << "element div : " << div->text() << '\n';
 
     int v = 4040;
-    using xio::utils::expect;
 
     expect<int> zyx = 45;
     expect<int> z2;
@@ -45,6 +48,12 @@ auto main() -> int {
     std::cout << "int& v2 = zyx::value() :" << v2 << '\n';
     std::cout << " Call z2.value() - Uninitialized :..." << z2.value() << "\n";
 
+    expect<notification::code> cc = tdd_lexer("a=0;");
+    if(cc)
+    {
+        std::cout << "lexer test returned ok\n";
+        //...
+    }
     xio::utils::notification::clear(
         [](xio::utils::notification& n) 
         {

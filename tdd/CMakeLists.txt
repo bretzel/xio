@@ -21,7 +21,7 @@ target_include_directories(tdd.out PUBLIC
 		"$<BUILD_INTERFACE:${XIO_INCLUDE_PATHS}>"
 		)
 
-target_link_libraries(tdd.out ${CMAKE_DL_LIBS} utils sqlitedb logbook sqlite3)#journal grammar lexer utils sqlitedb)
+target_link_libraries(tdd.out ${CMAKE_DL_LIBS} utils sqlitedb logbook sqlite3 lexer)#journal grammar lexer utils sqlitedb)
 
 
 IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )

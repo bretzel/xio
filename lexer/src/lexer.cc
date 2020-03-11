@@ -69,8 +69,8 @@ lexscanners::code lexscanners::Scan()
 {
     _cursor.b = _cursor.c = _source;
     _cursor.e = _cursor.b + std::strlen(_source) - 1; // important to substract 1 to set e to points at the last valid character.
-    if (_tokens.empty())
-        return { (notification::push(notification::type::error), " address of the tokens stream is null") };
+    if (!_tokens.empty())
+        return { (notification::push(notification::type::error), " Clear the tokens stream prior re-invoke.") };
     if ((_cursor.e < _cursor.b) || (!_source) || (!std::strlen(_source)))
         return { (notification::push(notification::type::error), "[eof] -> source code is empty") };
     
@@ -141,12 +141,12 @@ lexscanners::code lexscanners::Scan()
 
 lexscanners::code lexscanners::operator[](const char* aSrc)
 {
-    if (_tokens.empty()) {
+    if (!_tokens.empty()) {
         return {(
                     notification::push(),
-                        notification::type::error,
-                        notification::code::null,
-                        " Lexical scanners invoked without type::token_t stream. "
+                    notification::type::error,": ",
+                    notification::code::exists,
+                    " Lexical scanners invoked without type::token_t stream reset. Clear the tokens stream prior to re-invoke."
                 )};
     }
     _source = aSrc;
