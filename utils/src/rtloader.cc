@@ -40,9 +40,11 @@ std::string rtloader::locate()
     @brief Opens the library at the found location into the filesystem.
     @return pointer to the Plugin base class lobject successfuly initialized and ready to use.
     @author Serge Lussier (bretzelus), lussier.serge@gmail.com
+
+    @note ----- _WIN32 : ---> Not updated!!!! LOL!!
 */
 
-rtloader::code rtloader::open()
+rtloader::ret rtloader::open()
 {
     std::string str_location = locate();
     if (str_location.empty()) {
@@ -127,7 +129,7 @@ rtloader::code rtloader::open()
             //throw notification::Push(notification::T::error), " Plugin ", id, ": exported symbol is unbound: [", ix.first, "]";
         }
     }
-    if ((_plugin = (reinterpret_cast<rtlx * (*)(const char*)>(_interface[CREATE_SYM]))(_id.c_str())) != nullptr) {
+    if ((_plugin = (reinterpret_cast<rtlx::shared (*)(const char*)>(_interface[CREATE_SYM]))(_id.c_str())) != nullptr) {
         _plugin->set_interface(_interface);
         _interface.clear(); // Do not keep a local copy since the interface data is now owned by the Plugin Instance...
     }
@@ -156,7 +158,7 @@ int rtloader::release()
     if (!_plugin)
         return 0;
 
-    (void) reinterpret_cast<int(*)(rtlx*)>(_plugin->_interface[DELETE_SYM])(_plugin);
+    (void) reinterpret_cast<int(*)(rtlx::shared)>(_plugin->_interface[DELETE_SYM])(_plugin);
     _plugin = nullptr;
     return 0;
 }

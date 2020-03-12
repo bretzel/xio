@@ -20,5 +20,9 @@ public:
     
     tdd::result run();
 
+
+    tdd::result lexer();
+    tdd::result logbook();
+
 };
 

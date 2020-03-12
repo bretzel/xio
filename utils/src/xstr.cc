@@ -737,8 +737,9 @@ std::string xstr::type_of_T(string &&func_desc)// , const std::string& _T) -> _T
     std::size_t count = text.words(w);
     for(auto s : w)
     {
-        std::cout  << s() << '\n';
+        std::cout << s();
     }
+    std::cout << '\n';
     return "finish to implement, please\n";
 }
 

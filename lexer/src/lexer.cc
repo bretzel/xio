@@ -1,4 +1,5 @@
-//
+
+
 // Created by bretzel on 20-02-03.
 //
 
@@ -296,13 +297,13 @@ bool lexscanners::num::ok(bool l)
  * @todo Do not force-scan hexadecimal/octal/decimal in "auto-scan mode" ...
  * @return
  */
-lexscanners::code lexscanners::__Number(type::token_t& a_token, bool literal)
+lexscanners::code lexscanners::__Number(type::token_t& a_token)
 {
     
     type::T btype=type::u64;
     // -------------------------------------------
     num number(_cursor.c, _cursor.e);
-    while(number.ok(literal)) number++;
+    while(number.ok(true)) number++;
     if(number)
         a_token.s = number() | (number.real ? type::real : 0);
     
