@@ -95,7 +95,7 @@ public:
     {
         if (!f)
         {
-            notification::push(), notification::type::error, __PRETTY_FUNCTION__, " : Cannot reference to the expected value.";
+            notification::push(), notification::type::error, ": ", __PRETTY_FUNCTION__, " - Expected value was not returned.";
             _a = T();
         } 
         return std::any_cast<T&>(_a);

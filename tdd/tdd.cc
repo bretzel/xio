@@ -15,30 +15,28 @@ using xio::logbook::book;
 using xio::utils::xstr;
 
 
-template<typename T> int test_T()
+
+
+
+tdd::result tdd::run()
 {
-    std::cout << __PRETTY_FUNCTION__ << ":\n";
-    std::cout << xstr::type_of_T(__PRETTY_FUNCTION__);
-    return 0;
+    return {
+        (
+         notification::push(), __PRETTY_FUNCTION__ , ": not implemented, yet..."
+        )
+    };
+}
+
+
+tdd::~tdd()
+{
+    std::cout << __PRETTY_FUNCTION__ << " \\O/\n";
 }
 
 auto main() -> int {
-    xstr str = "Hello, World!\n";
-    std::cout << str();
-    // ...
+   // tdd _tdd;
+    tdd().run();
 
-    int v = 4040;
-
-    expect<int> zyx = 45;
-    expect<int> z2;
-
-    std::cout << "xio::utils::expect::notice() (int v=4040; zyx = 45;):" <<  zyx.note()() << '\n';
-    int& v2 = zyx.value();
-    std::cout << "int& v2 = zyx::value() :" << v2 << '\n';
-    std::cout << " Call z2.value() - Uninitialized :..." << z2.value() << "\n";
-
-    std::cout << test_T<int>() << '\n';
-    
     xio::utils::notification::clear(
         [](xio::utils::notification& n) 
         {
@@ -55,11 +53,15 @@ tdd::result tdd::lexer()
     xio::lexer::lexscanners::code code = lexer["a=b;"];
     if (!code) return code.note();
 
-    for (auto t : lexer.tokens())
-    {
-        std::cout << t.attribute() << " : " << xio::lexer::type::to_s(t.s) << '\n';
-    }
-    //...
+//    for (auto t : lexer.tokens())
+//    {
+//        std::cout << t.attribute() << " : " << xio::lexer::type::to_s(t.s) << '\n';
+//    }
+//    //...
+    lexer.debug([](xio::lexer::type::token_t& token){
+        std::cout << '[' << token.attribute() << "] :" << xio::lexer::type::to_s(token.s) << '\n';
+    });
+
     xio::lexer::type::token_t::collection tokens = lexer.tokens(); // deep copy.
     lexer.tokens().clear();
 

@@ -13,7 +13,7 @@ public:
 
     using result = expect<xio::utils::notification::code>;
 
-    tdd();
+    tdd() = default;
 
     ~tdd();
 
