@@ -20,6 +20,8 @@ using xio::utils::xstr;
 
 tdd::result tdd::run()
 {
+    logbook();
+    lexer();
     return {
         (
          notification::push(), __PRETTY_FUNCTION__ , ": not implemented, yet..."
@@ -84,5 +86,5 @@ tdd::result tdd::logbook()
     std::cout << "element div : " << div->text() << '\n';
 
 
-    return notification::code::implement;
+    return notification::code::ok;
 }
