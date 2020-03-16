@@ -20,11 +20,8 @@ namespace xio::lexer
 class LEXERAPI lexscanners
 {
     type::token_t::collection _tokens;
-    
     const char*      _source = nullptr;
-    
     struct internal_cursor{
-        
         const char* b = nullptr; ///> Absolute Beginning of the source text.
         const char* e = nullptr; ///> Absolute End of the soure text.
         const char* c = nullptr;
@@ -73,7 +70,7 @@ class LEXERAPI lexscanners
         bool operator++();
         bool operator++(int);
         bool ok(bool l);
-        operator bool () { return st==good; }
+        operator bool () { return (st==good) || (c>b); }
         state update_state();
         
         num::numbase numeric_base();

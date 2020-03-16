@@ -76,7 +76,7 @@ lexscanners::code lexscanners::Scan()
         return { (notification::push(notification::type::error), "[eof] -> source code is empty") };
     
     _cursor.l = _cursor.col = 1;
-    _tokens.clear();
+    //_tokens.clear();
     _cursor._F = 0;
     _tokens.emplace_back(type::token_t{lexem::mnemonic::noop, type::null, type::null, type::delta::noop, {_cursor.c, _cursor.e, -1, -1, -1}, {0, 0, 0}, 0 });
     
@@ -94,6 +94,7 @@ lexscanners::code lexscanners::Scan()
         if (!__Number(token_t)) {
             token_t = type::token_t::scan(_cursor.c);
             if (!token_t) {
+                std::cout << " not a number, not a lexem : checking Identifier:\n";
                 if (code r; !(r = __Identifier(token_t)))
                     return { (r.note(), "\n", _cursor.mark()) };
                 else{
@@ -204,7 +205,7 @@ bool lexscanners::num::operator++(int)
                 st = state::bad;
                 return false;
             }
-            // else *c is on '.' :
+            // else *c is on '.' :  2.a
             if(!real)
             {
                 e = c;
@@ -216,6 +217,7 @@ bool lexscanners::num::operator++(int)
         st = state::bad;
         return false;
     }
+    if(
     e = c;
     return true;
 }
@@ -229,11 +231,13 @@ lexscanners::num::state lexscanners::num::update_state()
     if((base == numbase::none) || ((base == hex) && literal))
     {
         st = state::bad;
+        //std::cout << __PRETTY_FUNCTION__ << " : (" << *c <<  ") Bad state.\n";
         return st;
     }
     
     if(n < base) n=base;
     st = state::good;
+    //std::cout << __PRETTY_FUNCTION__ << " : Good state.\n";
     return st;
 }
 
@@ -245,10 +249,9 @@ lexscanners::num::numbase  lexscanners::num::numeric_base()
     {
         int cv = *c -'0';
         if (cv <= 1)
-            return numbase::dec;
+            return numbase::bin;
         if(cv<=7)
-            return numbase::dec;
-        
+            return numbase::oct;
         return numbase::dec;
     }
     
@@ -304,11 +307,9 @@ lexscanners::code lexscanners::__Number(type::token_t& a_token)
     // -------------------------------------------
     num number(_cursor.c, _cursor.e);
     while(number.ok(true)) number++;
-    if(number)
-        a_token.s = number() | (number.real ? type::real : 0);
-    
-    if(number.numeric_base() == num::none) return notification::code::rejected;
-    
+    if(!number)  return {};
+    a_token.s = number() | (number.real ? type::real : 0);
+    if(number.numeric_base() == num::none) return {};
     btype = number();
     
     ///@todo Determiner le num value-size
@@ -764,10 +765,6 @@ lexscanners::code lexscanners::debug(lexscanners::fn_t fn)
     
     return notification::code::ok;
 }
-
-
-
-
 
 
 // -------------------------- CALLABLE SCANNERS --------------
