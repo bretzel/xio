@@ -52,7 +52,7 @@ auto main() -> int {
 tdd::result tdd::lexer()
 {
     xio::lexer::lexscanners lexer;
-    xio::lexer::lexscanners::code code = lexer["a = 4ac(45 * pi  + b);"];
+    xio::lexer::lexscanners::code code = lexer["a = 4ac(45 * pi  + b) + sin0.3;"];
     if (!code) return code.note();
 
 //    for (auto t : lexer.tokens())

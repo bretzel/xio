@@ -165,6 +165,7 @@ bool lexscanners::num::operator++()
 {
     ++c;
     if(c > eos) return false;
+    
     if(!isalnum(*c))
     {
         if(c<eos)
@@ -174,7 +175,7 @@ bool lexscanners::num::operator++()
                 st = state::bad;
                 return false;
             }
-            // else *c is on '.' :
+            // else *c is on '.' :  2.a
             if(!real)
             {
                 e = c;
@@ -186,7 +187,6 @@ bool lexscanners::num::operator++()
         st = state::bad;
         return false;
     }
-    e = c;
     return true;
 }
 
@@ -226,7 +226,7 @@ lexscanners::num::state lexscanners::num::update_state()
     
     numbase base = numeric_base();
 
-    if((base == numbase::none) || (base == hex))// && literal))
+    if(((base == numbase::none) && (st == state::bad)))// && literal))
     {
         st = state::bad;
         //std::cout << __PRETTY_FUNCTION__ << " : (" << *c <<  ") Bad state.\n";
@@ -310,7 +310,7 @@ lexscanners::code lexscanners::__Number(type::token_t& a_token)
     //while(number++);
     if(!number)  return {};
     a_token.s = number() | (number.real ? type::real : 0);
-    if(number.numeric_base() == num::none) return {};
+    if(number.n == num::none) return {};
     btype = number();
     
     ///@todo Determiner le num value-size
