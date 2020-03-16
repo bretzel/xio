@@ -217,8 +217,6 @@ bool lexscanners::num::operator++(int)
         st = state::bad;
         return false;
     }
-    if(
-    e = c;
     return true;
 }
 
@@ -228,7 +226,7 @@ lexscanners::num::state lexscanners::num::update_state()
     
     numbase base = numeric_base();
 
-    if((base == numbase::none) || ((base == hex) && literal))
+    if((base == numbase::none) || (base == hex))// && literal))
     {
         st = state::bad;
         //std::cout << __PRETTY_FUNCTION__ << " : (" << *c <<  ") Bad state.\n";
@@ -287,9 +285,11 @@ lexer::type::T lexscanners::num::operator()()
 
 bool lexscanners::num::ok(bool l)
 {
-    literal = l;
-    bool k =  ((c<=eos) && (update_state() == state::good));
-    literal = false;
+    //literal = l;
+    bool k;
+    if(( k = ((c<=eos) && (update_state() == state::good))))
+        e = c;
+    //literal = false;
     return k;
 }
 
@@ -307,6 +307,7 @@ lexscanners::code lexscanners::__Number(type::token_t& a_token)
     // -------------------------------------------
     num number(_cursor.c, _cursor.e);
     while(number.ok(true)) number++;
+    //while(number++);
     if(!number)  return {};
     a_token.s = number() | (number.real ? type::real : 0);
     if(number.numeric_base() == num::none) return {};

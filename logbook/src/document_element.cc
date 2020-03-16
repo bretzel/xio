@@ -147,7 +147,7 @@ doc_element::~doc_element()
     std::cout << __PRETTY_FUNCTION__ << text() << " -  \\O/\n";
 }
 
-doc_element::doc_element(doc_element::shared a_parent, doc_element::tag a_tag): _tag(a_tag), _parent(a_parent) //_parent(std::make_shared<document_element>(a_parent))
+doc_element::doc_element(doc_element* a_parent, doc_element::tag a_tag): _tag(a_tag), _parent(a_parent) //_parent(std::make_shared<document_element>(a_parent))
 {
     _tagstr = doc_element::tagname(_tag);
 }
@@ -157,7 +157,7 @@ doc_element::doc_element(doc_element::tag a_tag) : _tag(a_tag)
     _tagstr = doc_element::tagname(_tag);
 }
 
-doc_element::shared doc_element::parent()
+doc_element* doc_element::parent()
 {
     if (!_parent) return nullptr;
     return _parent;
@@ -185,10 +185,17 @@ std::string  doc_element::text()
 
 
 
-doc_element::shared doc_element::create(doc_element::shared a_parent, doc_element::tag tg)
+doc_element::shared doc_element::create(doc_element* a_parent, doc_element::tag tg)
 {
-    return std::make_shared<doc_element>(a_parent, tg);
+    std::make_shared<doc_element>(a_parent, tg);
 }
+
+void doc_element::append_child(doc_element::shared a_child)
+{
+    _nodes.push_back(a_child);
+    a_child->_parent = this;
+}
+
 
 }
 

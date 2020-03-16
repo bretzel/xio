@@ -45,7 +45,7 @@ doc_element& book::element()
 
 doc_element::shared book::create_element(doc_element::shared a_parent, doc_element::tag tg)
 {
-    return std::make_shared<doc_element>(a_parent, tg);
+    return std::make_shared<doc_element>(a_parent.get(), tg);
 }
 
 

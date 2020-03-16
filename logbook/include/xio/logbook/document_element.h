@@ -137,7 +137,7 @@ public:
     using attr_collection_t = std::vector<attr_val_t>;
     using iterator          = collection::iterator;
 
-    static doc_element::shared create(doc_element::shared, doc_element::tag tg);
+    static doc_element::shared create(doc_element*, doc_element::tag tg);
 private:
     utils::xstr _stream;
     utils::xstr _tagstr;
@@ -154,7 +154,7 @@ private:
     }_params = { 0 };
 
     doc_element::tag _tag = tag::nil;
-    doc_element::shared _parent = nullptr;
+    doc_element* _parent = nullptr;
 
 
 
@@ -162,19 +162,19 @@ private:
 protected:
     
     void append_child(doc_element::shared a_child);
-    doc_element::iterator query_child(doc_element::shared a_child);
+    doc_element::iterator query_child(doc_element* a_child);
     void detach();
-    void detach_child(doc_element::shared el);
+    void detach_child(doc_element* el);
 
 public:
 
     doc_element() = default;
     ~doc_element();
 
-    doc_element(doc_element::shared a_parent,doc_element::tag a_tag);
+    doc_element(doc_element* a_parent,doc_element::tag a_tag);
     doc_element(doc_element::tag a_tag);
 
-    doc_element::shared parent();
+    doc_element* parent();
 
     static utils::xstr tagname(doc_element::tag a_tag);
     static doc_element null;
