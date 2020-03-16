@@ -20,7 +20,8 @@ public:
     
     tdd::result run();
 
-
+    tdd::result init();
+    
     tdd::result lexer();
     tdd::result logbook();
 

@@ -187,7 +187,7 @@ std::string  doc_element::text()
 
 doc_element::shared doc_element::create(doc_element* a_parent, doc_element::tag tg)
 {
-    std::make_shared<doc_element>(a_parent, tg);
+    return std::make_shared<doc_element>(a_parent, tg);
 }
 
 void doc_element::append_child(doc_element::shared a_child)

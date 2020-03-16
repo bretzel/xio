@@ -3,8 +3,46 @@
 #include <xio/utils/notification.h>
 #include <xio/logbook/book.h>
 #include <xio/lexer/lexer.h>
-
+#include <xio/utils/journal.h>
 //#include <any>
+
+#include <signal.h>
+
+void signal_int(int s)
+{
+    logdebugpfn << "Interrupted by user signal " << xio::utils::log::color::HCyan << "INT" <<ends;
+    xio::utils::journal::close();
+    exit(s);
+}
+
+
+void signal_segfault(int)
+{
+    LogFatalPFn << "Interrupted by segmentation fault signal" << Ends;
+    xio::utils::journal::close();
+    exit(127);
+}
+
+
+void sig_abort( int s)
+{
+    xio::utils::journal::close();
+    
+    LogCriticalPFn << "Interrupted by " << xio::utils::log::color::Yellow << "ABORT" << xio::utils::log::color::White<< " signal" << Ends;
+    xio::utils::journal::close();
+    exit(s);
+}
+
+void install_signals()
+{
+    
+    LogNoticeFn << xio::utils::log::color::Yellow << " SIGINT" << Ends;
+    ::signal(SIGINT, signal_int);
+    LogNoticeFn  << xio::utils::log::color::HRed << " SIGSEGV" << Ends;
+    ::signal(SIGSEGV, signal_segfault);
+    LogNoticeFn << xio::utils::log::color::HRed << "SIGABRT" << Ends;
+    ::signal(SIGABRT, sig_abort);
+}
 
 
 
@@ -20,6 +58,8 @@ using xio::utils::xstr;
 
 tdd::result tdd::run()
 {
+    init();
+    install_signals();
     logbook();
     lexer();
     return {
@@ -33,12 +73,14 @@ tdd::result tdd::run()
 tdd::~tdd()
 {
     std::cout << __PRETTY_FUNCTION__ << " \\O/\n";
+    xio::utils::journal::close();
 }
 
 auto main() -> int {
    // tdd _tdd;
-    tdd().run();
-
+   
+   tdd().run();
+    
     xio::utils::notification::clear(
         [](xio::utils::notification& n) 
         {
@@ -86,5 +128,17 @@ tdd::result tdd::logbook()
     std::cout << "element div : " << div->text() << '\n';
 
 
+    return notification::code::ok;
+}
+
+
+tdd::result tdd::init()
+{
+    using  xio::utils::journal;
+    journal::setfile("xioproject.log");
+    journal::init(journal::Ansi, "xio project API tests (MyTDD)", true);
+    journal::resetstamp(), journal::Hour24;
+    logdebugpfn << " mark" << Ends;
+    
     return notification::code::ok;
 }
