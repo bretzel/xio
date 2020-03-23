@@ -253,7 +253,7 @@ lexscanners::num::numbase  lexscanners::num::numeric_base()
         return numbase::dec;
     }
     
-    if(isalpha(*c))
+    if(isalpha(*c) && (!literal))
     {
         return ((*c >= 'A') && (*c <= 'F')) || ( (*c >= 'a') && (*c <= 'f') )  ? numbase::hex : numbase::none;
     }
