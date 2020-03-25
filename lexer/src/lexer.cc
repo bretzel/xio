@@ -215,7 +215,9 @@ bool lexscanners::num::operator++(int)
     {
         real = true;
         e = c;
+        ++c;
         st = state::good;
+        return true;
     }
     
     st = state::bad;
@@ -509,13 +511,19 @@ lexscanners::code lexscanners::__Hex(type::token_t& a_token)
     a_token._loc.begin = _cursor.c;
     a_token._loc.end = ptr;
     
-    return { notification::code::accepted }; // return {}; // oops!
+    return { notification::code::accepted };
 }
 
 lexscanners::code lexscanners::__Unary(type::token_t& a_token)
 {
     if ((a_token.c == lexem::mnemonic::add) || (a_token.c == lexem::mnemonic::sub))
-        if (!__Sign(a_token)) return { notification::code::accepted };
+    {
+        if (!__Sign(a_token))
+        {
+            // discard __Sign return code and return code::accepted.
+            return { notification::code::accepted };
+        }
+    }
     
     if (Empty()) {
         a_token.t = type::prefix;
@@ -529,7 +537,8 @@ lexscanners::code lexscanners::__Unary(type::token_t& a_token)
     
     type::token_t prev = _tokens.back();
     
-    if (prev.is_operator()) {
+    if (prev.is_operator()) 
+    {
         a_token.t = type::prefix;
         a_token.s = type::oper | type::prefix | type::unary;
         return { notification::code::accepted };
@@ -572,12 +581,12 @@ lexscanners::code lexscanners::__Keyword(type::token_t& a_token)
         if (!a_token._f.V) {
             if (pre.is_operator()) {
                 return { (
-                             notification::push(),
-                                 notification::type::error,
-                                 notification::code::unexpected,
-                                 "non-operand on right hand side of an operator.\n",
-                                 a_token.mark()
-                         ) };
+                    notification::push(),
+                    notification::type::error,
+                    notification::code::unexpected,
+                    "non-operand on right hand side of an operator.\n",
+                    a_token.mark()
+                ) };
             }
         }
     }
@@ -731,11 +740,11 @@ lexscanners::code lexscanners::__Assign_rs(type::token_t& a_token)
     std::cout << __PRETTY_FUNCTION__ << '\n';
     type::token_t prev = Empty() ? type::token_t::_null : _tokens.back();
     if ((!prev) || _cursor._F) {
-        return { (
-                     notification::push(),
-                         notification::type::error,", ",
-                         _cursor.l, ",", _cursor.col, "Unexpected assign operator:\n", _cursor.mark()
-                 ) };
+        return {(
+            notification::push(),
+            notification::type::error,", ",
+            _cursor.l, ",", _cursor.col, "Unexpected assign operator:\n", _cursor.mark()
+        )};
     }
     a_token._loc = {_cursor.c, _cursor.c, _cursor.l, _cursor.col, _cursor.c - _cursor.b };
     return { notification::code::accepted };
@@ -774,7 +783,7 @@ lexscanners::token_code lexscanners::scan_number()
     type::token_t token;
     code c;
     _cursor.SkipWS();
-    if( (c = __Number(token))) return token;
+    if((c = __Number(token))) return token;
     return {c.note()};
 }
 

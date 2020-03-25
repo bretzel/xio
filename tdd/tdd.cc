@@ -58,8 +58,10 @@ using xio::utils::xstr;
 
 tdd::result tdd::run()
 {
+    
     init();
     install_signals();
+    loginfopfn << Ends;
     logbook();
     lexer();
     return {
