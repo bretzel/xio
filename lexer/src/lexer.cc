@@ -211,7 +211,7 @@ bool lexscanners::num::operator++(int)
         return false;
     }
 
-    if (!real && *c == '.')
+    if (!real && (*c == '.'))
     {
         real = true;
         e = c;
@@ -228,13 +228,11 @@ lexscanners::num::state lexscanners::num::update_state()
     
     numbase base = numeric_base();
 
-    if(((base == numbase::none) && (st == state::bad)))// && literal))
+    if(((base == numbase::none) && literal))// && literal))
     {
         st = state::bad;
-        //std::cout << __PRETTY_FUNCTION__ << " : (" << *c <<  ") Bad state.\n";
         return st;
-    }
-    
+    } 
     if(n < base) n=base;
     st = state::good;
     //std::cout << __PRETTY_FUNCTION__ << " : Good state.\n";
