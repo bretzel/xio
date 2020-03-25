@@ -67,7 +67,7 @@ class LEXERAPI lexscanners
         
         ~num() = default;
         
-        bool operator++();
+        //bool operator++();
         bool operator++(int);
         bool ok(bool l);
         operator bool () { return (st==good) || (c>b); }

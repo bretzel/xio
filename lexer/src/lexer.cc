@@ -161,63 +161,65 @@ lexscanners::code lexscanners::operator[](const char* aSrc)
 lexscanners::num::num(const char *_c, const char *_eos): b(_c),e(_c),c(_c), eos(_eos) {}
 
 
-bool lexscanners::num::operator++()
-{
-    ++c;
-    if(c > eos) return false;
-    
-    if(!isalnum(*c))
-    {
-        if(c<eos)
-        {
-            if(*c !='.')
-            {
-                st = state::bad;
-                return false;
-            }
-            // else *c is on '.' :  2.a
-            if(!real)
-            {
-                e = c;
-                st = state::good;
-                real = true;
-                return true;
-            }
-        }
-        st = state::bad;
-        return false;
-    }
-    return true;
-}
+//bool lexscanners::num::operator++()
+//{
+//    ++c;
+//    if(c > eos) return false;
+//    
+//    if(!isalnum(*c))
+//    {
+//        if(c<eos)
+//        {
+//            if(*c !='.')
+//            {
+//                st = state::bad;
+//                return false;
+//            }
+//            // else *c is on '.' :  2.a
+//            if(!real)
+//            {
+//                e = c;
+//                st = state::good;
+//                real = true;
+//                return true;
+//            }
+//        }
+//        st = state::bad;
+//        return false;
+//    }
+//    return true;
+//}
 
 
 bool lexscanners::num::operator++(int)
 {
-    ++c;
-    if(c > eos) return false;
-    
-    if(!isalnum(*c))
+
+    if (c > eos) return false;
+    if (isalnum(*c))
     {
-        if(c<eos)
+        if (update_state() == state::good)
         {
-            if(*c !='.')
-            {
-                st = state::bad;
-                return false;
-            }
-            // else *c is on '.' :  2.a
-            if(!real)
-            {
-                e = c;
-                st = state::good;
-                real = true;
-                return true;
-            }
+            e = c;
+            ++c;
+            return true;
         }
+    }
+
+    if ((c >= eos) || (*c != '.') || (real && (*c == '.')))
+    {
         st = state::bad;
         return false;
     }
-    return true;
+
+    if (!real && *c == '.')
+    {
+        real = true;
+        e = c;
+        st = state::good;
+    }
+    
+    st = state::bad;
+    return false;
 }
 
 
@@ -287,9 +289,8 @@ bool lexscanners::num::ok(bool l)
 {
     //literal = l;
     bool k;
-    if(( k = ((c<=eos) && (update_state() == state::good))))
-        e = c;
-    //literal = false;
+    if(( k = ((c<=eos) && (update_state() == state::good)))) e = c;
+    ++c;
     return k;
 }
 
@@ -306,7 +307,7 @@ lexscanners::code lexscanners::__Number(type::token_t& a_token)
     type::T btype=type::u64;
     // -------------------------------------------
     num number(_cursor.c, _cursor.e);
-    while(number.ok(true)) number++;
+    while(number++);
     //while(number++);
     if(!number)  return {};
     a_token.s = number() | (number.real ? type::real : 0);
