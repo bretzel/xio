@@ -5,6 +5,7 @@
 #include <xio/lexer/lexer.h>
 #include <xio/utils/journal.h>
 //#include <any>
+#include <xio/interpreter/alu.h>
 
 #include <signal.h>
 
@@ -64,6 +65,7 @@ tdd::result tdd::run()
     loginfopfn << Ends;
     logbook();
     lexer();
+    alu();
     return {
         (
          notification::push(), __PRETTY_FUNCTION__ , ": not implemented, yet..."
@@ -92,6 +94,29 @@ auto main() -> int {
     
     return 0;
 }
+
+
+tdd::result tdd::alu()
+{
+    teacc::alu a = 4.02;
+    teacc::alu b = 0;
+    teacc::alu r;
+    std::any an;
+    an = 0;
+    logdebugpfn << " std::any an has_value: "  << an.has_value() << '\n';
+    an.reset();
+    logdebugpfn << " std::any an has_value after reset: "  << an.has_value() << '\n';
+
+    r = a/b;
+    if(r.is_set())
+    ///@todo DO NOT FORGET to Implement exceptions in the interperter;
+        std::cout << __PRETTY_FUNCTION__ << ": a/b=" << r() << '\n';
+    else 
+        std::cout << __PRETTY_FUNCTION__ << ": a/b= Failed; UNSET." << '\n';
+    return notification::code::ok;
+}
+
+
 
 tdd::result tdd::lexer()
 {

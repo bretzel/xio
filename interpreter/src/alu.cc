@@ -5,6 +5,8 @@
 #include <xio/interpreter/alu.h>
 #include <cmath>
 #include <xio/utils/expect.h>
+#include <xio/utils/journal.h>
+
 #include <any>
 
 namespace teacc {
@@ -98,6 +100,7 @@ bool alu::type_size(const alu & rv)
 
 alu::operator bool()
 {
+    if(!a.has_value()) return false;
     if (!_type) return false;
     if (_type&lexer::type::text)
         return !value<std::string>().empty();
@@ -238,8 +241,13 @@ alu alu::operator /(const alu& rv)
     lr_number(rv) {
         double vr = rv.number<double>();
         if (!vr) {
-            utils::notification::push(utils::notification::type::warning), "alu: cannot divide by zero.";
-            return alu(0.0f);
+            logwarningpfn << " :" << (
+                utils::notification::push(utils::notification::type::fatal), 
+                "alu: cannot divide by zero. (",
+                (*this)(), " / ", rv(), ")" 
+                )() 
+            << ends;
+            return alu();
         }
         return alu(number<double>() / rv.number<double>());
     }
@@ -581,7 +589,7 @@ alu alu::operator &&(const alu& rv)
 }
 
 
-bool alu::operator !() { return _type == lexer::type::null; }
+bool alu::operator !() { return a.has_value(); }//_type == lexer::type::null; }
 alu alu::operator -()
 {
     is_text(*this){

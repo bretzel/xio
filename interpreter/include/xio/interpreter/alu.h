@@ -21,10 +21,10 @@ class  INTERPRETERAPI alu
 
         enum conv {
             DEG,
-                RAD
+            RAD
         };
 
-        alu() { a = nullptr; }
+        alu() { a.reset(); }
 
         alu(const alu& lf) { a = lf.a; _type = lf._type; }
         alu(double lf);
@@ -159,6 +159,7 @@ class  INTERPRETERAPI alu
         alu operator &&(const alu& rv);
 
         bool operator !();
+        bool is_set() { return a.has_value(); }
         operator bool();
 
         alu operator -();

@@ -16,12 +16,12 @@ SET( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 add_executable(tdd.out ${SRCS})
 add_dependencies(tdd.out utils sqlitedb logbook lexer)
 
-list(APPEND XIO_INCLUDE_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/include" "${XIO_ROOT}/utils/include" "${XIO_ROOT}/xdb/sqlite3/include" "${XIO_ROOT}/lexer/include")
+list(APPEND XIO_INCLUDE_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/include" "${XIO_ROOT}/utils/include" "${XIO_ROOT}/xdb/sqlite3/include" "${XIO_ROOT}/lexer/include" "${XIO_ROOT}/interpreter/include")
 target_include_directories(tdd.out PUBLIC
 		"$<BUILD_INTERFACE:${XIO_INCLUDE_PATHS}>"
 		)
 
-target_link_libraries(tdd.out ${CMAKE_DL_LIBS} utils sqlitedb logbook sqlite3 lexer)#journal grammar lexer utils sqlitedb)
+target_link_libraries(tdd.out ${CMAKE_DL_LIBS} utils sqlitedb logbook sqlite3 lexer interpreter)#journal grammar lexer utils sqlitedb)
 
 
 IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )

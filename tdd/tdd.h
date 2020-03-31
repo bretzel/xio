@@ -24,6 +24,8 @@ public:
     
     tdd::result lexer();
     tdd::result logbook();
+    tdd::result alu();
+    
 
 };
 
