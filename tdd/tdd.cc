@@ -113,6 +113,19 @@ tdd::result tdd::alu()
         std::cout << __PRETTY_FUNCTION__ << ": a/b=" << r() << '\n';
     else 
         std::cout << __PRETTY_FUNCTION__ << ": a/b= Failed; UNSET." << '\n';
+    
+    b = 4.01;
+    std::cout << __PRETTY_FUNCTION__ << ": a/b[" << b.number<double>() << "]:\n";
+    
+
+    r = a/b;
+    if(r.is_set())
+    ///@todo DO NOT FORGET to Implement exceptions in the interperter;
+        std::cout << __PRETTY_FUNCTION__ << ": a/b=" << r() << '\n';
+    else 
+        std::cout << __PRETTY_FUNCTION__ << ": a/b= Failed; UNSET." << '\n';
+    
+
     return notification::code::ok;
 }
 

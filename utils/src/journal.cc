@@ -96,8 +96,8 @@ journal::journal(const char *a_function_name, int aline, const char *filename)
     }
     if(journal::m_closed)
         return;
-    if(!journal::m_tstamp.empty())
-        m_text << xstr::datetime(journal::m_tstamp) << ' ';
+    //if(!journal::m_tstamp.empty())
+    //    m_text << xstr::datetime(journal::m_tstamp) << ' ';
 
     //if (journal::m_indent > 0)
     //    m_text().insert(0, journal::m_indent * 4, ' ');
@@ -127,8 +127,8 @@ journal::journal(journal::Type t, const char *a_function_name, int aline, const 
     }
     if(journal::m_closed)
         return;
-    if(!journal::m_tstamp.empty())
-        m_text << (*xchronos()).text() << ' ';
+    //if(!journal::m_tstamp.empty())
+    //    m_text << (*xchronos()).text() << ' ';
     m_text << journal::m_type_table[(int) t] << journal::m_attr_table[(int) journal::Reset];
     if(!a_function_name) {
         return;
