@@ -34,7 +34,9 @@ ENDIF()
 #set_target_properties(${PROJECT_NAME}
 #        SOVERSION
 #        )
-SET(XIO_INCLUDE_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/include)
+SET(XIO_INCLUDE_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/include )
+list(APPEND XIO_INCLUDE_PATHS "${XIO_ROOT}/utils/include" "${XIO_ROOT}/xdb/sqlite3/include" "${XIO_ROOT}/logbook/include" "${XIO_ROOT}/lexer/include")
+
 message("XIO_INCLUDE_PATHS:" ${XIO_INCLUDE_PATHS})
 target_include_directories(${PROJECT_NAME} PUBLIC
 		"$<BUILD_INTERFACE:${XIO_INCLUDE_PATHS}>"
