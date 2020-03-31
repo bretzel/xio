@@ -10,7 +10,7 @@
 #endif
 
 
-namespace xio::xdb
+namespace teacc::xdb
 {
 
 

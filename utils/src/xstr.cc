@@ -6,7 +6,7 @@
 
 
 
-namespace xio::utils
+namespace teacc::utils
 {
 
 using std::string;

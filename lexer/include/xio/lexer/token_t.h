@@ -15,7 +15,7 @@
 
 
 
-namespace xio::lexer
+namespace teacc::lexer
 {
 
 namespace type

@@ -13,7 +13,7 @@
 #endif
 
 
-namespace xio::utils
+namespace teacc::utils
 {
 
 
@@ -25,9 +25,9 @@ namespace xio::utils
 #define CREATE_SYM "create_instance"  // Exported symbol name string.
 #define DELETE_SYM "delete_instance"
 #define EXPORT_SYM "export_symbol"
-#define EXPORT   xio::utils::rtlx::interface_map export_symbols()
-#define CREATE_INSTANCE_C_IMPL xio::utils::rtlx::shared  create_instance(const std::string &aId)
-#define DELETE_INSTANCE_C_IMPL void  delete_instance(xio::utils::rtlx::shared _dll_instance)
+#define EXPORT   teacc::utils::rtlx::interface_map export_symbols()
+#define CREATE_INSTANCE_C_IMPL teacc::utils::rtlx::shared  create_instance(const std::string &aId)
+#define DELETE_INSTANCE_C_IMPL void  delete_instance(teacc::utils::rtlx::shared _dll_instance)
 
 
  

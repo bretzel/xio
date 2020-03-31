@@ -2,7 +2,7 @@
 
 #include <xio/utils/rtlx.h>
 #include <memory>
-namespace xio::lexer
+namespace teacc::lexer
 {
 
 

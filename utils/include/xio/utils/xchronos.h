@@ -11,7 +11,7 @@
 
 #include <chrono>
 
-namespace xio::utils
+namespace teacc::utils
 {
 /*!
  * @brief Own time management class.

@@ -7,7 +7,7 @@
 #include <xio/logbook/logfmt.h>
 //#include <xio/logbook/document_element.h>
 
-namespace xio::logbook
+namespace teacc::logbook
 {
 
 
@@ -36,7 +36,7 @@ class logbook_api book
     // Testons le stockage static private:
 
     static std::string          _dbname; // pas besoin d'exporter | no need to export. \O/ !!
-//    static xio::xdb::sqlitedb   _dbdata;
+//    static teacc::xdb::sqlitedb   _dbdata;
 
 public:
 

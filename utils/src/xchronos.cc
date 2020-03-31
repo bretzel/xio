@@ -5,7 +5,7 @@
 #include <xio/utils/xchronos>
 
 
-namespace xio::utils
+namespace teacc::utils
 {
 
 xchronos::xchronos(xchronos&& xs) noexcept

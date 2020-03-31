@@ -3,7 +3,7 @@
 #include <xio/utils/expect>
 
 
-using xio::utils::expect;
+using teacc::utils::expect;
 
 class tdd
 {
@@ -11,7 +11,7 @@ class tdd
 
 public:
 
-    using result = expect<xio::utils::notification::code>;
+    using result = expect<teacc::utils::notification::code>;
 
     tdd() = default;
 

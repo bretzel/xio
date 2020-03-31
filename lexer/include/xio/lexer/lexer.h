@@ -14,7 +14,7 @@
 
 
 
-namespace xio::lexer
+namespace teacc::lexer
 {
 
 class LEXERAPI lexscanners

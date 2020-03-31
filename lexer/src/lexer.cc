@@ -7,10 +7,10 @@
 #include <stdint.h>
 #include <array>
 
-using xio::utils::xstr;
-using xio::utils::notification;
+using teacc::utils::xstr;
+using teacc::utils::notification;
 
-namespace xio::lexer
+namespace teacc::lexer
 {
 
 

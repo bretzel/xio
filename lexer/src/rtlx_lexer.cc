@@ -3,22 +3,22 @@
 #include <map>
 
 
-namespace xio::lexer
+namespace teacc::lexer
 {
 
 using utils::rtlx;
 
-xio::lexer::rtlx_lexer::~rtlx_lexer()
+teacc::lexer::rtlx_lexer::~rtlx_lexer()
 {
 
 }
-xio::lexer::rtlx_lexer::rtlx_lexer(const std::string &dlname) : rtlx(dlname)
+teacc::lexer::rtlx_lexer::rtlx_lexer(const std::string &dlname) : rtlx(dlname)
 {
 
 }
 
 
-utils::notification::code xio::lexer::rtlx_lexer::execute()
+utils::notification::code teacc::lexer::rtlx_lexer::execute()
 {
     
     return utils::notification::code::implement;
@@ -32,10 +32,10 @@ utils::notification::code xio::lexer::rtlx_lexer::execute()
 BEGIN_EXPORT
 
 
-std::string highlight(xio::lexer::rtlx_lexer::shared _instance, const std::string& _src)
+std::string highlight(teacc::lexer::rtlx_lexer::shared _instance, const std::string& _src)
 {
     if(!_instance) return "";
-    xio::lexer::lexscanners lexer;
+    teacc::lexer::lexscanners lexer;
     lexer.source() = _src.c_str();
     lexer.Scan();
     // .. for ( auto& t : lexer.tokens() )
@@ -48,7 +48,7 @@ std::string highlight(xio::lexer::rtlx_lexer::shared _instance, const std::strin
 
 CREATE_INSTANCE_C_IMPL
 {
-    return std::make_shared<xio::lexer::rtlx_lexer>(aId);
+    return std::make_shared<teacc::lexer::rtlx_lexer>(aId);
 };
 
 DELETE_INSTANCE_C_IMPL
@@ -56,7 +56,7 @@ DELETE_INSTANCE_C_IMPL
     _dll_instance = nullptr;
 };
 
-xio::utils::rtlx::interface_map export_symbols()
+teacc::utils::rtlx::interface_map export_symbols()
 {
     return { 
         {"highlight",(void*)highlight}

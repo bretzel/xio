@@ -12,7 +12,7 @@
 
 
 
-namespace xio::logbook
+namespace teacc::logbook
 {
 
 
@@ -24,7 +24,7 @@ class logbook_api doc_element
 {
 public:
     /*!
-        @brief html document element tags: ( ex.: 'xio::logbook::document_element::tag::div' )
+        @brief html document element tags: ( ex.: 'teacc::logbook::document_element::tag::div' )
     */
     enum class tag : uint16_t  {
         a           ,

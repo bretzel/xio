@@ -3,7 +3,7 @@
 
 
 
-namespace xio::logbook
+namespace teacc::logbook
 {
 
 
@@ -16,7 +16,7 @@ using utils::notification;
 
 
 std::string book::_dbname = "logbook";
-//xio::xdb::sqlitedb   logbook::_dbdata;
+//teacc::xdb::sqlitedb   logbook::_dbdata;
 
 
 book::~book()

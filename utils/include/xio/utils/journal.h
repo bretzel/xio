@@ -1,9 +1,9 @@
 //
-// Created by sxio::utilssier on 19-11-20.
+// Created by steacc::utilssier on 19-11-20.
 //
 
-//#ifndef xio::utils_JOURNAL_H
-//#define xio::utils_JOURNAL_H
+//#ifndef teacc::utils_JOURNAL_H
+//#define teacc::utils_JOURNAL_H
 #pragma once
 
 #include <xio/utils/xstr.h>
@@ -15,7 +15,7 @@
 #include <stack>
 
 
-namespace xio::utils{
+namespace teacc::utils{
 
 class XIOUTILS_API journal
 {
@@ -215,135 +215,135 @@ private:
 }
 
 
-#define Ends xio::utils::journal::End
-#define ends xio::utils::journal::End
-#define LEnd xio::utils::journal::End
-#define BR   xio::utils::journal::LF
+#define Ends teacc::utils::journal::End
+#define ends teacc::utils::journal::End
+#define LEnd teacc::utils::journal::End
+#define BR   teacc::utils::journal::LF
 
 
 
 
 // Short (Test)
-#define DebugFn     xio::utils::journal(xio::utils::journal::Debug   ,__FUNCTION__,__LINE__) // logdebugfn
-#define DebugPFn    xio::utils::journal(xio::utils::journal::Debug   ,__PRETTY_FUNCTION__,__LINE__)
-//#define Debug       xio::utils::journal(xio::utils::journal::Debug   ,0,0)
-#define InfoFn      xio::utils::journal(xio::utils::journal::Info    ,__FUNCTION__,__LINE__,0)
-#define InfoPFn     xio::utils::journal(xio::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,0)
-//#define Info        xio::utils::journal(xio::utils::journal::Info    ,0,0)
-#define ErrorFn     xio::utils::journal(xio::utils::journal::Err     ,__FUNCTION__,__LINE__,0)
-#define ErrorPfn    xio::utils::journal(xio::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,0)
+#define DebugFn     teacc::utils::journal(teacc::utils::journal::Debug   ,__FUNCTION__,__LINE__) // logdebugfn
+#define DebugPFn    teacc::utils::journal(teacc::utils::journal::Debug   ,__PRETTY_FUNCTION__,__LINE__)
+//#define Debug       teacc::utils::journal(teacc::utils::journal::Debug   ,0,0)
+#define InfoFn      teacc::utils::journal(teacc::utils::journal::Info    ,__FUNCTION__,__LINE__,0)
+#define InfoPFn     teacc::utils::journal(teacc::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,0)
+//#define Info        teacc::utils::journal(teacc::utils::journal::Info    ,0,0)
+#define ErrorFn     teacc::utils::journal(teacc::utils::journal::Err     ,__FUNCTION__,__LINE__,0)
+#define ErrorPfn    teacc::utils::journal(teacc::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,0)
 // -----------------------
-#define LogDebugFn     xio::utils::journal(xio::utils::journal::Debug   ,__FUNCTION__,__LINE__) // logdebugfn
-#define LogDebugPFn    xio::utils::journal(xio::utils::journal::Debug   ,__PRETTY_FUNCTION__,__LINE__)
-#define LogDebug       xio::utils::journal(xio::utils::journal::Debug   ,0,0)
-#define LogInfoFn      xio::utils::journal(xio::utils::journal::Info    ,__FUNCTION__,__LINE__,0)
-#define LogInfoPFn     xio::utils::journal(xio::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,0)
-#define LogInfo        xio::utils::journal(xio::utils::journal::Info    ,0,0)
-#define LogErrorFn     xio::utils::journal(xio::utils::journal::Err     ,__FUNCTION__,__LINE__,0)
-#define LogErrorPfn    xio::utils::journal(xio::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,0)
-#define LogError       xio::utils::journal(xio::utils::journal::Err     ,0,0)
-#define LogFatalFn     xio::utils::journal(xio::utils::journal::Fatal   ,__FUNCTION__,__LINE__,0)
-#define LogFatalPFn    xio::utils::journal(xio::utils::journal::Fatal   ,__PRETTY_FUNCTION__,__LINE__,0)
-#define LogFatal       xio::utils::journal(xio::utils::journal::Fatal   ,0,0)
-#define LogCriticalFn  xio::utils::journal(xio::utils::journal::Critical,__FUNCTION__,__LINE__,0)
-#define LogCriticalPFn xio::utils::journal(xio::utils::journal::Critical,__PRETTY_FUNCTION__,__LINE__,0)
-#define LogCritical    xio::utils::journal(xio::utils::journal::Critical,0,0)
-#define LogExcepPFn    xio::utils::journal(xio::utils::journal::Excep   ,__PRETTY_FUNCTION__,__LINE__,0)
-#define LogExcepFn     xio::utils::journal(xio::utils::journal::Excep   ,__FUNCTION__,__LINE__,0)
-#define LogExcep       xio::utils::journal(xio::utils::journal::Excep   ,0,0)
-#define LogNoticePFn   xio::utils::journal(xio::utils::journal::Notice  ,__PRETTY_FUNCTION__,__LINE__,0)
-#define LogNoticeFn    xio::utils::journal(xio::utils::journal::Notice  ,__FUNCTION__,__LINE__,0)
-#define LogNotice      xio::utils::journal(xio::utils::journal::Notice  ,0,0)
-#define LogWarningFn   xio::utils::journal(xio::utils::journal::Warning ,__FUNCTION__,__LINE__,0)
-#define LogWarningPFn  xio::utils::journal(xio::utils::journal::Warning ,__PRETTY_FUNCTION__,__LINE__,0)
-#define LogWarning     xio::utils::journal(xio::utils::journal::Warning ,0,0)
-#define LogSuccessFn   xio::utils::journal(xio::utils::journal::Succes ,__FUNCTION__,__LINE__,0)
-#define LogSuccessPFn  xio::utils::journal(xio::utils::journal::Succes ,__PRETTY_FUNCTION__,__LINE__,0)
-#define LogSuccess     xio::utils::journal(xio::utils::journal::Succes ,0,0)
-#define LogNH          xio::utils::journal()
+#define LogDebugFn     teacc::utils::journal(teacc::utils::journal::Debug   ,__FUNCTION__,__LINE__) // logdebugfn
+#define LogDebugPFn    teacc::utils::journal(teacc::utils::journal::Debug   ,__PRETTY_FUNCTION__,__LINE__)
+#define LogDebug       teacc::utils::journal(teacc::utils::journal::Debug   ,0,0)
+#define LogInfoFn      teacc::utils::journal(teacc::utils::journal::Info    ,__FUNCTION__,__LINE__,0)
+#define LogInfoPFn     teacc::utils::journal(teacc::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,0)
+#define LogInfo        teacc::utils::journal(teacc::utils::journal::Info    ,0,0)
+#define LogErrorFn     teacc::utils::journal(teacc::utils::journal::Err     ,__FUNCTION__,__LINE__,0)
+#define LogErrorPfn    teacc::utils::journal(teacc::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,0)
+#define LogError       teacc::utils::journal(teacc::utils::journal::Err     ,0,0)
+#define LogFatalFn     teacc::utils::journal(teacc::utils::journal::Fatal   ,__FUNCTION__,__LINE__,0)
+#define LogFatalPFn    teacc::utils::journal(teacc::utils::journal::Fatal   ,__PRETTY_FUNCTION__,__LINE__,0)
+#define LogFatal       teacc::utils::journal(teacc::utils::journal::Fatal   ,0,0)
+#define LogCriticalFn  teacc::utils::journal(teacc::utils::journal::Critical,__FUNCTION__,__LINE__,0)
+#define LogCriticalPFn teacc::utils::journal(teacc::utils::journal::Critical,__PRETTY_FUNCTION__,__LINE__,0)
+#define LogCritical    teacc::utils::journal(teacc::utils::journal::Critical,0,0)
+#define LogExcepPFn    teacc::utils::journal(teacc::utils::journal::Excep   ,__PRETTY_FUNCTION__,__LINE__,0)
+#define LogExcepFn     teacc::utils::journal(teacc::utils::journal::Excep   ,__FUNCTION__,__LINE__,0)
+#define LogExcep       teacc::utils::journal(teacc::utils::journal::Excep   ,0,0)
+#define LogNoticePFn   teacc::utils::journal(teacc::utils::journal::Notice  ,__PRETTY_FUNCTION__,__LINE__,0)
+#define LogNoticeFn    teacc::utils::journal(teacc::utils::journal::Notice  ,__FUNCTION__,__LINE__,0)
+#define LogNotice      teacc::utils::journal(teacc::utils::journal::Notice  ,0,0)
+#define LogWarningFn   teacc::utils::journal(teacc::utils::journal::Warning ,__FUNCTION__,__LINE__,0)
+#define LogWarningPFn  teacc::utils::journal(teacc::utils::journal::Warning ,__PRETTY_FUNCTION__,__LINE__,0)
+#define LogWarning     teacc::utils::journal(teacc::utils::journal::Warning ,0,0)
+#define LogSuccessFn   teacc::utils::journal(teacc::utils::journal::Succes ,__FUNCTION__,__LINE__,0)
+#define LogSuccessPFn  teacc::utils::journal(teacc::utils::journal::Succes ,__PRETTY_FUNCTION__,__LINE__,0)
+#define LogSuccess     teacc::utils::journal(teacc::utils::journal::Succes ,0,0)
+#define LogNH          teacc::utils::journal()
 // ------Extended logger infos (+ file )-------------------------------------------------------------------
-#define LogDebugFnX    xio::utils::journal(xio::utils::journal::Debug   ,__FUNCTION__,__LINE__,__FILE__)
-#define LogDebugPFnX   xio::utils::journal(xio::utils::journal::Debug   ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
-#define LogInfoFnX     xio::utils::journal(xio::utils::journal::Info    ,__FUNCTION__,__LINE__,__FILE__)
-#define LogInfoPFnX    xio::utils::journal(xio::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
-#define LogErrorFnX    xio::utils::journal(xio::utils::journal::Err     ,__FUNCTION__,__LINE__,__FILE__)
-#define LogErrorPfnX   xio::utils::journal(xio::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
-#define LogErrorX      xio::utils::journal(xio::utils::journal::Err     ,__PRETTY_FUNCTION__,__FILE__)
-#define LogSuccessEnd  xio::utils::journal(xio::utils::journal::Succes ,__PRETTY_FUNCTION__,__LINE__,0) << xio::utils::journal::White << "leaving -" << Ends;
+#define LogDebugFnX    teacc::utils::journal(teacc::utils::journal::Debug   ,__FUNCTION__,__LINE__,__FILE__)
+#define LogDebugPFnX   teacc::utils::journal(teacc::utils::journal::Debug   ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
+#define LogInfoFnX     teacc::utils::journal(teacc::utils::journal::Info    ,__FUNCTION__,__LINE__,__FILE__)
+#define LogInfoPFnX    teacc::utils::journal(teacc::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
+#define LogErrorFnX    teacc::utils::journal(teacc::utils::journal::Err     ,__FUNCTION__,__LINE__,__FILE__)
+#define LogErrorPfnX   teacc::utils::journal(teacc::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
+#define LogErrorX      teacc::utils::journal(teacc::utils::journal::Err     ,__PRETTY_FUNCTION__,__FILE__)
+#define LogSuccessEnd  teacc::utils::journal(teacc::utils::journal::Succes ,__PRETTY_FUNCTION__,__LINE__,0) << teacc::utils::journal::White << "leaving -" << Ends;
 
-#define logdebugfn     xio::utils::journal(xio::utils::journal::Debug   ,__FUNCTION__) // logdebugfn
-#define logdebugpfn    xio::utils::journal(xio::utils::journal::Debug   ,__PRETTY_FUNCTION__)
-#define logdebug       xio::utils::journal(xio::utils::journal::Debug   ,0,0)
-#define loginfofn      xio::utils::journal(xio::utils::journal::Info    ,__FUNCTION__)
-#define loginfopfn     xio::utils::journal(xio::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,0)
-#define loginfo        xio::utils::journal(xio::utils::journal::Info    ,0,0)
-#define logerrorfn     xio::utils::journal(xio::utils::journal::Err     ,__FUNCTION__)
-#define logerrorpfn    xio::utils::journal(xio::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,0)
-#define logerror       xio::utils::journal(xio::utils::journal::Err     ,0,0)
-#define logfatalfn     xio::utils::journal(xio::utils::journal::Fatal   ,__FUNCTION__,__LINE__,0)
-#define logfatalpfn    xio::utils::journal(xio::utils::journal::Fatal   ,__PRETTY_FUNCTION__,__LINE__,0)
-#define logfatal       xio::utils::journal(xio::utils::journal::Fatal   ,0,0)
-#define logcriticalfn  xio::utils::journal(xio::utils::journal::Critical,__FUNCTION__,__LINE__,0)
-#define logcriticalpfn xio::utils::journal(xio::utils::journal::Critical,__PRETTY_FUNCTION__,__LINE__,0)
-#define logcritical    xio::utils::journal(xio::utils::journal::Critical,0,0)
-#define logexceppfn    xio::utils::journal(xio::utils::journal::Excep   ,__PRETTY_FUNCTION__,__LINE__,0)
-#define logexcepfn     xio::utils::journal(xio::utils::journal::Excep   ,__FUNCTION__)
-#define logexcep       xio::utils::journal(xio::utils::journal::Excep   ,0,0)
-#define lognoticepfn   xio::utils::journal(xio::utils::journal::Notice  ,__PRETTY_FUNCTION__,__LINE__,0)
-#define lognoticefn    xio::utils::journal(xio::utils::journal::Notice  ,__FUNCTION__)
-#define lognotice      xio::utils::journal(xio::utils::journal::Notice  ,0,0)
-#define logwarningfn   xio::utils::journal(xio::utils::journal::Warning ,__FUNCTION__)
-#define logwarningpfn  xio::utils::journal(xio::utils::journal::Warning ,__PRETTY_FUNCTION__,__LINE__,0)
-#define logwarning     xio::utils::journal(xio::utils::journal::Warning ,0,0)
-#define logsuccessfn   xio::utils::journal(xio::utils::journal::Succes ,__FUNCTION__)
-#define logsuccesspfn  xio::utils::journal(xio::utils::journal::Succes ,__PRETTY_FUNCTION__,__LINE__,0)
-#define logsuccess     xio::utils::journal(xio::utils::journal::Succes ,0,0)
-#define lognh          xio::utils::journal()
+#define logdebugfn     teacc::utils::journal(teacc::utils::journal::Debug   ,__FUNCTION__) // logdebugfn
+#define logdebugpfn    teacc::utils::journal(teacc::utils::journal::Debug   ,__PRETTY_FUNCTION__)
+#define logdebug       teacc::utils::journal(teacc::utils::journal::Debug   ,0,0)
+#define loginfofn      teacc::utils::journal(teacc::utils::journal::Info    ,__FUNCTION__)
+#define loginfopfn     teacc::utils::journal(teacc::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,0)
+#define loginfo        teacc::utils::journal(teacc::utils::journal::Info    ,0,0)
+#define logerrorfn     teacc::utils::journal(teacc::utils::journal::Err     ,__FUNCTION__)
+#define logerrorpfn    teacc::utils::journal(teacc::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,0)
+#define logerror       teacc::utils::journal(teacc::utils::journal::Err     ,0,0)
+#define logfatalfn     teacc::utils::journal(teacc::utils::journal::Fatal   ,__FUNCTION__,__LINE__,0)
+#define logfatalpfn    teacc::utils::journal(teacc::utils::journal::Fatal   ,__PRETTY_FUNCTION__,__LINE__,0)
+#define logfatal       teacc::utils::journal(teacc::utils::journal::Fatal   ,0,0)
+#define logcriticalfn  teacc::utils::journal(teacc::utils::journal::Critical,__FUNCTION__,__LINE__,0)
+#define logcriticalpfn teacc::utils::journal(teacc::utils::journal::Critical,__PRETTY_FUNCTION__,__LINE__,0)
+#define logcritical    teacc::utils::journal(teacc::utils::journal::Critical,0,0)
+#define logexceppfn    teacc::utils::journal(teacc::utils::journal::Excep   ,__PRETTY_FUNCTION__,__LINE__,0)
+#define logexcepfn     teacc::utils::journal(teacc::utils::journal::Excep   ,__FUNCTION__)
+#define logexcep       teacc::utils::journal(teacc::utils::journal::Excep   ,0,0)
+#define lognoticepfn   teacc::utils::journal(teacc::utils::journal::Notice  ,__PRETTY_FUNCTION__,__LINE__,0)
+#define lognoticefn    teacc::utils::journal(teacc::utils::journal::Notice  ,__FUNCTION__)
+#define lognotice      teacc::utils::journal(teacc::utils::journal::Notice  ,0,0)
+#define logwarningfn   teacc::utils::journal(teacc::utils::journal::Warning ,__FUNCTION__)
+#define logwarningpfn  teacc::utils::journal(teacc::utils::journal::Warning ,__PRETTY_FUNCTION__,__LINE__,0)
+#define logwarning     teacc::utils::journal(teacc::utils::journal::Warning ,0,0)
+#define logsuccessfn   teacc::utils::journal(teacc::utils::journal::Succes ,__FUNCTION__)
+#define logsuccesspfn  teacc::utils::journal(teacc::utils::journal::Succes ,__PRETTY_FUNCTION__,__LINE__,0)
+#define logsuccess     teacc::utils::journal(teacc::utils::journal::Succes ,0,0)
+#define lognh          teacc::utils::journal()
 // ------Extended logger infos (+ file )-------------------------------------------------------------------
-#define logdebugfnx    xio::utils::journal(xio::utils::journal::Debug   ,__FUNCTION__,__LINE__,__FILE__)
-#define logdebugpfnx   xio::utils::journal(xio::utils::journal::Debug   ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
-#define loginfofnx     xio::utils::journal(xio::utils::journal::Info    ,__FUNCTION__,__LINE__,__FILE__)
-#define loginfopfnx    xio::utils::journal(xio::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
-#define logerrorfnx    xio::utils::journal(xio::utils::journal::Err     ,__FUNCTION__,__LINE__,__FILE__)
-#define logerrorpfnx   xio::utils::journal(xio::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
-#define logerrorx      xio::utils::journal(xio::utils::journal::Err     ,__PRETTY_FUNCTION__,__FILE__)
-#define logsuccessend  xio::utils::journal(xio::utils::journal::Succes ,__PRETTY_FUNCTION__,__LINE__,0) << xio::utils::journal::White << "leaving -" << Ends;
+#define logdebugfnx    teacc::utils::journal(teacc::utils::journal::Debug   ,__FUNCTION__,__LINE__,__FILE__)
+#define logdebugpfnx   teacc::utils::journal(teacc::utils::journal::Debug   ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
+#define loginfofnx     teacc::utils::journal(teacc::utils::journal::Info    ,__FUNCTION__,__LINE__,__FILE__)
+#define loginfopfnx    teacc::utils::journal(teacc::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
+#define logerrorfnx    teacc::utils::journal(teacc::utils::journal::Err     ,__FUNCTION__,__LINE__,__FILE__)
+#define logerrorpfnx   teacc::utils::journal(teacc::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,__FILE__)
+#define logerrorx      teacc::utils::journal(teacc::utils::journal::Err     ,__PRETTY_FUNCTION__,__FILE__)
+#define logsuccessend  teacc::utils::journal(teacc::utils::journal::Succes ,__PRETTY_FUNCTION__,__LINE__,0) << teacc::utils::journal::White << "leaving -" << Ends;
 
 // -------- Most shorten aliases -----------------------------------------------------------
-//#define fndebug       xio::utils::journal(xio::utils::journal::Debug   ,__FUNCTION__) // logdebugfn
-//#define fdebug       xio::utils::journal(xio::utils::journal::Debug   ,__PRETTY_FUNCTION__)
-//#define dlog          xio::utils::journal(xio::utils::journal::Debug   ,0,0)
-//#define finfo         xio::utils::journal(xio::utils::journal::Info    ,__FUNCTION__)
-//#define flninfo       xio::utils::journal(xio::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,0)
-//#define infolog       xio::utils::journal(xio::utils::journal::Info    ,0,0)
-//#define errlog        xio::utils::journal(xio::utils::journal::Err     ,__FUNCTION__)
-//#define flnerror      xio::utils::journal(xio::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,0)
-//#define  xio::utils::journal(xio::utils::journal::Err     ,0,0)
-//#define  xio::utils::journal(xio::utils::journal::Fatal   ,__FUNCTION__,__LINE__,0)
-//#define  xio::utils::journal(xio::utils::journal::Fatal   ,__PRETTY_FUNCTION__,__LINE__,0)
-//#define  xio::utils::journal(xio::utils::journal::Fatal   ,0,0)
-//#define  xio::utils::journal(xio::utils::journal::Critical,__FUNCTION__,__LINE__,0)
-//#define  xio::utils::journal(xio::utils::journal::Critical,__PRETTY_FUNCTION__,__LINE__,0)
-//#define  xio::utils::journal(xio::utils::journal::Critical,0,0)
-//#define  xio::utils::journal(xio::utils::journal::Excep   ,__PRETTY_FUNCTION__,__LINE__,0)
-//#define  xio::utils::journal(xio::utils::journal::Excep   ,__FUNCTION__)
-//#define  xio::utils::journal(xio::utils::journal::Excep   ,0,0)
-//#define  xio::utils::journal(xio::utils::journal::Notice  ,__PRETTY_FUNCTION__,__LINE__,0)
-//#define  xio::utils::journal(xio::utils::journal::Notice  ,__FUNCTION__)
-//#define  xio::utils::journal(xio::utils::journal::Notice  ,0,0)
-//#define  xio::utils::journal(xio::utils::journal::Warning ,__FUNCTION__)
-//#define  xio::utils::journal(xio::utils::journal::Warning ,__PRETTY_FUNCTION__,__LINE__,0)
-//#define  xio::utils::journal(xio::utils::journal::Warning ,0,0)
-//#define  xio::utils::journal(xio::utils::journal::Succes ,__FUNCTION__)
-//#define  xio::utils::journal(xio::utils::journal::Succes ,__PRETTY_FUNCTION__,__LINE__,0)
-//#define  xio::utils::journal(xio::utils::journal::Succes ,0,0)
-//#define  xio::utils::journal()
+//#define fndebug       teacc::utils::journal(teacc::utils::journal::Debug   ,__FUNCTION__) // logdebugfn
+//#define fdebug       teacc::utils::journal(teacc::utils::journal::Debug   ,__PRETTY_FUNCTION__)
+//#define dlog          teacc::utils::journal(teacc::utils::journal::Debug   ,0,0)
+//#define finfo         teacc::utils::journal(teacc::utils::journal::Info    ,__FUNCTION__)
+//#define flninfo       teacc::utils::journal(teacc::utils::journal::Info    ,__PRETTY_FUNCTION__,__LINE__,0)
+//#define infolog       teacc::utils::journal(teacc::utils::journal::Info    ,0,0)
+//#define errlog        teacc::utils::journal(teacc::utils::journal::Err     ,__FUNCTION__)
+//#define flnerror      teacc::utils::journal(teacc::utils::journal::Err     ,__PRETTY_FUNCTION__,__LINE__,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Err     ,0,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Fatal   ,__FUNCTION__,__LINE__,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Fatal   ,__PRETTY_FUNCTION__,__LINE__,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Fatal   ,0,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Critical,__FUNCTION__,__LINE__,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Critical,__PRETTY_FUNCTION__,__LINE__,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Critical,0,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Excep   ,__PRETTY_FUNCTION__,__LINE__,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Excep   ,__FUNCTION__)
+//#define  teacc::utils::journal(teacc::utils::journal::Excep   ,0,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Notice  ,__PRETTY_FUNCTION__,__LINE__,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Notice  ,__FUNCTION__)
+//#define  teacc::utils::journal(teacc::utils::journal::Notice  ,0,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Warning ,__FUNCTION__)
+//#define  teacc::utils::journal(teacc::utils::journal::Warning ,__PRETTY_FUNCTION__,__LINE__,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Warning ,0,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Succes ,__FUNCTION__)
+//#define  teacc::utils::journal(teacc::utils::journal::Succes ,__PRETTY_FUNCTION__,__LINE__,0)
+//#define  teacc::utils::journal(teacc::utils::journal::Succes ,0,0)
+//#define  teacc::utils::journal()
 
 
 
-namespace xio::utils::log
+namespace teacc::utils::log
 {
-    using color = xio::utils::journal::Attr;
+    using color = teacc::utils::journal::Attr;
 }
 
-// #endif //xio::utils_JOURNAL_H
+// #endif //teacc::utils_JOURNAL_H

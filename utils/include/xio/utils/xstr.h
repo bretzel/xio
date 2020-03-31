@@ -21,7 +21,7 @@
 #include <xio/utils/xio.utils>
 
 
-namespace xio::utils
+namespace teacc::utils
 {
 
 class XIOUTILS_API xstr

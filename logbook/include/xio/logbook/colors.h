@@ -10,7 +10,7 @@
 
 #include <xio/utils/xstr.h>
 
-namespace xio::logbook{
+namespace teacc::logbook{
 
 
 enum class webcolor: uint8_t {

@@ -1,5 +1,5 @@
 //
-// Created by sxio::utilssier on 19-11-20.
+// Created by steacc::utilssier on 19-11-20.
 //
 
 #include <xio/utils/journal.h>
@@ -14,7 +14,7 @@
 #endif
 #include <xio/utils/xchronos.h>
 
-namespace xio::utils
+namespace teacc::utils
 {
 
 std::stack<int> journal::m_spanstack;
@@ -160,7 +160,7 @@ journal::~journal()
 *    @param afilename the complete path and name of the file to be used for output.
 *    <p> if \c afilename is empty, then stdout will be used as the output file. </p>
 *
-*    @author &copy; 2015,2017, serge xio::utilssier (bretzexio::utils), xio::utilssier.serge@gmail.com
+*    @author &copy; 2015,2017, serge teacc::utilssier (bretzeteacc::utils), teacc::utilssier.serge@gmail.com
 *
 */
 void journal::setfile(const std::string &afilename)

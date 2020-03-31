@@ -17,7 +17,7 @@
     #include <dlfcn.h>
 #endif
 
-namespace xio::utils
+namespace teacc::utils
 {
 
 

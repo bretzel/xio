@@ -9,7 +9,7 @@
 #include <functional>
 
 
-namespace xio::utils
+namespace teacc::utils
 {
 
 struct XIOUTILS_API notification final

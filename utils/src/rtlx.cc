@@ -7,7 +7,7 @@
 
 
 
-namespace xio::utils
+namespace teacc::utils
 {
     void* rtlx::get_proc(const char* _procid)
     {

@@ -6,7 +6,7 @@
 #include <xio/utils/expect>
 
 
-namespace xio::xdb
+namespace teacc::xdb
 {
 
 

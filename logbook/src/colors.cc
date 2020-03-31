@@ -5,7 +5,7 @@
 #include "xio/logbook/colors.h"
 #include <map>
 
-namespace xio::logbook
+namespace teacc::logbook
 {
 
 

@@ -8,9 +8,9 @@
 
 
 
-using xio::utils::xstr;
+using teacc::utils::xstr;
 
-namespace xio::lexer
+namespace teacc::lexer
 {
 
 namespace type
@@ -481,7 +481,7 @@ std::string token_t::typestr(type::T ty)
 }
 
 
-namespace xio::lexer::lexem
+namespace teacc::lexer::lexem
 {
 
     mnemonic code(lexem::T a_lexem)
