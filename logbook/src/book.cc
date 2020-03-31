@@ -39,7 +39,6 @@ book::result book::open()
 doc_element& book::element()
 {
     return doc_element::null;
-    // TODO: insérer une instruction return ici
 }
 
 
