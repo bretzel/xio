@@ -133,6 +133,7 @@ journal::journal(journal::Type t, const char *a_function_name, int aline, const 
     if(!a_function_name) {
         return;
     }
+    
     if(filename)
         m_text << filename << " ";
     if(aline)
