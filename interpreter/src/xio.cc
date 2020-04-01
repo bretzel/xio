@@ -11,6 +11,12 @@ namespace teacc{
 
 using logger = utils::journal;
 
+xio::shared xio::_global_root_bloc = nullptr;
+
+
+xio::shared xio::get_global_root() { return xio::_global_root_bloc; }
+
+
 #define deg2rad(_xio) ((_xio)->acc->number<double>()*3.1415) / 180
 constexpr auto _PI_ = 3.14159265358979323846;
 // M_PI ?
@@ -134,10 +140,10 @@ xio::xio_opfn_table_t   xio::xio_operators_table{
 };
 
 
-xio::xio()
-{
-    acc = std::make_shared<alu>(0.0);
-}
+// xio::xio()
+// {
+//     //acc = std::make_shared<alu>(0.0);
+// }
 
 
 xio::xio(xio::shared a_parent):_parent(a_parent)
@@ -197,11 +203,21 @@ xio::xio(xio::shared a_parent, token_t * a_token, alu::shared a_alu):_parent(a_p
 
 }
 
-
-xio::~xio()
+xio::shared xio::make(xio::shared a_parent, lexer::type::token_t* a_token, alu::shared a_acc)
 {
-
+    return std::make_shared<xio>(a_parent, a_token, a_acc);
 }
+
+xio::shared xio::copy(xio::shared a_)
+{
+    return nullptr;
+}
+
+
+// xio::~xio()
+// {
+
+// }
 
 
 
@@ -219,7 +235,7 @@ xio::~xio()
                      / \                                                       /           / \     +       / \                               / \
                     2   3                                                     2           2   3 <- )      2   3                             2   3
 */
-xio::assume xio::tree_input(token_t * a_token, xio::maker invoke_maker)
+xio::expect xio::tree_input(token_t * a_token, xio::maker invoke_maker)
 {
     inptr_fn_t pfn = nullptr;
     for(auto key : xio::tree_input_assoc_table)
@@ -274,7 +290,7 @@ xio::shared xio::pop_lpar()
 }
 
 
-xio::assume xio::tree_input_binary(xio::shared x) {
+xio::expect xio::tree_input_binary(xio::shared x) {
 
     logdebugfn
         << logger::Yellow << t0->attribute()
@@ -312,7 +328,7 @@ xio::assume xio::tree_input_binary(xio::shared x) {
 }
 
 
-xio::assume xio::tree_input_leaf(xio::shared x) {
+xio::expect xio::tree_input_leaf(xio::shared x) {
 
     logdebugfn
         << logger::Yellow << t0->attribute()
@@ -357,7 +373,7 @@ xio::assume xio::tree_input_leaf(xio::shared x) {
          /
         5  
 */
-xio::assume xio::tree_set_left(xio::shared x)
+xio::expect xio::tree_set_left(xio::shared x)
 {
     logdebugfn
         << logger::Yellow << t0->attribute()
@@ -396,7 +412,7 @@ xio::assume xio::tree_set_left(xio::shared x)
                    /       
                   a        
 */
-xio::assume xio::tree_set_right(xio::shared x) {
+xio::expect xio::tree_set_right(xio::shared x) {
     logdebugfn
         << logger::Yellow << t0->attribute()
         << logger::White << ":"
@@ -432,7 +448,7 @@ xio::assume xio::tree_set_right(xio::shared x) {
 }
 
 
-xio::assume xio::tree_set_right_to_op(xio::shared x)
+xio::expect xio::tree_set_right_to_op(xio::shared x)
 {
     logdebugfn << logger::Yellow << t0->attribute()
              << logger::White << ":"
@@ -462,7 +478,7 @@ xio::inptr_fn_t xio::associate(xio::shared a_lhs, xio::shared a_rhs)
 }
 
 
-xio::assume xio::tree_close()
+xio::expect xio::tree_close()
 {
     logdebugfn << Ends;
     if (t0->c == lexer::lexem::mnemonic::openpar)
@@ -495,7 +511,7 @@ xio::assume xio::tree_close()
 }
 
 
-xio::assume xio::tree_root()
+xio::expect xio::tree_root()
 {
     xio::shared x = _parent->query_child(this);
     xio::shared p = x;
@@ -532,7 +548,7 @@ xio::assume xio::tree_root()
     return  x ;
 }
 
-xio::assume xio::tree_lpar_input_binary(xio::shared x)
+xio::expect xio::tree_lpar_input_binary(xio::shared x)
 {
     if (!lhs) {
         return {(
@@ -544,7 +560,7 @@ xio::assume xio::tree_lpar_input_binary(xio::shared x)
 }
 
 
-xio::assume xio::tree_input_rpar(xio::shared rpxio)
+xio::expect xio::tree_input_rpar(xio::shared rpxio)
 {
     logdebugfn
         << logger::Yellow << t0->attribute()
@@ -572,7 +588,7 @@ xio::assume xio::tree_input_rpar(xio::shared rpxio)
 }
 
 
-xio::assume xio::tree_input_lpar(xio::shared x)
+xio::expect xio::tree_input_lpar(xio::shared x)
 {
 
     logdebugfn
@@ -587,7 +603,7 @@ xio::assume xio::tree_input_lpar(xio::shared x)
     return tree_set_right(x);
 }
 
-xio::assume xio::tree_close_par(xio::shared x)
+xio::expect xio::tree_close_par(xio::shared x)
 {
     logdebugfn
         << logger::Yellow << t0->attribute()
@@ -621,7 +637,7 @@ xio::assume xio::tree_close_par(xio::shared x)
 }
 
 
-xio::assume xio::tree_rpar_input_leaf(xio::shared x)
+xio::expect xio::tree_rpar_input_leaf(xio::shared x)
 {
     logdebugfn << logger::Yellow << t0->attribute()
              << logger::White << ":"
@@ -652,7 +668,7 @@ xio::assume xio::tree_rpar_input_leaf(xio::shared x)
 }
 
 
-xio::assume xio::tree_rpar_rpar(xio::shared r)
+xio::expect xio::tree_rpar_rpar(xio::shared r)
 {
     logdebugfn << logger::Yellow << t0->attribute()
              << logger::White << ":"
@@ -1058,7 +1074,7 @@ std::string xio::type_name()
     return lexer::type::to_s(t0->t);
 }
 
-xio::assume xio::tree_rpar_input_postfix(xio::shared) {
+xio::expect xio::tree_rpar_input_postfix(xio::shared) {
     return {};
 }
 

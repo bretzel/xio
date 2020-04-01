@@ -241,9 +241,9 @@ alu alu::operator /(const alu& rv)
     lr_number(rv) {
         double vr = rv.number<double>();
         if (!vr) {
-            logwarningpfn << " :" << (
-                utils::notification::push(utils::notification::type::fatal), 
-                "alu: cannot divide by zero. (",
+            logfatalpfn << " :" << (
+                utils::notification::push(),
+                " in alu arithmetic operation: division by zero error. (",
                 (*this)(), " / ", rv(), ")" 
                 )() 
             << ends;

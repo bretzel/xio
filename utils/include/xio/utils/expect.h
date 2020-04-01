@@ -144,6 +144,8 @@ public:
     }
 };
 
+using result_code = expect<notification::code>;
+
 
 }
 

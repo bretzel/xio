@@ -29,6 +29,10 @@ class INTERPRETERAPI  xio {
 public:
     using shared     = std::shared_ptr<xio>;
     using collection = std::vector<xio::shared>;
+
+    ///< Children Xio's (instructions/[statically stored]bloc/stack instances) shared across blocs/stacks.
+    using shared_collection = std::shared_ptr<xio::collection>;
+
 private:
 
     xio::shared op     = nullptr; ///< Parent Operator
@@ -39,8 +43,6 @@ private:
     lexer::type::token_t* t0 = nullptr; ///< Token informations.
     alu::shared acc; ///< Arithmetic Logical Unit, or Accumulator, or whatever!
 
-    collection _children;
-    xio::shared _parent;
 
     struct storage_attr {
         uint8_t lvalue : 1; // 0 = rvalue non-assignable (such as const,leaf). 1= left value; assignable.
@@ -49,31 +51,31 @@ private:
         uint8_t sstatic: 1; // 1 = static storage.
         // ...
     }mem = { 0,0,0,0 }; ///< Storage types of this xio.
-    friend class xio_vari;
+    friend class var;
     friend class bloc;
-    friend class compiler;
-    friend class interpreter_t;
+    // friend class compiler;
+    // friend class interpreter_t;
 
 
 public:
 
-    xio();
+    xio() = default;
 
 
     xio(xio::shared a_parent);
     xio(xio::shared a_parent, lexer::type::token_t* a_token, alu::shared a_alu = nullptr);
 
-    virtual ~xio();
+    virtual ~xio() = default;
 
     xio& operator =(const xio&) = delete;
     xio& operator =(xio&&) = delete;
 
-    using assume = utils::expect<xio::shared>;
+    using expect = utils::expect<xio::shared>;
     using maker = std::function<xio::shared(lexer::type::token_t *)>;
 
     alu::shared unit() { return acc; }
 
-    xio::assume tree_input(lexer::type::token_t* a_token, xio::maker a_allocator=nullptr);
+    xio::expect tree_input(lexer::type::token_t* a_token, xio::maker a_allocator=nullptr);
 
     virtual alu jsr(); // "Jump Subroutine" :)
 
@@ -82,15 +84,20 @@ public:
 
     xio::shared oper() { return op; }
     lexer::type::token_t* token() { return t0;}
-    xio::assume tree_close();
-    xio::assume tree_root();
+    xio::expect tree_close();
+    xio::expect tree_root();
+
+    static xio::shared make(xio::shared a_parent, lexer::type::token_t* a_token, alu::shared a_acc);
+    
+    template<class T> T* to() {return dynamic_cast<T*>(this);}
+
 
 private:
 
 #pragma region Assoc
     // First : declare associative pair:
     using associative_type = std::pair<lexer::type::T, lexer::type::T>;
-    using inptr_fn_t    = xio::assume(xio::*)(xio::shared);        ///< callable xio tree input function ptr
+    using inptr_fn_t    = xio::expect(xio::*)(xio::shared);        ///< callable xio tree input function ptr
     using associated_method = std::pair < xio::associative_type, xio::inptr_fn_t>;
 
     using input_table_t = std::vector<xio::associated_method>;
@@ -106,11 +113,14 @@ protected:
 
     xio_opfn_t xio_fn = nullptr;
 
-    virtual void copy(xio::shared blk)
-    {}
+    virtual xio::shared copy(xio::shared);
+    
+    static xio::shared get_global_root();
+
 
 private:
 
+    static xio::shared _global_root_bloc;
     static std::stack<xio::shared> pars;
     static std::stack<xio::shared> indexes;
     static std::stack<xio::shared> curls;
@@ -125,22 +135,22 @@ private:
 */
 
 #pragma region INPUT
-    xio::assume tree_input_binary(xio::shared x);
-    xio::assume tree_input_leaf(xio::shared x);
-    xio::assume tree_set_left(xio::shared x);
-    xio::assume tree_set_right(xio::shared x);
-    xio::assume tree_set_right_to_op(xio::shared x);
+    xio::expect tree_input_binary(xio::shared x);
+    xio::expect tree_input_leaf(xio::shared x);
+    xio::expect tree_set_left(xio::shared x);
+    xio::expect tree_set_right(xio::shared x);
+    xio::expect tree_set_right_to_op(xio::shared x);
 
     xio::inptr_fn_t associate(xio::shared a_lhs, xio::shared a_rhs);
 
-    xio::assume tree_lpar_input_binary(xio::shared x);
+    xio::expect tree_lpar_input_binary(xio::shared x);
 
-    xio::assume tree_input_rpar(xio::shared);
-    xio::assume tree_input_lpar(xio::shared);
-    xio::assume tree_close_par  (xio::shared);
-    xio::assume tree_rpar_input_postfix (xio::shared);
-    xio::assume tree_rpar_input_leaf(xio::shared);
-    xio::assume tree_rpar_rpar    (xio::shared);
+    xio::expect tree_input_rpar(xio::shared);
+    xio::expect tree_input_lpar(xio::shared);
+    xio::expect tree_close_par  (xio::shared);
+    xio::expect tree_rpar_input_postfix (xio::shared);
+    xio::expect tree_rpar_input_leaf(xio::shared);
+    xio::expect tree_rpar_rpar    (xio::shared);
 
 #pragma endregion INPUT
 
@@ -221,7 +231,18 @@ public:
 
 
 protected:
+
+    collection _children;
+    xio::shared _parent;
+
     xio::shared query_child(xio* cThis);
+
 };
+
+template<class T> typename T::shared make(xio::shared a_parent, lexer::type::token_t* a_token, alu::shared a_acc)
+{
+    return std::make_shared<T>(a_parent, a_token, a_acc);
+}
+
 
 }

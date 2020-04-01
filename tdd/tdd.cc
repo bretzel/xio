@@ -6,7 +6,7 @@
 #include <xio/utils/journal.h>
 //#include <any>
 #include <xio/interpreter/alu.h>
-
+#include <xio/interpreter/bloc.h>
 #include <signal.h>
 
 void signal_int(int s)
@@ -180,5 +180,18 @@ tdd::result tdd::init()
     journal::resetstamp(), journal::Hour24;
     logdebugpfn << " mark" << Ends;
     
+
+    struct a{};
+    struct b:a{};
+    struct c:b{};
+
+    std::shared_ptr<a> sa = std::make_shared<a>();
+    std::shared_ptr<a> sb = std::make_shared<b>();
+    
+
+    teacc::bloc::shared the_root_bloc = teacc::make<teacc::bloc>(nullptr,nullptr,nullptr);
+
+
+
     return notification::code::ok;
 }
