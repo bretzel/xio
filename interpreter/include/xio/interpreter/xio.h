@@ -113,8 +113,6 @@ protected:
 
     xio_opfn_t xio_fn = nullptr;
 
-    virtual xio::shared copy(xio::shared);
-    
     static xio::shared get_global_root();
 
 

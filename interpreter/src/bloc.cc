@@ -4,6 +4,16 @@
 namespace teacc
 {
 
+bloc::bloc(const bloc& a_bloc)
+{
+    // implement;
+    _instructions = a_bloc._instructions;
+    _static_blocs = a_bloc._static_blocs;
+    _static_vars  = a_bloc._static_vars;
+
+    //@todo duplicate local vars and blocs, recursively:
+
+}
 
 bloc::bloc(xio::shared a_parent, lexer::type::token_t* a_token, alu::shared a_acc): xio(a_parent,a_token,a_acc)
 {
@@ -25,6 +35,23 @@ bloc::~bloc()
     std::cout << __PRETTY_FUNCTION__ << " \\O/\n";
 }
 
+
+
+bloc& bloc::operator = (const bloc& a_bloc)
+{
+    // implement;
+    _instructions = a_bloc._instructions;
+    _static_blocs = a_bloc._static_blocs;
+    _static_vars  = a_bloc._static_vars;
+
+    //@todo duplicate local vars and blocs, recursively:
+
+    return *this;
+}
+
+
+
+
 alu bloc::jsr()
 {
     if(!_instructions)
@@ -37,12 +64,6 @@ alu bloc::jsr()
     return *acc;
 }
 
-
-xio::shared bloc::copy(xio::shared a_stack)
-{
-    // 
-    return nullptr; //@todo  Implement! :)
-}
 
 xio::shared bloc::query_var(const std::string& var_id)
 {
@@ -92,11 +113,11 @@ xio::shared bloc::query_var_local(const std::string& var_id)
      return utils::notification::code::implement;
  }
 
+
 bloc::shared bloc::make(xio::shared a_parent, lexer::type::token_t* a_token, alu::shared a_acc)
 {
     return std::make_shared<bloc>(a_parent, a_token, a_acc);
 }
-
 
 
 }

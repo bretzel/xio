@@ -176,19 +176,50 @@ tdd::result tdd::init()
 {
     using  teacc::utils::journal;
     journal::setfile("xioproject.log");
-    journal::init(journal::Ansi, "xio project API tests (MyTDD)", true);
+    journal::init(journal::Ansi, "xio project API dev & tests (MyTDD)", true);
     journal::resetstamp(), journal::Hour24;
     logdebugpfn << " mark" << Ends;
     
 
-    struct a{};
-    struct b:a{};
-    struct c:b{};
+    struct a{
+        using shared = std::shared_ptr<a>;
+        virtual a::shared copy(a::shared _a)
+        {
+            logdebugpfn << "_a;" << ends;
+            return _a;
+        }
+    };
 
-    std::shared_ptr<a> sa = std::make_shared<a>();
-    std::shared_ptr<a> sb = std::make_shared<b>();
-    
+    struct b:a{
+        a::shared copy(a::shared _b) override
+        {
+            logdebugpfn << "_b;" << ends;
+            return _b;
+        }
+ 
+            
+        
+    };
 
+    struct c:b{
+        a::shared copy(a::shared _c) override
+        {
+           logdebugpfn << "_c;" << ends;
+           return _c;
+        }
+         
+    };
+
+    a::shared sa = std::make_shared<a>();
+    a::shared sb = std::make_shared<b>();
+    a::shared sc = std::make_shared<c>();
+    sb->copy(sa);
+    sc->copy(sa);
+
+    sa = sb;
+    sa->copy(sc);
+    sa = sc;
+    sa->copy(sb);
     teacc::bloc::shared the_root_bloc = teacc::make<teacc::bloc>(nullptr,nullptr,nullptr);
 
 

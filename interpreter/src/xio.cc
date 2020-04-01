@@ -208,18 +208,6 @@ xio::shared xio::make(xio::shared a_parent, lexer::type::token_t* a_token, alu::
     return std::make_shared<xio>(a_parent, a_token, a_acc);
 }
 
-xio::shared xio::copy(xio::shared a_)
-{
-    return nullptr;
-}
-
-
-// xio::~xio()
-// {
-
-// }
-
-
 
 // -------------- ARITHMETIC BINARY TREE INPUT LOGIC IMPLEMENTATION ------------------------------------
 /*
