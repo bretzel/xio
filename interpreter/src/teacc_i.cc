@@ -5,7 +5,7 @@
 namespace teacc
 {
 
- utils::notification::code teacc_i::execute()
+ utils::notification::code teacc::execute()
  {
 
      return utils::notification::code::implement;

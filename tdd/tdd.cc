@@ -6,7 +6,9 @@
 #include <xio/utils/journal.h>
 //#include <any>
 #include <xio/interpreter/alu.h>
-#include <xio/interpreter/bloc.h>
+//#include <xio/interpreter/bloc.h>
+#include <xio/interpreter/interpreter.h>
+
 #include <signal.h>
 
 void signal_int(int s)
@@ -66,6 +68,7 @@ tdd::result tdd::run()
     logbook();
     lexer();
     alu();
+    interpreter();
     return {
         (
          notification::push(), __PRETTY_FUNCTION__ , ": not implemented, yet..."
@@ -76,19 +79,19 @@ tdd::result tdd::run()
 
 tdd::~tdd()
 {
-    std::cout << __PRETTY_FUNCTION__ << " \\O/\n";
+    loginfopfn << __PRETTY_FUNCTION__ << " \\O/\n";
     teacc::utils::journal::close();
 }
 
 auto main() -> int {
    // tdd _tdd;
    
-   tdd().run();
-    
-    teacc::utils::notification::clear(
-        [](teacc::utils::notification& n) 
+    tdd::result r = tdd().run();
+    loginfopfn << " Notifications:" << ends; //?????????????
+    notification::clear(
+        [](notification& n) 
         {
-            std::cout << n() << '\n';
+            lognotice << n() << ends;
         }
     );
     
@@ -107,25 +110,26 @@ tdd::result tdd::alu()
     an.reset();
     logdebugpfn << " std::any 'an' has_value after reset: "  << an.has_value() << '\n';
 
-    std::cout << __PRETTY_FUNCTION__ << ": a/b[" << b.number<double>() << "]:\n";
+    LogDebug << ": a/b[" << b.number<double>() << "]:" << ends;
     r = a/b;
     if(r.is_set())
     ///@todo DO NOT FORGET to Implement exceptions in the interperter;
-        std::cout << __PRETTY_FUNCTION__ << ": a/b=" << r() << '\n';
+        logdebug << ": a/b=" << r() << ends;
     else 
-        std::cout << __PRETTY_FUNCTION__ << ": a/b= Failed; UNSET." << '\n';
+        logdebug << ": a/b= Failed; UNSET." << ends;
     
     b = 4.01;
-    std::cout << __PRETTY_FUNCTION__ << ": a/b[" << b.number<double>() << "]:\n";
+    logdebug << ": a/b[" << b.number<double>() << "]:" << ends;
     
 
     r = a/b;
     if(r.is_set())
     ///@todo DO NOT FORGET to Implement exceptions in the interperter;
-        std::cout << __PRETTY_FUNCTION__ << ": a/b=" << r() << '\n';
+        logdebug << ": a/b=" << r() << ends;
     else 
-        std::cout << __PRETTY_FUNCTION__ << ": a/b= Failed; UNSET." << '\n';
+        logdebug << ": a/b= Failed; UNSET." << ends;
     
+    notification::push(), __PRETTY_FUNCTION__, notification::code::ok;
 
     return notification::code::ok;
 }
@@ -144,7 +148,7 @@ tdd::result tdd::lexer()
 //    }
 //    //...
     lexer.debug([](teacc::lexer::type::token_t& token){
-        std::cout << '[' << token.attribute() << "] :" << teacc::lexer::type::to_s(token.s) << '\n';
+        loginfo << '[' << token.attribute() << "] :" << teacc::lexer::type::to_s(token.s) << ends;
     });
 
     teacc::lexer::type::token_t::collection tokens = lexer.tokens(); // deep copy.
@@ -164,9 +168,9 @@ tdd::result tdd::logbook()
     doc_element::shared div = book::create_element(e, doc_element::tag::div);
     auto head = div->parent();
 
-    std::cout << "element e : " << e->text() << '\n';
-    std::cout << "element head=div(e).parent(): " << head->text() << '\n';
-    std::cout << "element div : " << div->text() << '\n';
+    logdebug << "element e : " << e->text() << '\n';
+    logdebug << "element head=div(e).parent(): " << head->text() << ends;
+    logdebug << "element div : " << div->text() << ends;
 
 
     return notification::code::ok;
@@ -226,4 +230,12 @@ tdd::result tdd::init()
 
 
     return notification::code::ok;
+}
+
+
+tdd::result tdd::interpreter()
+{
+    return {(
+        notification::push(), __PRETTY_FUNCTION__, ':', notification::code::implement
+    )};
 }
