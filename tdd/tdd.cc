@@ -103,10 +103,11 @@ tdd::result tdd::alu()
     teacc::alu r;
     std::any an;
     an = 0;
-    logdebugpfn << " std::any an has_value: "  << an.has_value() << '\n';
+    logdebugpfn << " std::any 'an' has_value: "  << an.has_value() << '\n';
     an.reset();
-    logdebugpfn << " std::any an has_value after reset: "  << an.has_value() << '\n';
+    logdebugpfn << " std::any 'an' has_value after reset: "  << an.has_value() << '\n';
 
+    std::cout << __PRETTY_FUNCTION__ << ": a/b[" << b.number<double>() << "]:\n";
     r = a/b;
     if(r.is_set())
     ///@todo DO NOT FORGET to Implement exceptions in the interperter;

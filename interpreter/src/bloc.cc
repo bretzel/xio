@@ -4,7 +4,7 @@
 namespace teacc
 {
 
-bloc::bloc(const bloc& a_bloc)
+bloc::bloc(const bloc& a_bloc, xio::shared a_parent): xio(a_parent, nullptr, nullptr)
 {
     // implement;
     _instructions = a_bloc._instructions;
@@ -19,6 +19,22 @@ bloc::bloc(xio::shared a_parent, lexer::type::token_t* a_token, alu::shared a_ac
 {
 
 }
+
+
+
+
+/*!
+    @brief Will recursively create memory instances of the internal structure.
+
+    @note This is prepared for the future only: OBJECT structures and storages are not yet designed. 
+          Only LOCAL Instructions and LOCAL Variables collections are implemented
+*/
+utils::result_code bloc::instanciate_from(xio::shared)
+{
+    return utils::notification::code::implement;
+}
+
+
 
 utils::result_code bloc::push_i(xio::shared a_i)
 {
@@ -118,6 +134,5 @@ bloc::shared bloc::make(xio::shared a_parent, lexer::type::token_t* a_token, alu
 {
     return std::make_shared<bloc>(a_parent, a_token, a_acc);
 }
-
 
 }

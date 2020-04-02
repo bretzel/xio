@@ -114,7 +114,7 @@ protected:
     xio_opfn_t xio_fn = nullptr;
 
     static xio::shared get_global_root();
-
+    virtual utils::result_code instanciate_from(xio::shared bcd);
 
 private:
 

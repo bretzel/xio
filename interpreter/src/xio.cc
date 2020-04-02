@@ -208,6 +208,10 @@ xio::shared xio::make(xio::shared a_parent, lexer::type::token_t* a_token, alu::
     return std::make_shared<xio>(a_parent, a_token, a_acc);
 }
 
+utils::result_code xio::instanciate_from(xio::shared)
+{
+    return utils::notification::code::implement;
+}
 
 // -------------- ARITHMETIC BINARY TREE INPUT LOGIC IMPLEMENTATION ------------------------------------
 /*
@@ -1021,7 +1025,7 @@ alu xio::ku64()
 
 alu xio::ki8()
 {
-    *acc = (char)(rhs->acc->number<int64_t>() & 0xFF);
+    *acc = (int8_t)(rhs->acc->number<int64_t>() & 0xFF);
     return *acc;
 }
 
