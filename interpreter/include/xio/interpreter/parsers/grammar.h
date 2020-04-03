@@ -3,7 +3,8 @@
 //
 
 #pragma once
-//#include <teacc/teacc_type.h>
+#include <xio/interpreter/interpreterdll.h>
+
 #include <xio/lexer/lexer.h>
 #include <xio/utils/expect>
 #include <map>
@@ -259,7 +260,7 @@ struct seq_t
 struct rule_t
 {
 
-    seq_t::collection lists;
+    seq_t::collection sequences;
     // ---------------------------------------
     seq_t::iterator seq; // Temporary held for building this rule.
     // ---------------------------------------
@@ -278,7 +279,7 @@ struct rule_t
 
     rule_t(int) {}
     ~rule_t();
-    bool empty() const { return lists.empty() ? true : lists.begin()->terms.empty(); }
+    bool empty() const { return sequences.empty() ? true : sequences.begin()->terms.empty(); }
     void inject_attr(attr a_a) { inject = a_a; }
     rule_t &new_sequence();
     rule_t &operator|(rule_t *_r);
@@ -286,8 +287,8 @@ struct rule_t
     rule_t &operator|(lexer::type::T _t);
     rule_t &operator|(lexer::lexem::mnemonic _t);
 
-    seq_t::const_iterator begin() const { return lists.cbegin(); }
-    bool end(seq_t::const_iterator s) const { return s == lists.cend(); }
+    seq_t::const_iterator begin() const { return sequences.cbegin(); }
+    bool end(seq_t::const_iterator s) const { return s == sequences.cend(); }
 };
 
 class teacc_grammar
@@ -297,7 +298,7 @@ public:
     teacc_grammar();
     ~teacc_grammar();
     utils::xstr &text() { return _text; }
-    teacc_grammar::result build();
+    utils::result_code build();
     void dump();
 
 private:

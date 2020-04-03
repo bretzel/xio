@@ -101,10 +101,10 @@ private:
         bool operator ++(int);
         void reset(const std::string& _str)
         {
-            c = b;
+            c = b = _str.cbegin();
             l = col = 1;
             i = 0;
-            e = _str.end();
+            e = _str.cend();
         }
         _bce& operator >> (word& w);
         //_bce& operator = (const word& w);

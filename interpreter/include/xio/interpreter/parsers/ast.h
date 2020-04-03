@@ -15,7 +15,8 @@
 #pragma once
 
 //#include <xio/utils/expect>
-#include <xio/nterpreter/parsers/grammar.h>
+#include <xio/interpreter/parsers/grammar.h>
+#include <xio/interpreter/bloc.h>
 #include <memory>
 #include <vector>
 namespace teacc::ast
@@ -28,7 +29,7 @@ namespace teacc::ast
 
     @note Pour l'instant, les ast sont des structures passives. 
 */
-struct ast_node
+struct INTERPRETERAPI ast_node
 {
     using shared        = std::shared_ptr<ast_node>;
     using collection    = std::shared_ptr<std::vector<ast_node::shared>>;
@@ -42,7 +43,7 @@ struct ast_node
     parsers::term_t  _term; ///< Element de la règle : { sous-règle en récursion; terminale; directive; }
                             ///< Element's rule : { récursive (sub-)rule; terminal; directive; }
     xio::shared      _xio;  ///< Élément concret produit.
-                            ///< Concrete produced element.
+                            ///< Produced concrete element.
 
 
     ast_node()  = default;
@@ -52,7 +53,17 @@ struct ast_node
 
 };
 
+class INTERPRETERAPI astbloc
+{
+    parsers::teacc_grammar  _gr;
+    ast_node::shared        _root;
 
+public:
+    astbloc()   = default;
+    ~astbloc()  = default;
+
+    utils::result_code build();
+};
 
 }
 

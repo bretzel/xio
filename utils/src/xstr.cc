@@ -417,28 +417,26 @@ const char* xstr::scanto(const char* start, char c)
     */
 std::size_t xstr::words(xstr::word::collection& wcollection, const std::string& a_delimiters, bool keep_as_word)
 {
+    //std::cout << __PRETTY_FUNCTION__ << ":\n";// << _s << "\n:\n";
     if (_s.empty()) {
-        //std::cout << " --> Contents is empty!";
+        std::cout << " --> Contents is empty!";
         return (std::size_t)0;
     }
     _cursor.reset(_s);
     std::string token_separators = a_delimiters.empty() ? xstr::default_separators : a_delimiters;
-    
+    //std::cout << " contents after bce::reset\n ------------- \n" << _s << "\n---------------\n: [\n" << *_cursor.c << "\n]\n";
     if ( !_cursor.skip() )
+    {    
+        //std::cout << " --> Contents skip is false? (internal?)...\n";
         return (std::size_t)0;
+    }
     word w;
     _cursor >> w;
     
     while (!_cursor.end()) {
-        
-        
         if ( !wcollection.empty() );
-        
         //std::cout << __FUNCTION__ << " last inserted word: [" << wcollection.back()() << "] - _cursor on [" << *_cursor.c << "]\n";
-        
         std::string::const_iterator cc = _cursor.c;
-        
-        
         if (token_separators.find(*_cursor.c) != string::npos)
         {
             cc = _cursor.c;

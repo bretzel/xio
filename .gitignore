@@ -48,9 +48,9 @@ project.fragment.lock.json
 artifacts/
 **/Properties/launchSettings.json
 
-#*_i.c
+*_i.c
 *_p.c
-#*_i.h
+*_i.h
 *.ilk
 *.meta
 *.obj

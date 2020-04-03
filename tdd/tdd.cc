@@ -65,9 +65,9 @@ tdd::result tdd::run()
     init();
     install_signals();
     loginfopfn << Ends;
-    logbook();
-    lexer();
-    alu();
+    //logbook();
+    //lexer();
+    //alu();
     interpreter();
     return {
         (
@@ -91,7 +91,8 @@ auto main() -> int {
     notification::clear(
         [](notification& n) 
         {
-            lognotice << n() << ends;
+            //lognotice << n() << ends;
+            std::cout << n() << '\n';
         }
     );
     
@@ -186,46 +187,46 @@ tdd::result tdd::init()
     logdebugpfn << " mark" << Ends;
     
 
-    struct a{
-        using shared = std::shared_ptr<a>;
-        virtual a::shared copy(a::shared _a)
-        {
-            logdebugpfn << "_a;" << ends;
-            return _a;
-        }
-    };
+    // struct a{
+    //     using shared = std::shared_ptr<a>;
+    //     virtual a::shared copy(a::shared _a)
+    //     {
+    //         logdebugpfn << "_a;" << ends;
+    //         return _a;
+    //     }
+    // };
 
-    struct b:a{
-        a::shared copy(a::shared _b) override
-        {
-            logdebugpfn << "_b;" << ends;
-            return _b;
-        }
+    // struct b:a{
+    //     a::shared copy(a::shared _b) override
+    //     {
+    //         logdebugpfn << "_b;" << ends;
+    //         return _b;
+    //     }
  
             
         
-    };
+    // };
 
-    struct c:b{
-        a::shared copy(a::shared _c) override
-        {
-           logdebugpfn << "_c;" << ends;
-           return _c;
-        }
+    // struct c:b{
+    //     a::shared copy(a::shared _c) override
+    //     {
+    //        logdebugpfn << "_c;" << ends;
+    //        return _c;
+    //     }
          
-    };
+    // };
 
-    a::shared sa = std::make_shared<a>();
-    a::shared sb = std::make_shared<b>();
-    a::shared sc = std::make_shared<c>();
-    sb->copy(sa);
-    sc->copy(sa);
+    // a::shared sa = std::make_shared<a>();
+    // a::shared sb = std::make_shared<b>();
+    // a::shared sc = std::make_shared<c>();
+    // sb->copy(sa);
+    // sc->copy(sa);
 
-    sa = sb;
-    sa->copy(sc);
-    sa = sc;
-    sa->copy(sb);
-    teacc::bloc::shared the_root_bloc = teacc::make<teacc::bloc>(nullptr,nullptr,nullptr);
+    // sa = sb;
+    // sa->copy(sc);
+    // sa = sc;
+    // sa->copy(sb);
+    // teacc::bloc::shared the_root_bloc = teacc::make<teacc::bloc>(nullptr,nullptr,nullptr);
 
 
 
@@ -235,7 +236,10 @@ tdd::result tdd::init()
 
 tdd::result tdd::interpreter()
 {
+    teacc::parsers::teacc_grammar tgram;
+    (void)tgram.build();
+
     return {(
-        notification::push(), __PRETTY_FUNCTION__, ':', notification::code::implement
+        notification::push(), __PRETTY_FUNCTION__, " complete."
     )};
 }

@@ -54,7 +54,7 @@ std::string grammar_txt =
     "objcfncall         : '[' function_id  *args ']'.";
 //"function_id        .";
 
-
+using logger = utils::journal;
 std::string std_expr = R"(
 
 )";
@@ -64,7 +64,7 @@ expression         : +#expr_token.
 stmts              : +statement.
 statement          : assignstmt ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.
 assignstmt         : declvar assign expression, var_id assign expression.
-declvar            : *typename #newvar .\n" // new_var.
+declvar            : *typename #newvar.
 funcsig            : *typename function_id '(' *params ')'.
 declfunc           : funcsig ';', funcsig bloc.
 paramseq           : ',' param.
@@ -75,7 +75,7 @@ arg                : objcarg, expression.
 argseq             : ',' arg.
 args               : arg *+argseq.
 typename           : *'static' ?'i8' ?'u8' ?'i16' ?'u16' ?'i32' ?'u32' ?'i64' ?'u64' ?'real' ?'number' ?'string' ?#objectid.
-instruction        : ?'if' ?'then' ?'end' ?'switch' ?'case' ?'cout' ?'cin' ?'' ?'for' ?'while' ?'repeat' ?'until' ?'do'.
+instruction        : ?'if' ?'then'  ?'switch' ?'case' ?'for' ?'while' ?'repeat' ?'until' ?'do'.
 if                 : 'if' condexpr ifbody, 'if' '(' condexpr ')' ifbody.
 bloc               :  '{' stmts '}'.
 truebloc           : *'then' bloc, *'then' statement.
@@ -88,42 +88,38 @@ function_id        : *'::' #functionid, #objectid '::' #functionid, #var_id '.' 
 objcfncall         : '[' function_id  *args ']'.
 )";
 
-teacc_grammar::result teacc_grammar::build()
+utils::result_code teacc_grammar::build()
 {
-    //if (_text.empty())
-    //    return {
-    //        (utils::notification::push(utils::notification::type::error), "rules source code is empty!")
-    //    };
+ 
+    if (built()) 
+        return { (
+                    utils::notification::push(utils::notification::type::warning),
+                    "x.i.o. grammar is already built"
+              ) };
 
-    //logdebug
-    //    << logger::HCyan << __FUNCTION__
-    //    << logger::White << ": [ Building rules :" << logger::brk()
-    //    << logger::Yellow << grammar_txt
-    //    << logger::White << ']'
-    //    << Ends;
+    _text = teacc_grammar_text;
+    logdebugfn
+       << logger::White << ": [ Building rules :" << logger::brk()
+       << logger::Yellow << _text
+       << logger::White << ']'
+       << 
+    Ends;
 
-    if (built()) return { (
-                              utils::notification::push(utils::notification::type::warning),
-                                  "x.i.o. grammar is already built"
-                          ) };
-
-    _text = grammar_txt;
     std::size_t count = _text.words(tokens, ":;,|.+*?#", true);
     utils::xstr::collection list;
-    for (auto s : tokens) list.push_back(s());
+    logdebug << "building words list..." << ends;
+    for (auto s : tokens) 
+        list.push_back(s());
+    
     if (!count)
-        return { (utils::notification::push(utils::notification::type::error),"rules source code is empty!") };
+    {
+        logerrorpfnx << " text has no words count. (internal error)" << ends;
+        return { (utils::notification::push(utils::notification::type::internal), "rules source code is empty!") };
+    }
 
     auto s = list.begin();
     _state = st_begin;
     do {
-        //         logdebug
-        //             << logger::HCyan << __FUNCTION__
-        //             << logger::White << "do-loop: ["
-        //             << logger::Yellow << *s
-        //             << logger::White << ']'
-        //             << Ends;
-
         result r;
         auto p = teacc_grammar::grammar_dictionary.find((*s)[0]);
 
@@ -142,7 +138,7 @@ teacc_grammar::result teacc_grammar::build()
 
 void teacc_grammar::dump()
 {
-    using logger = utils::journal;
+    
    loginfopfnx << Ends;
 
    loginfo << logger::HBlue << "lexer::lexem::lexer::lexem::mnemonic" << logger::Yellow << ',' <<
@@ -151,7 +147,7 @@ void teacc_grammar::dump()
 
    for (auto rule : _rules) {
        loginfo << logger::HCyan << rule.second->_id << logger::White << ':';
-       for (auto seq : rule.second->lists) {
+       for (auto seq : rule.second->sequences) {
            logger() << logger::HCyan << "{ " << logger::Yellow;// << Ends;
            for (auto t : seq.terms) {
                logger() << logger::Yellow << t() << ' ';// << Ends;
@@ -232,12 +228,12 @@ teacc_grammar::result teacc_grammar::parse_identifier(utils::xstr::iterator & cr
 
 teacc_grammar::result teacc_grammar::enter_rule_def(utils::xstr::iterator &crs)
 {
-    //     logdebug
-    //         << logger::HCyan << __FUNCTION__
-    //         << logger::White << ": ["
-    //         << logger::Yellow << *crs
-    //         << logger::White << ']'
-    //         << Ends;
+        // logdebug
+        //     << logger::HCyan << __FUNCTION__
+        //     << logger::White << ": ["
+        //     << logger::Yellow << *crs
+        //     << logger::White << ']'
+        //     << Ends;
     if (_state != st_init_rule) {
         return { (utils::notification::push(utils::notification::type::error), "syntax error '", *crs, "' is invalid in this context") };
     }
@@ -249,12 +245,12 @@ teacc_grammar::result teacc_grammar::enter_rule_def(utils::xstr::iterator &crs)
 
 teacc_grammar::result teacc_grammar::new_sequence(utils::xstr::iterator & crs)
 {
-    //     logdebug
-    //         << logger::HCyan << __FUNCTION__
-    //         << logger::White << ": ["
-    //         << logger::Yellow << *crs
-    //         << logger::White << ']'
-    //         << Ends;
+        // logdebug
+        //     << logger::HCyan << __FUNCTION__
+        //     << logger::White << ": ["
+        //     << logger::Yellow << *crs
+        //     << logger::White << ']'
+        //     << Ends;
 
     if (_state == st_option)
         return { (utils::notification::push(utils::notification::type::error), "syntax error '", *crs, "' is invalid in this context") };
@@ -268,12 +264,12 @@ teacc_grammar::result teacc_grammar::new_sequence(utils::xstr::iterator & crs)
 
 teacc_grammar::result teacc_grammar::end_rule(utils::xstr::iterator & crs)
 {
-    //     logdebug
-    //         << logger::HCyan << __FUNCTION__
-    //         << logger::White << ": ["
-    //         << logger::Yellow << *crs
-    //         << logger::White << ']'
-    //         << Ends;
+        // logdebug
+        //     << logger::HCyan << __FUNCTION__
+        //     << logger::White << ": ["
+        //     << logger::Yellow << *crs
+        //     << logger::White << ']'
+        //     << Ends;
     _state = st_begin;
     ++crs;
     return { utils::notification::code::accepted };
@@ -328,12 +324,13 @@ teacc_grammar::result teacc_grammar::set_optional(utils::xstr::iterator & crs)
 
 teacc_grammar::result teacc_grammar::enter_litteral(utils::xstr::iterator & crs)
 {
-    //     logdebug
-    //         << logger::HCyan << __FUNCTION__
-    //         << logger::White << ": ["
-    //         << logger::Yellow << *crs
-    //         << logger::White << ']'
-    //         << Ends;
+
+        // logdebug
+        //     << logger::HCyan << __FUNCTION__
+        //     << logger::White << ": ["
+        //     << logger::Yellow << *crs
+        //     << logger::White << ']'
+        //     << Ends;
 
     if ((_state != st_seq) && (_state != st_option))
         return { (
@@ -346,13 +343,13 @@ teacc_grammar::result teacc_grammar::enter_litteral(utils::xstr::iterator & crs)
                  ) };
 
     utils::xstr::iterator i = crs;
-    //logdebugfn << logger::HBlue << "token: '" << logger::HRed << *i << logger::HBlue << "'" << Ends;
+    // logdebugfn << logger::HBlue << "token: '" << logger::HRed << *i << logger::HBlue << "'" << Ends;
     ++i;
     // logdebugfn << logger::HBlue << "token[++i]: '" << logger::HRed << *i << logger::HBlue << "'" << Ends;
     if ((*i == "'") || (*i == "\""))
         return { (utils::notification::push(utils::notification::type::error), "error: litteral x.i.o grammar element cannot be empty") };
 
-    //logdebugfn << logger::White << " Checking token: '" << logger::Yellow << *i << logger::White << "'" << Ends;
+    // logdebugfn << logger::White << " Checking token: '" << logger::Yellow << *i << logger::White << "'" << Ends;
     lexer::type::token_t token = lexer::type::token_t::scan(i->c_str());
     if (token) {
         _rule->a = a;
@@ -367,7 +364,7 @@ teacc_grammar::result teacc_grammar::enter_litteral(utils::xstr::iterator & crs)
                          "' is not a valid xio++ grammar token"
                  ) };
 
-    //      logdebugfn << logger::White << "term_t : '" << logger::Yellow << *i << logger::White << "':" << Ends;
+    // logdebugfn << logger::White << "term_t : '" << logger::Yellow << *i << logger::White << "':" << Ends;
     crs = i;
     ++crs;
     if ((*crs == "'") || (*crs == "\""))
@@ -563,20 +560,20 @@ std::string term_t::operator()() const
 rule_t::rule_t(const std::string& a_id)
 {
     _id = a_id;
-    lists.push_back(seq_t());
-    seq = lists.begin();
+    sequences.push_back(seq_t());
+    seq = sequences.begin();
 }
 
 rule_t::~rule_t()
 {
-    lists.clear();
+    sequences.clear();
     _id.clear();
 }
 
 rule_t & rule_t::new_sequence()
 {
-    lists.push_back(seq_t());
-    seq = --lists.end();
+    sequences.push_back(seq_t());
+    seq = --sequences.end();
     a.reset();
     return *this;
 }
