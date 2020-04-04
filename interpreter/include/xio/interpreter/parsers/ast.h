@@ -55,9 +55,9 @@ struct INTERPRETERAPI ast_node
 
 class INTERPRETERAPI astbloc
 {
-    parsers::teacc_grammar  _gr;
+    const parsers::teacc_grammar*  _gr = nullptr;
     ast_node::shared        _root;
-
+    
 public:
     astbloc()   = default;
     ~astbloc()  = default;

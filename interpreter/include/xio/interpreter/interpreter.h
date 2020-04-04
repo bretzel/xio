@@ -13,8 +13,17 @@ namespace teacc
 
 class INTERPRETERAPI interpreter : public bloc
 {
+
+    parsers::teacc_grammar _grammar;
+    
 public:
     interpreter() = default;
+    ~interpreter() override = default;
+
+    alu jsr() override;
+    
+    utils::result_code run();
+
 };
 
 }

@@ -236,9 +236,12 @@ tdd::result tdd::init()
 
 tdd::result tdd::interpreter()
 {
-    teacc::parsers::teacc_grammar tgram;
-    (void)tgram.build();
-
+    teacc::interpreter interpreter;
+    teacc::utils::result_code r = interpreter.run();
+    if(!r)
+    
+        logdebugpfnx << " - TEST!!!! :) \\O/" << ends;
+    
     return {(
         notification::push(), __PRETTY_FUNCTION__, " complete."
     )};
