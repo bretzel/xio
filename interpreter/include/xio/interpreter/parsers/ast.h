@@ -31,11 +31,11 @@ namespace teacc::ast
 */
 struct INTERPRETERAPI ast_node
 {
-    using shared        = std::shared_ptr<ast_node>;
-    using collection    = std::vector<ast_node::shared>;
-    using product       = utils::expect<ast_node::shared>;
     
-    ast_node::shared     _parent;   ///< Parent node  (Noeud parent).
+    using collection    = std::vector<ast_node*>;
+    using product       = utils::expect<ast_node*>;
+    
+    ast_node*     _parent;   ///< Parent node  (Noeud parent).
     
     // Arithmetic Expression (Sub)Tree
     ast_node* _lhs= nullptr; ///< Left-hand side operand node;
@@ -47,12 +47,10 @@ struct INTERPRETERAPI ast_node
     parsers::term_t  _term; ///< Element de la règle : { sous-règle en récursion; terminale; directive; }
                             ///< Element's rule : { récursive (sub-)rule; terminal; directive; }
     
-    ast_node::shared      _xio;  ///< Élément concret produit.
-                            ///< Produced concrete element.
-                            
+    ast_node*      _xio;  ///< Élément concret produit.
+                            ///< Produced concrete element
     ast_node()  = default;
-    
-    ast_node(ast_node::shared _parent_node, lexer::type::token_t* a_token);
+    ast_node(ast_node* _parent_node, lexer::type::token_t* a_token);
     
     ~ast_node() = default;
     
@@ -89,19 +87,15 @@ struct INTERPRETERAPI ast_node
     
     #pragma endregion INPUT
     // -------- Arithmetic binary tree: -----------------------------------
-    
-    
-    
-    
 };
 
 class INTERPRETERAPI astbloc
 {
     parsers::teacc_grammar  _rules;
-    ast_node::shared        _root;
-    ast_node::shared        _node;
+    ast_node*        _root;
+    ast_node*        _node;
     
-    using product = utils::expect<ast_node::shared>;
+    using product = utils::expect<ast_node*>;
     
 public:
     astbloc()   = default;
@@ -117,18 +111,14 @@ private:
     //-------------------------------------------------
     
     // Visiation/Navigation :
-    ast_node::shared up();
+    ast_node* up();
     ast_node::collection _children;
     auto begin();
     auto end();
     
-    
     // -----------------------------------------
     //ast_node::collection::iterator
     //ast_node::shared lr_next(ast_node::shared to);
-    
-    
-
 };
 
 }

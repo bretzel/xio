@@ -32,7 +32,7 @@ astbloc::product astbloc::enter_rule(parsers::rule_t *rule)
     )};
 }
 
-ast_node::shared astbloc::up()
+ast_node* astbloc::up()
 {
     notification::push(), __PRETTY_FUNCTION__, " Sorry, not planned yet...";
     return nullptr;
@@ -48,8 +48,8 @@ auto astbloc::end()
     return _children.end();
 }
 
-ast_node::ast_node(ast_node::shared _parent_node, lexer::type::token_t *a_token)
-:_parent(std::move(_parent_node)), _token(a_token) {}
+ast_node::ast_node(ast_node* _parent_node, lexer::type::token_t *a_token)
+:_parent(_parent_node), _token(a_token) {}
 
 
 auto ast_node::begin()
@@ -62,15 +62,10 @@ auto ast_node::end()
     return _children.end();
 }
 
-
-
-
 // -------- Arithmetic binary tree INPUT: -----------------------------------
 
-
 // Arithmetic Binary Tree: associative building logic table:
-ast_node::ar_input_collection     ast_node::_ar_input_assoc_collection = {
-    
+ast_node::ar_input_collection  ast_node::_ar_input_assoc_collection = {
     {{lexer::type::binary,   lexer::type::leftpar},   &ast_node::ar_expr_set_right},
     {{lexer::type::leftpar,  lexer::type::leaf},      &ast_node::ar_expr_set_left},
     {{lexer::type::leftpar,  lexer::type::prefix},    &ast_node::ar_expr_set_left},
@@ -116,8 +111,6 @@ ast_node::ar_input_method ast_node::associate(lexer::type::token_t *_input_locat
 }
 
 
-
-
 // -------------- ARITHMETIC BINARY TREE INPUT LOGIC IMPLEMENTATION ------------------------------------
 /*
         a = 32 * (2+3) / 4;
@@ -132,6 +125,7 @@ ast_node::ar_input_method ast_node::associate(lexer::type::token_t *_input_locat
                      / \                                                       /           / \     +       / \                               / \
                     2   3                                                     2           2   3 <- )      2   3                             2   3
 */
+
 ast_node::product ast_node::ar_expr_input(lexer::type::token_t *input_token)
 {
     auto fn = ast_node::associate(_token, input_token);
@@ -161,11 +155,8 @@ ast_node::product ast_node::ar_expr_input(lexer::type::token_t *input_token)
 //    }
 */
     if (fn)
-    {
-        auto an = std::make_shared<ast_node>(_parent,input_token);
-        
-        return (this->*fn)(an.get());
-    }
+        return (this->*fn)(new ast_node(_parent,input_token));
+    
     return
         {(
              utils::notification::push(utils::notification::type::error),
@@ -249,14 +240,74 @@ ast_node::product ast_node::ar_expr_input_leaf(ast_node *x)
 
 
 
-ast_node::product ast_node::ar_expr_set_left(ast_node *)
+ast_node::product ast_node::ar_expr_set_left(ast_node *x)
 {
-    return teacc::ast::ast_node::product();
+    logdebugfn
+        << logger::Yellow << _token->attribute()
+        << logger::White  << ":"
+        << logger::Black << __FUNCTION__
+        << logger::White << ":"
+        << logger::Yellow << x->_token->attribute()
+        << Ends;
+    
+    /*
+              (;[;{   // Appliqué sur aucun autre type de token car l'appel de tree_set_left ne se fait qu'� partir de tree_input qui r�soud l'associativit�.
+               /
+              x <- next_token
+             /
+           lhs
+     */
+    
+    if (_lhs) {
+        // here we are supposed to be the openning par/index/bracket. so the interior will become right hand side of the parent op of this.
+        _lhs->_op = x;
+        x->_lhs = _lhs;
+    }
+    if(_parent)
+        x->_op = this;
+    
+    _lhs = x;
+    return x;
 }
-ast_node::product ast_node::ar_expr_set_right(ast_node *)
+
+
+ast_node::product ast_node::ar_expr_set_right(ast_node *x)
 {
-    return teacc::ast::ast_node::product();
+    logdebugfn
+        << logger::Yellow << _token->attribute()
+        << logger::White << ":"
+        << logger::Black << __FUNCTION__
+        << logger::White << ":"
+        << logger::Yellow << x->_token->attribute()
+        << Ends;
+    
+    // Temporary hack....
+    if (x->_token->c == lexer::lexem::mnemonic::openpar)
+        push_lpar(x);
+    
+    if (_rhs) {
+        /*
+           this
+              \
+               x <- next_token
+              /
+            rhs
+        */
+        logdebugfn << _token->attribute() << " -> " << _rhs->_token->attribute()
+                   << logger::Black << "tree_set_right "
+                   << logger::White << "<- "
+                   << logger::Yellow << x->_token->attribute()
+                   <<   Ends;
+        _rhs->_op = x;
+        x->_lhs = _rhs;
+    }
+    _rhs = x;
+    if(_parent)
+        x->_op = this;
+    return x;
 }
+
+
 ast_node::product ast_node::ar_expr_set_right_to_op(ast_node *)
 {
     return teacc::ast::ast_node::product();
