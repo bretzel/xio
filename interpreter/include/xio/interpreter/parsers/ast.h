@@ -32,30 +32,103 @@ namespace teacc::ast
 struct INTERPRETERAPI ast_node
 {
     using shared        = std::shared_ptr<ast_node>;
-    using collection    = std::shared_ptr<std::vector<ast_node::shared>>;
+    using collection    = std::vector<ast_node::shared>;
+    using product       = utils::expect<ast_node::shared>;
     
     ast_node::shared     _parent;   ///< Parent node  (Noeud parent).
+    
+    // Arithmetic Expression (Sub)Tree
+    ast_node* _lhs= nullptr; ///< Left-hand side operand node;
+    ast_node* _rhs= nullptr; ///< Right-hand side operand node;
+    ast_node* _op = nullptr;  ///< Parent Operator node.
+    //--------------------------------------------------------
+    
     ast_node::collection _children; ///< Recursive descendant ast nodes. Récursion descendante de l'arbre abstrait.
     parsers::term_t  _term; ///< Element de la règle : { sous-règle en récursion; terminale; directive; }
                             ///< Element's rule : { récursive (sub-)rule; terminal; directive; }
     
-    xio::shared      _xio;  ///< Élément concret produit.
+    ast_node::shared      _xio;  ///< Élément concret produit.
                             ///< Produced concrete element.
                             
     ast_node()  = default;
+    
+    ast_node(ast_node::shared _parent_node, lexer::type::token_t* a_token);
+    
     ~ast_node() = default;
+    
+    lexer::type::token_t* _token = nullptr;
+    
+    auto begin();
+    auto end();
+    
+    // -------- Arithmetic binary tree INPUT: -----------------------------------
+    #pragma region INPUT
+    
+    using ar_associative_token_type = std::pair<lexer::type::T, lexer::type::T>;
+    using ar_input_method           = ast_node::product(ast_node::*)(ast_node*);  ///< callable arithmetic tree input function ptr
+    using associated_input_method   = std::pair < ast_node::ar_associative_token_type, ast_node::ar_input_method>;
+    using ar_input_collection       = std::vector<ast_node::associated_input_method>;
+    
+    static ast_node::ar_input_collection _ar_input_assoc_collection;
+    static ast_node::ar_input_method associate(lexer::type::token_t* _input_location, lexer::type::token_t* _input_token);
+    
+    ast_node::product ar_expr_input(lexer::type::token_t* a_token);
+    
+    ast_node::product ar_expr_input_binary      (ast_node*);
+    ast_node::product ar_expr_input_leaf        (ast_node*);
+    ast_node::product ar_expr_set_left          (ast_node*);
+    ast_node::product ar_expr_set_right         (ast_node*);
+    ast_node::product ar_expr_set_right_to_op   (ast_node*);
+    ast_node::product ar_expr_lpar_input_binary (ast_node*);
+    ast_node::product ar_expr_input_rpar        (ast_node*);
+    ast_node::product ar_expr_input_lpar        (ast_node*);
+    ast_node::product ar_expr_close_par         (ast_node*);
+    ast_node::product ar_expr_rpar_input_postfix(ast_node*);
+    ast_node::product ar_expr_rpar_input_leaf   (ast_node*);
+    ast_node::product ar_expr_rpar_rpar         (ast_node*);
+    
+    #pragma endregion INPUT
+    // -------- Arithmetic binary tree: -----------------------------------
+    
+    
+    
+    
 };
 
 class INTERPRETERAPI astbloc
 {
     parsers::teacc_grammar  _rules;
     ast_node::shared        _root;
+    ast_node::shared        _node;
+    
+    using product = utils::expect<ast_node::shared>;
     
 public:
     astbloc()   = default;
     ~astbloc()  = default;
 
     utils::result_code build();
+    
+private:
+    // building ast:
+    astbloc::product enter_rule(parsers::rule_t* rule);
+    
+    
+    //-------------------------------------------------
+    
+    // Visiation/Navigation :
+    ast_node::shared up();
+    ast_node::collection _children;
+    auto begin();
+    auto end();
+    
+    
+    // -----------------------------------------
+    //ast_node::collection::iterator
+    //ast_node::shared lr_next(ast_node::shared to);
+    
+    
+
 };
 
 }

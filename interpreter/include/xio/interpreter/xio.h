@@ -132,6 +132,7 @@ private:
     static xio::shared pop_curly();
 */
 
+// -------- Arithmetic binary tree INPUT: -----------------------------------
 #pragma region INPUT
     xio::expect tree_input_binary(xio::shared x);
     xio::expect tree_input_leaf(xio::shared x);
@@ -151,7 +152,9 @@ private:
     xio::expect tree_rpar_rpar    (xio::shared);
 
 #pragma endregion INPUT
-
+// -------- Arithmetic binary tree: -----------------------------------
+    
+    
     static xio_opfn_table_t xio_operators_table;
     // ----------- Primary operators ----------------------------
 #pragma region ARITMETIC
