@@ -19,12 +19,12 @@
 #include <xio/interpreter/bloc.h>
 #include <memory>
 #include <vector>
+
+
+
 namespace teacc::ast
 {
-
-
 /*!
-
     @brief ...
 
     @note Pour l'instant, les ast sont des structures passives. 
@@ -33,29 +33,22 @@ struct INTERPRETERAPI ast_node
 {
     using shared        = std::shared_ptr<ast_node>;
     using collection    = std::shared_ptr<std::vector<ast_node::shared>>;
-
-
+    
     ast_node::shared     _parent;   ///< Parent node  (Noeud parent).
     ast_node::collection _children; ///< Recursive descendant ast nodes. Récursion descendante de l'arbre abstrait.
-
-
-
     parsers::term_t  _term; ///< Element de la règle : { sous-règle en récursion; terminale; directive; }
                             ///< Element's rule : { récursive (sub-)rule; terminal; directive; }
+    
     xio::shared      _xio;  ///< Élément concret produit.
                             ///< Produced concrete element.
-
-
+                            
     ast_node()  = default;
     ~ast_node() = default;
-
-
-
 };
 
 class INTERPRETERAPI astbloc
 {
-    const parsers::teacc_grammar*  _gr = nullptr;
+    parsers::teacc_grammar  _rules;
     ast_node::shared        _root;
     
 public:

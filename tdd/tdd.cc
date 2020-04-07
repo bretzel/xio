@@ -84,15 +84,15 @@ tdd::~tdd()
 }
 
 auto main() -> int {
-   // tdd _tdd;
+   tdd _tdd;
    
-    tdd::result r = tdd().run();
+    tdd::result r = _tdd.run();
     loginfopfn << " Notifications:" << ends; //?????????????
     notification::clear(
         [](notification& n) 
         {
-            //lognotice << n() << ends;
-            std::cout << n() << '\n';
+            lognotice << n() << ends;
+            //std::cout << n() << '\n';
         }
     );
     
@@ -239,7 +239,6 @@ tdd::result tdd::interpreter()
     teacc::interpreter interpreter;
     teacc::utils::result_code r = interpreter.run();
     if(!r)
-    
         logdebugpfnx << " - TEST!!!! :) \\O/" << ends;
     
     return {(

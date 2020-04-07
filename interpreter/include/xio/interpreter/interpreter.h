@@ -3,8 +3,7 @@
 
 #include <xio/interpreter/interpreterdll.h>
 #include <xio/interpreter/bloc.h>
-#include <xio/interpreter/parsers/grammar.h>
-
+#include <xio/interpreter/parsers/ast.h>
 
 
 
@@ -13,16 +12,18 @@ namespace teacc
 
 class INTERPRETERAPI interpreter : public bloc
 {
-
-    parsers::teacc_grammar _grammar;
     
 public:
     interpreter() = default;
     ~interpreter() override = default;
-
-    alu jsr() override;
     
+    alu jsr() override;
     utils::result_code run();
+    
+    
+private:
+    ast::astbloc       _ast;
+    utils::result_code build();
 
 };
 

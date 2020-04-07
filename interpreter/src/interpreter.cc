@@ -1,4 +1,5 @@
 #include <xio/interpreter/interpreter.h>
+#include <xio/interpreter/parsers/ast.h>
 
 
 
@@ -16,13 +17,29 @@ alu interpreter::jsr()
 
 utils::result_code interpreter::run()
 {
-    (void)_grammar.build();
-    
-    return {(
-        notification::push(),
-        " Tests will grow as the interpreter advances..."
-        )};
+    return build();
+//    return {(
+//        notification::push(),
+//        " Tests will grow as the interpreter advances..."
+//        )};
 }
 
+
+utils::result_code interpreter::build()
+{
+    utils::result_code r = _ast.build();
+    if(!r)
+    {
+        return {(
+            utils::notification::push(), __PRETTY_FUNCTION__, ": build aborted because of previous errors (",
+            r.note()(),
+            ")."
+        )};
+    }
+    
+    return {(
+        utils::notification::push(), "not implemented"
+    )};
+}
 
 }

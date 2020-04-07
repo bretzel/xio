@@ -35,8 +35,8 @@ public:
     
     expect(expect &&n) noexcept
     {
-        _a = std::move(n);
-        f = true;
+        _a = std::move(n._a);
+        f = n.f;
     }
     
     expect(const expect & n)

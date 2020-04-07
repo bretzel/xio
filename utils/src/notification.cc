@@ -52,6 +52,7 @@ notification::notification(const notification& A)
     _text = A._text;
     _type = A._type;
     _code = A._code;
+    _components = A._components;
     
 }
 
@@ -61,6 +62,7 @@ notification::notification(notification&& A) noexcept
     _type = A._type;
     _code = A._code;
     std::swap(_text, A._text);
+    std::swap(_components, A._components);
 }
 
 
@@ -79,7 +81,7 @@ notification& notification::operator=(const notification& A)
     _text = A._text;
     _type = A._type;
     _code = A._code;
-    
+    _components = A._components;
     return *this;
 }
 
@@ -89,6 +91,7 @@ notification& notification::operator=(notification&& A) noexcept
     _type = A._type;
     _code = A._code;
     std::swap(_text, A._text);
+    std::swap(_components, A._components);
     return *this;
 }
 
@@ -118,7 +121,8 @@ notification& notification::push(notification::type aType)
 std::string notification::operator()()
 {
     _text = "";
-    for (auto S : _components) _text += S;
+    for (auto S : _components)
+        _text += S;
     _components.clear();
     return _text();
 }
