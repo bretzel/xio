@@ -87,6 +87,8 @@ struct INTERPRETERAPI ast_node
     
     #pragma endregion INPUT
     // -------- Arithmetic binary tree: -----------------------------------
+    product expr_root();
+    product ar_expr_close();
 };
 
 class INTERPRETERAPI astbloc
