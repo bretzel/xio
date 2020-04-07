@@ -178,14 +178,14 @@ ast_node::product ast_node::ar_expr_input(lexer::type::token_t *input_token)
 
 
 
-ast_node::product ast_node::ar_expr_input_binary(ast_node* input_token)
+ast_node::product ast_node::ar_expr_input_binary(ast_node* x)
 {
     logdebugfn
         << logger::Yellow << _token->attribute()
         << logger::White << ":"
         << logger::Black << __FUNCTION__
         << logger::White << ":"
-        << logger::Yellow << _token->attribute()
+        << logger::Yellow << x->_token->attribute()
         << Ends;
     
     if (_token->is_binary())
@@ -198,23 +198,21 @@ ast_node::product ast_node::ar_expr_input_binary(ast_node* input_token)
                              _token->attribute(),_token->mark()
                      )};
         }
-        if (_token->d >= input_token->_token->d)
+        if (_token->d >= x->_token->d)
         {
-            return ar_expr_set_right(input_token);
+            return ar_expr_set_right(x);
         }
     }
     
     if (_op)
     {
-        ar_input_method ptr = associate(_op->_token, input_token->_token);
+        ar_input_method ptr = associate(_op->_token, x->_token);
         if (ptr)
-            return (_op->*ptr)(input_token);
+            return (_op->*ptr)(x);
     }
     
     if(_parent)
         _parent->ar_expr_set_left(this);
-    
-    
 }
 
 
