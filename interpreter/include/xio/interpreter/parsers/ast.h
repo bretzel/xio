@@ -29,30 +29,30 @@ namespace teacc::ast
 
     @note Pour l'instant, les ast sont des structures passives. 
 */
-struct INTERPRETERAPI ast_node
+struct INTERPRETERAPI node
 {
     
-    using collection    = std::vector<ast_node*>;
-    using product       = utils::expect<ast_node*>;
+    using collection    = std::vector<node*>;
+    using product       = utils::expect<node*>;
     
-    ast_node*     _parent = nullptr;   ///< Parent node  (Noeud parent).
+    node*     _parent = nullptr;   ///< Parent node  (Noeud parent).
     
     // Arithmetic Expression (Sub)Tree
-    ast_node* _lhs= nullptr; ///< Left-hand side operand node;
-    ast_node* _rhs= nullptr; ///< Right-hand side operand node;
-    ast_node* _op = nullptr;  ///< Parent Operator node.
+    node* _lhs= nullptr; ///< Left-hand side operand node;
+    node* _rhs= nullptr; ///< Right-hand side operand node;
+    node* _op = nullptr;  ///< Parent Operator node.
     //--------------------------------------------------------
     
-    ast_node::collection _children; ///< Recursive descendant ast nodes. Récursion descendante de l'arbre abstrait.
+    node::collection _children; ///< Recursive descendant immeditate children ast nodes. Récursion descendante de l'arbre abstrait.
     parsers::term_t  _term; ///< Element de la règle : { sous-règle en récursion; terminale; directive; }
                             ///< Element's rule : { récursive (sub-)rule; terminal; directive; }
     
     xio*      _xio = nullptr;  ///< Élément concret produit.
                             ///< Produced concrete element
-    ast_node()  = default;
-    ast_node(ast_node* _parent_node, lexer::type::token_t* a_token);
+    node()  = default;
+    node(node* _parent_node, lexer::type::token_t* a_token);
     
-    virtual ~ast_node() = default;
+    virtual ~node() = default;
     
     lexer::type::token_t* _token = nullptr;
     
@@ -63,27 +63,27 @@ struct INTERPRETERAPI ast_node
     #pragma region INPUT
     
     using ar_associative_token_type = std::pair<lexer::type::T, lexer::type::T>;
-    using ar_input_method           = ast_node::product(ast_node::*)(ast_node*);  ///< callable arithmetic tree input function ptr
-    using associated_input_method   = std::pair < ast_node::ar_associative_token_type, ast_node::ar_input_method>;
-    using ar_input_collection       = std::vector<ast_node::associated_input_method>;
+    using ar_input_method           = node::product(node::*)(node*);  ///< callable arithmetic tree input function ptr
+    using associated_input_method   = std::pair < node::ar_associative_token_type, node::ar_input_method>;
+    using ar_input_collection       = std::vector<node::associated_input_method>;
     
-    static ast_node::ar_input_collection _ar_input_assoc_collection;
-    static ast_node::ar_input_method associate(lexer::type::token_t* _input_location, lexer::type::token_t* _input_token);
+    static node::ar_input_collection _ar_input_assoc_collection;
+    static node::ar_input_method associate(lexer::type::token_t* _input_location, lexer::type::token_t* _input_token);
     
-    ast_node::product ar_expr_input(lexer::type::token_t* a_token);
+    node::product ar_expr_input(lexer::type::token_t* a_token);
     
-    ast_node::product ar_expr_input_binary      (ast_node*);
-    ast_node::product ar_expr_input_leaf        (ast_node*);
-    ast_node::product ar_expr_set_left          (ast_node*);
-    ast_node::product ar_expr_set_right         (ast_node*);
-    ast_node::product ar_expr_set_right_to_op   (ast_node*);
-    ast_node::product ar_expr_lpar_input_binary (ast_node*);
-    ast_node::product ar_expr_input_rpar        (ast_node*);
-    ast_node::product ar_expr_input_lpar        (ast_node*);
-    ast_node::product ar_expr_close_par         (ast_node*);
-    ast_node::product ar_expr_rpar_input_postfix(ast_node*);
-    ast_node::product ar_expr_rpar_input_leaf   (ast_node*);
-    ast_node::product ar_expr_rpar_rpar         (ast_node*);
+    node::product ar_expr_input_binary      (node*);
+    node::product ar_expr_input_leaf        (node*);
+    node::product ar_expr_set_left          (node*);
+    node::product ar_expr_set_right         (node*);
+    node::product ar_expr_set_right_to_op   (node*);
+    node::product ar_expr_lpar_input_binary (node*);
+    node::product ar_expr_input_rpar        (node*);
+    node::product ar_expr_input_lpar        (node*);
+    node::product ar_expr_close_par         (node*);
+    node::product ar_expr_rpar_input_postfix(node*);
+    node::product ar_expr_rpar_input_leaf   (node*);
+    node::product ar_expr_rpar_rpar         (node*);
     
     #pragma endregion INPUT
     // -------- Arithmetic binary tree: -----------------------------------
@@ -93,9 +93,9 @@ struct INTERPRETERAPI ast_node
     #pragma region TRIGRAPH
 public:
     static void trace_tree_start(utils::xstr& a_out, const utils::xstr& Title);
-    static void trace_node(ast_node* A, utils::xstr& a_out);
-    static void trace_null_node(ast_node*, int, utils::xstr&);
-    static void trace_tree(ast_node* a_root, utils::xstr& a_out);
+    static void trace_node(node* A, utils::xstr& a_out);
+    static void trace_null_node(node*, int, utils::xstr&);
+    static void trace_tree(node* a_root, utils::xstr& a_out);
     static void trace_tree_close(utils::xstr& a_out);
     void tree_attr(utils::xstr& a_out);
     std::string attribute();
@@ -103,38 +103,38 @@ public:
     
 };
 
-class INTERPRETERAPI astbloc
-{
-    parsers::teacc_grammar  _rules;
-    ast_node* _root = nullptr;
-    ast_node* _node = nullptr;
-    
-    using product = utils::expect<ast_node*>;
-    
-public:
-    astbloc()   = default;
-    ~astbloc() = default;
-
-    utils::result_code build();
-    
-private:
-    // building ast:
-    astbloc::product enter_rule(parsers::rule_t* rule);
-    
-    
-    //-------------------------------------------------
-    
-    // Visiation/Navigation :
-    ast_node* up();
-    ast_node::collection _children;
-    auto begin();
-    auto end();
-    
-
-    // -----------------------------------------
-    //ast_node::collection::iterator
-    //ast_node::shared lr_next(ast_node::shared to);
-};
+//class INTERPRETERAPI astbloc
+//{
+//    parsers::teacc_grammar  _rules;
+//    node* _root = nullptr;
+//    node* _node = nullptr;
+//
+//    using product = utils::expect<node*>;
+//
+//public:
+//    astbloc()   = default;
+//    ~astbloc() = default;
+//
+//    utils::result_code build();
+//
+//private:
+//    // building ast:
+//    astbloc::product enter_rule(parsers::rule_t* rule);
+//
+//
+//    //-------------------------------------------------
+//
+//    // Visiation/Navigation :
+//    node* up();
+//    node::collection _children;
+//    auto begin();
+//    auto end();
+//
+//
+//    // -----------------------------------------
+//    //node::collection::iterator
+//    //node::shared lr_next(node::shared to);
+//};
 
 }
 

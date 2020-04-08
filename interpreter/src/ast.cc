@@ -12,45 +12,10 @@ namespace teacc::ast
 using utils::notification;
 
 
-utils::result_code astbloc::build()
-{
-    utils::result_code r  = _rules.build();
-    
-    return
-        {(
-             notification::push(), __PRETTY_FUNCTION__ ,
-             notification::code::implement
-             ," wtf? I'm only testing!!"
-         )};
-    
-}
-astbloc::product astbloc::enter_rule(parsers::rule_t *rule)
-{
-    return
-    {(
-        notification::push(), __PRETTY_FUNCTION__, " Sorry, not implemented yet..."
-    )};
-}
-
-ast_node* astbloc::up()
-{
-    notification::push(), __PRETTY_FUNCTION__, " Sorry, not planned yet...";
-    return nullptr;
-}
-
-auto astbloc::begin()
-{
-    return _children.begin();
-}
-
-auto astbloc::end()
-{
-    return _children.end();
-}
 
 #pragma region TRIGRAPH
 
-void ast_node::trace_tree_start(utils::xstr& a_out, const utils::xstr& Title)
+void node::trace_tree_start(utils::xstr& a_out, const utils::xstr& Title)
 {
     a_out << "AST Tree {\n";
     a_out << "ratio=compress; ranksep=.55; size = \"6.5,6.5\";\n";
@@ -58,14 +23,14 @@ void ast_node::trace_tree_start(utils::xstr& a_out, const utils::xstr& Title)
     a_out << "    label=\"AST:[" << Title << "]\"; fontsize = 10;\n";
 }
 
-void ast_node::trace_tree(ast_node* a_root, utils::xstr& a_out)
+void node::trace_tree(node* a_root, utils::xstr& a_out)
 {
     a_root->tree_attr(a_out);
-    ast_node::trace_node(a_root, a_out);
+    node::trace_node(a_root, a_out);
 }
 
 
-void ast_node::trace_node(ast_node* A, utils::xstr& a_out)
+void node::trace_node(node* A, utils::xstr& a_out)
 {
     //static int nullcount = 0;
     if(!A) return;
@@ -73,30 +38,30 @@ void ast_node::trace_node(ast_node* A, utils::xstr& a_out)
     
     if (A->_lhs){
         a_out <<  "    A" << A << " -> A" <<  A->_lhs << ";\n";
-        ast_node::trace_node(A->_lhs,a_out);
+        node::trace_node(A->_lhs, a_out);
     }
     //     else
     //         t_node::trace_null_node(A, nullcount++, a_stream);
     
     if (A->_rhs){
         a_out <<  "    A" << A << " -> A" <<  A->_rhs << ";\n";
-        ast_node::trace_node(A->_rhs,a_out);
+        node::trace_node(A->_rhs, a_out);
     }
     //     else
     //         trace_null_node(A, nullcount++, a_stream);
 }
 
-void ast_node::trace_null_node(ast_node*, int, utils::xstr&)
+void node::trace_null_node(node*, int, utils::xstr&)
 {
 
 }
 
 
-void ast_node::trace_tree_close(utils::xstr& a_out)
+void node::trace_tree_close(utils::xstr& a_out)
 {
 }
 
-void ast_node::tree_attr(utils::xstr& a_out)
+void node::tree_attr(utils::xstr& a_out)
 {
     utils::xstr attr ;
     attr << _token->attribute();
@@ -115,23 +80,23 @@ void ast_node::tree_attr(utils::xstr& a_out)
         _rhs->tree_attr(a_out);
 }
 
-std::string ast_node::attribute()
+std::string node::attribute()
 {
     return _token ? _token->attribute() : "[]";
 }
 
 #pragma endregion TRIGRAPH
 
-ast_node::ast_node(ast_node* _parent_node, lexer::type::token_t *a_token)
+node::node(node* _parent_node, lexer::type::token_t *a_token)
 :_parent(_parent_node), _token(a_token) {}
 
 
-auto ast_node::begin()
+auto node::begin()
 {
     return _children.begin();
 }
 
-auto ast_node::end()
+auto node::end()
 {
     return _children.end();
 }
@@ -139,44 +104,44 @@ auto ast_node::end()
 // -------- Arithmetic binary tree INPUT: -----------------------------------
 
 // Arithmetic Binary Tree: associative building logic table:
-ast_node::ar_input_collection  ast_node::_ar_input_assoc_collection = {
-    {{lexer::type::binary,   lexer::type::leftpar},   &ast_node::ar_expr_set_right},
-    {{lexer::type::leftpar,  lexer::type::leaf},      &ast_node::ar_expr_set_left},
-    {{lexer::type::leftpar,  lexer::type::prefix},    &ast_node::ar_expr_set_left},
-    {{lexer::type::leftpar,  lexer::type::binary},    &ast_node::ar_expr_set_left},
-    {{lexer::type::prefix,   lexer::type::leftpar},   &ast_node::ar_expr_set_right},
-    {{lexer::type::closepar,  lexer::type::leaf},     &ast_node::ar_expr_rpar_input_leaf},
-    {{lexer::type::closepar,  lexer::type::binary},   &ast_node::ar_expr_close_par},
-    {{lexer::type::closepar,  lexer::type::postfix},  &ast_node::ar_expr_close_par},
-    {{lexer::type::closepar,  lexer::type::closepar}, &ast_node::ar_expr_rpar_rpar},
-    {{lexer::type::prefix,   lexer::type::closepar},  &ast_node::ar_expr_input_rpar},
-    {{lexer::type::leaf,     lexer::type::closepar},  &ast_node::ar_expr_input_rpar},
-    {{lexer::type::leaf,     lexer::type::postfix},   &ast_node::ar_expr_set_right_to_op},
-    {{lexer::type::leaf,     lexer::type::assign},    &ast_node::ar_expr_input_binary},
-    {{lexer::type::postfix,  lexer::type::closepar},  &ast_node::ar_expr_input_rpar},
-    {{lexer::type::leftpar,  lexer::type::binary},    &ast_node::ar_expr_set_left},
-    {{lexer::type::leaf,     lexer::type::binary},    &ast_node::ar_expr_input_binary},
-    {{lexer::type::binary,   lexer::type::binary},    &ast_node::ar_expr_input_binary},
-    {{lexer::type::binary,   lexer::type::leaf},      &ast_node::ar_expr_set_right},
-    {{lexer::type::prefix,   lexer::type::binary},    &ast_node::ar_expr_input_binary},
-    {{lexer::type::binary,   lexer::type::prefix},    &ast_node::ar_expr_set_right},
-    {{lexer::type::prefix,   lexer::type::leaf},      &ast_node::ar_expr_set_right},
-    {{lexer::type::prefix,   lexer::type::number},    &ast_node::ar_expr_set_right},
-    {{lexer::type::sign,     lexer::type::id},        &ast_node::ar_expr_set_right},
-    {{lexer::type::sign,     lexer::type::number},    &ast_node::ar_expr_set_right},
-    {{lexer::type::sign,     lexer::type::leaf},      &ast_node::ar_expr_set_right},
-    {{lexer::type::postfix,  lexer::type::binary},    &ast_node::ar_expr_input_binary},
-    {{lexer::type::assign,   lexer::type::binary},    &ast_node::ar_expr_set_right},
-    {{lexer::type::assign,   lexer::type::leaf},      &ast_node::ar_expr_set_right},
-    {{lexer::type::assign,   lexer::type::prefix},    &ast_node::ar_expr_set_right},
-    {{lexer::type::assign,   lexer::type::postfix},   &ast_node::ar_expr_set_right}
+node::ar_input_collection  node::_ar_input_assoc_collection = {
+    {{lexer::type::binary,   lexer::type::leftpar},   &node::ar_expr_set_right},
+    {{lexer::type::leftpar,  lexer::type::leaf},      &node::ar_expr_set_left},
+    {{lexer::type::leftpar,  lexer::type::prefix},    &node::ar_expr_set_left},
+    {{lexer::type::leftpar,  lexer::type::binary},    &node::ar_expr_set_left},
+    {{lexer::type::prefix,   lexer::type::leftpar},   &node::ar_expr_set_right},
+    {{lexer::type::closepar,  lexer::type::leaf},     &node::ar_expr_rpar_input_leaf},
+    {{lexer::type::closepar,  lexer::type::binary},   &node::ar_expr_close_par},
+    {{lexer::type::closepar,  lexer::type::postfix},  &node::ar_expr_close_par},
+    {{lexer::type::closepar,  lexer::type::closepar}, &node::ar_expr_rpar_rpar},
+    {{lexer::type::prefix,   lexer::type::closepar},  &node::ar_expr_input_rpar},
+    {{lexer::type::leaf,     lexer::type::closepar},  &node::ar_expr_input_rpar},
+    {{lexer::type::leaf,     lexer::type::postfix},   &node::ar_expr_set_right_to_op},
+    {{lexer::type::leaf,     lexer::type::assign},    &node::ar_expr_input_binary},
+    {{lexer::type::postfix,  lexer::type::closepar},  &node::ar_expr_input_rpar},
+    {{lexer::type::leftpar,  lexer::type::binary},    &node::ar_expr_set_left},
+    {{lexer::type::leaf,     lexer::type::binary},    &node::ar_expr_input_binary},
+    {{lexer::type::binary,   lexer::type::binary},    &node::ar_expr_input_binary},
+    {{lexer::type::binary,   lexer::type::leaf},      &node::ar_expr_set_right},
+    {{lexer::type::prefix,   lexer::type::binary},    &node::ar_expr_input_binary},
+    {{lexer::type::binary,   lexer::type::prefix},    &node::ar_expr_set_right},
+    {{lexer::type::prefix,   lexer::type::leaf},      &node::ar_expr_set_right},
+    {{lexer::type::prefix,   lexer::type::number},    &node::ar_expr_set_right},
+    {{lexer::type::sign,     lexer::type::id},        &node::ar_expr_set_right},
+    {{lexer::type::sign,     lexer::type::number},    &node::ar_expr_set_right},
+    {{lexer::type::sign,     lexer::type::leaf},      &node::ar_expr_set_right},
+    {{lexer::type::postfix,  lexer::type::binary},    &node::ar_expr_input_binary},
+    {{lexer::type::assign,   lexer::type::binary},    &node::ar_expr_set_right},
+    {{lexer::type::assign,   lexer::type::leaf},      &node::ar_expr_set_right},
+    {{lexer::type::assign,   lexer::type::prefix},    &node::ar_expr_set_right},
+    {{lexer::type::assign,   lexer::type::postfix},   &node::ar_expr_set_right}
     
 };
 
 
-ast_node::ar_input_method ast_node::associate(lexer::type::token_t *_input_location, lexer::type::token_t *_input_token)
+node::ar_input_method node::associate(lexer::type::token_t *_input_location, lexer::type::token_t *_input_token)
 {
-    for(auto key : ast_node::_ar_input_assoc_collection)
+    for(auto key : node::_ar_input_assoc_collection)
     {
         if ((key.first.first & _input_location->s) && (_input_token->s & key.first.second))
             return key.second;
@@ -200,9 +165,9 @@ ast_node::ar_input_method ast_node::associate(lexer::type::token_t *_input_locat
                     2   3                                                     2           2   3 <- )      2   3                             2   3
 */
 
-ast_node::product ast_node::ar_expr_input(lexer::type::token_t *input_token)
+node::product node::ar_expr_input(lexer::type::token_t *input_token)
 {
-    auto fn = ast_node::associate(_token, input_token);
+    auto fn = node::associate(_token, input_token);
 
 /*
 //    for(auto key : xio::tree_input_assoc_table)
@@ -229,7 +194,7 @@ ast_node::product ast_node::ar_expr_input(lexer::type::token_t *input_token)
 //    }
 */
     if (fn)
-        return (this->*fn)(new ast_node(_parent,input_token));
+        return (this->*fn)(new node(_parent, input_token));
     
     return
         {(
@@ -243,7 +208,7 @@ ast_node::product ast_node::ar_expr_input(lexer::type::token_t *input_token)
 
 
 
-ast_node::product ast_node::ar_expr_input_binary(ast_node* x)
+node::product node::ar_expr_input_binary(node* x)
 {
     logdebugfn
         << logger::Yellow << _token->attribute()
@@ -282,7 +247,7 @@ ast_node::product ast_node::ar_expr_input_binary(ast_node* x)
 }
 
 
-ast_node::product ast_node::ar_expr_input_leaf(ast_node *x)
+node::product node::ar_expr_input_leaf(node *x)
 {
     logdebugfn
         << logger::Yellow << _token->attribute()
@@ -315,7 +280,7 @@ ast_node::product ast_node::ar_expr_input_leaf(ast_node *x)
 
 
 
-ast_node::product ast_node::ar_expr_set_left(ast_node *x)
+node::product node::ar_expr_set_left(node *x)
 {
     logdebugfn
         << logger::Yellow << _token->attribute()
@@ -345,24 +310,24 @@ ast_node::product ast_node::ar_expr_set_left(ast_node *x)
     return x;
 }
 
-static std::stack<ast_node*> pars;
+static std::stack<node*> pars;
 
-static void push_lpar(ast_node* lpar)
+static void push_lpar(node* lpar)
 {
     logdebugpfn << Ends;
     pars.push(lpar);
 }
 
-static ast_node* pop_lpar()
+static node* pop_lpar()
 {
     if (pars.empty()) return nullptr;
-    ast_node* x = pars.top();
+    node* x = pars.top();
     pars.pop();
     return x;
 }
 
 
-ast_node::product ast_node::ar_expr_set_right(ast_node *x)
+node::product node::ar_expr_set_right(node *x)
 {
     logdebugfn
         << logger::Yellow << _token->attribute()
@@ -399,7 +364,7 @@ ast_node::product ast_node::ar_expr_set_right(ast_node *x)
 }
 
 
-ast_node::product ast_node::ar_expr_set_right_to_op(ast_node *x)
+node::product node::ar_expr_set_right_to_op(node *x)
 {
     logdebugfn << logger::Yellow << _token->attribute()
                << logger::White << ":"
@@ -417,7 +382,7 @@ ast_node::product ast_node::ar_expr_set_right_to_op(ast_node *x)
 }
 
 
-ast_node::product ast_node::ar_expr_lpar_input_binary(ast_node *x)
+node::product node::ar_expr_lpar_input_binary(node *x)
 {
     if(!_lhs) {
         return {(
@@ -429,7 +394,7 @@ ast_node::product ast_node::ar_expr_lpar_input_binary(ast_node *x)
 }
 
 
-ast_node::product ast_node::ar_expr_input_rpar(ast_node *rpx)
+node::product node::ar_expr_input_rpar(node *rpx)
 {
     logdebugfn
         << logger::Yellow << _token->attribute()
@@ -439,7 +404,7 @@ ast_node::product ast_node::ar_expr_input_rpar(ast_node *rpx)
         << logger::Yellow << rpx->_token->attribute()
         << Ends;
     
-    ast_node* x = pop_lpar();
+    node* x = pop_lpar();
     if (!x)
         return {(
                     utils::notification::push(utils::notification::type::error),
@@ -455,7 +420,7 @@ ast_node::product ast_node::ar_expr_input_rpar(ast_node *rpx)
     
     return rpx;
 }
-ast_node::product ast_node::ar_expr_input_lpar(ast_node *x)
+node::product node::ar_expr_input_lpar(node *x)
 {
     logdebugfn
         << logger::Yellow << _token->attribute()
@@ -470,7 +435,7 @@ ast_node::product ast_node::ar_expr_input_lpar(ast_node *x)
 }
 
 
-ast_node::product ast_node::ar_expr_close_par(ast_node *x)
+node::product node::ar_expr_close_par(node *x)
 {
     logdebugfn
         << logger::Yellow << _token->attribute()
@@ -480,7 +445,7 @@ ast_node::product ast_node::ar_expr_close_par(ast_node *x)
         << logger::Yellow << x->_token->attribute()
         << Ends;    // Binary input left par -> tree_set_right is called directly.
     
-    ast_node* v = _lhs;
+    node* v = _lhs;
     
     // Collapse lhs
     
@@ -504,13 +469,13 @@ ast_node::product ast_node::ar_expr_close_par(ast_node *x)
 }
 
 
-ast_node::product ast_node::ar_expr_rpar_input_postfix(ast_node *)
+node::product node::ar_expr_rpar_input_postfix(node *)
 {
-    return teacc::ast::ast_node::product();
+    return teacc::ast::node::product();
 }
 
 
-ast_node::product ast_node::ar_expr_rpar_input_leaf(ast_node *x)
+node::product node::ar_expr_rpar_input_leaf(node *x)
 {
     logdebugfn << logger::Yellow << _token->attribute()
                << logger::White << ":"
@@ -531,7 +496,7 @@ ast_node::product ast_node::ar_expr_rpar_input_leaf(ast_node *x)
                 _op->_rhs = _lhs;
                 
             }
-            ast_node* xx = _lhs;
+            node* xx = _lhs;
             // discard();
             
             return xx->ar_expr_set_right(x);
@@ -541,7 +506,7 @@ ast_node::product ast_node::ar_expr_rpar_input_leaf(ast_node *x)
 }
 
 
-ast_node::product ast_node::ar_expr_rpar_rpar(ast_node * x)
+node::product node::ar_expr_rpar_rpar(node * x)
 {
     logdebugfn << logger::Yellow << _token->attribute()
                << logger::White << ":"
@@ -557,7 +522,7 @@ ast_node::product ast_node::ar_expr_rpar_rpar(ast_node * x)
 }
 
 
-ast_node::product ast_node::ar_expr_close()
+node::product node::ar_expr_close()
 {
     logdebugfn << Ends;
     if (_token->c == lexer::lexem::mnemonic::openpar)
@@ -575,7 +540,7 @@ ast_node::product ast_node::ar_expr_close()
     if (_token->c == lexer::lexem::mnemonic::closepar) {
         logdebugfn << "Closing the tree on close parenthese:" << Ends;
         if (_lhs) {
-            ast_node* x = _lhs;
+            node* x = _lhs;
             _lhs->_op = _op;
             
             if (_op) {
@@ -589,10 +554,10 @@ ast_node::product ast_node::ar_expr_close()
 }
 
 
-ast_node::product ast_node::expr_root()
+node::product node::expr_root()
 {
-    ast_node* x = this;
-    ast_node* p = x;
+    node* x = this;
+    node* p = x;
     do{
         x = p;
         switch (x->_token->t) {

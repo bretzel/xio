@@ -1,5 +1,5 @@
 #include <xio/interpreter/interpreter.h>
-#include <xio/interpreter/parsers/ast.h>
+//#include <xio/interpreter/parsers/ast.h>
 
 
 
@@ -27,15 +27,17 @@ utils::result_code interpreter::run()
 
 utils::result_code interpreter::build()
 {
-    utils::result_code r = _ast.build();
-    if(!r)
-    {
-        return {(
-            utils::notification::push(), __PRETTY_FUNCTION__, ": build aborted because of previous errors (",
-            r.note()(),
-            ")."
-        )};
-    }
+    lexer::lexscanners lex;
+    
+//    utils::result_code r = pstree.build();
+//    if(!r)
+//    {
+//        return {(
+//            utils::notification::push(), __PRETTY_FUNCTION__, ": build aborted because of previous errors (",
+//            r.note()(),
+//            ")."
+//        )};
+//    }
     
     return {(
         utils::notification::push(), "not implemented"
