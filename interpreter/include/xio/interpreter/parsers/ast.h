@@ -52,7 +52,7 @@ struct INTERPRETERAPI ast_node
     ast_node()  = default;
     ast_node(ast_node* _parent_node, lexer::type::token_t* a_token);
     
-    ~ast_node() = default;
+    virtual ~ast_node() = default;
     
     lexer::type::token_t* _token = nullptr;
     
@@ -89,6 +89,18 @@ struct INTERPRETERAPI ast_node
     // -------- Arithmetic binary tree: -----------------------------------
     product expr_root();
     product ar_expr_close();
+    
+    #pragma region TRIGRAPH
+public:
+    static void trace_tree_start(utils::xstr& a_out, const utils::xstr& Title);
+    static void trace_node(ast_node* A, utils::xstr& a_out);
+    static void trace_null_node(ast_node*, int, utils::xstr&);
+    static void trace_tree(ast_node* a_root, utils::xstr& a_out);
+    static void trace_tree_close(utils::xstr& a_out);
+    void tree_attr(utils::xstr& a_out);
+    std::string attribute();
+    #pragma endregion TRIGRAPH
+    
 };
 
 class INTERPRETERAPI astbloc
@@ -101,7 +113,7 @@ class INTERPRETERAPI astbloc
     
 public:
     astbloc()   = default;
-    ~astbloc()  = default;
+    ~astbloc() = default;
 
     utils::result_code build();
     
@@ -118,16 +130,6 @@ private:
     auto begin();
     auto end();
     
-#pragma region TRIGRAPH
-public:
-    static void trace_tree_start(utils::xstr& a_out, const utils::xstr& Title);
-    static void trace_node(ast_node* A, utils::xstr& a_out);
-    static void trace_null_node(ast_node*, int, utils::xstr&);
-    static void trace_tree(ast_node* a_root, utils::xstr& a_out);
-    static void trace_tree_close(utils::xstr& a_out);
-    void tree_attr(utils::xstr& a_out);
-    std::string attribute();
-#pragma endregion TRIGRAPH
 
     // -----------------------------------------
     //ast_node::collection::iterator

@@ -50,33 +50,74 @@ auto astbloc::end()
 
 #pragma region TRIGRAPH
 
-void astbloc::trace_tree_start(utils::xstr& a_out, const utils::xstr& Title)
+void ast_node::trace_tree_start(utils::xstr& a_out, const utils::xstr& Title)
+{
+    a_out << "AST Tree {\n";
+    a_out << "ratio=compress; ranksep=.55; size = \"6.5,6.5\";\n";
+    a_out << "    node [fontname=\"Source Code Pro\", fontsize=12];\n";
+    a_out << "    label=\"AST:[" << Title << "]\"; fontsize = 10;\n";
+}
+
+void ast_node::trace_tree(ast_node* a_root, utils::xstr& a_out)
+{
+    a_root->tree_attr(a_out);
+    ast_node::trace_node(a_root, a_out);
+}
+
+
+void ast_node::trace_node(ast_node* A, utils::xstr& a_out)
+{
+    //static int nullcount = 0;
+    if(!A) return;
+    if((!A->_lhs) && (!A->_rhs)) return;
+    
+    if (A->_lhs){
+        a_out <<  "    A" << A << " -> A" <<  A->_lhs << ";\n";
+        ast_node::trace_node(A->_lhs,a_out);
+    }
+    //     else
+    //         t_node::trace_null_node(A, nullcount++, a_stream);
+    
+    if (A->_rhs){
+        a_out <<  "    A" << A << " -> A" <<  A->_rhs << ";\n";
+        ast_node::trace_node(A->_rhs,a_out);
+    }
+    //     else
+    //         trace_null_node(A, nullcount++, a_stream);
+}
+
+void ast_node::trace_null_node(ast_node*, int, utils::xstr&)
+{
+
+}
+
+
+void ast_node::trace_tree_close(utils::xstr& a_out)
 {
 }
 
-void astbloc::trace_node(ast_node* A, utils::xstr& a_out)
+void ast_node::tree_attr(utils::xstr& a_out)
 {
+    utils::xstr attr ;
+    attr << _token->attribute();
+    if(_token->t & lexer::type::assign)
+        attr << ": [" << (_xio ? (*_xio->unit())() : "null") << "]";
+    utils::xstr Shape;
+    if((_token->t & lexer::type::text) || (_token->t & lexer::type::assign))
+        Shape << "none";
+    
+    a_out <<  "    A" << this << " [shape=%s, label=\"%s\"]\n";
+    a_out << Shape << attr;
+    
+    if(_lhs)
+        _lhs->tree_attr(a_out);
+    if(_rhs)
+        _rhs->tree_attr(a_out);
 }
 
-void astbloc::trace_null_node(ast_node*, int, utils::xstr&)
+std::string ast_node::attribute()
 {
-}
-
-void astbloc::trace_tree(ast_node* a_root, utils::xstr& a_out)
-{
-}
-
-void astbloc::trace_tree_close(utils::xstr& a_out)
-{
-}
-
-void astbloc::tree_attr(utils::xstr& a_out)
-{
-}
-
-std::string astbloc::attribute()
-{
-    return std::string();
+    return _token ? _token->attribute() : "[]";
 }
 
 #pragma endregion TRIGRAPH
@@ -237,6 +278,7 @@ ast_node::product ast_node::ar_expr_input_binary(ast_node* x)
     
     if(_parent)
         _parent->ar_expr_set_left(this);
+    return x;
 }
 
 
@@ -496,7 +538,6 @@ ast_node::product ast_node::ar_expr_rpar_input_leaf(ast_node *x)
         }
     }
     return {(utils::notification::push(utils::notification::type::error), "illegal rvalue token :", x->_token->mark())};
-    
 }
 
 
@@ -514,7 +555,6 @@ ast_node::product ast_node::ar_expr_rpar_rpar(ast_node * x)
     if (_op) _op->_rhs = x;
     return { x };
 }
-
 
 
 ast_node::product ast_node::ar_expr_close()
@@ -585,11 +625,5 @@ ast_node::product ast_node::expr_root()
     } while (p);
     return  x ;
 }
-
-
-//-------------------------------------------------------------------------------------------------------
-
-
-
 
 }
