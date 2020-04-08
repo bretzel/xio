@@ -530,7 +530,7 @@ int journal::init(journal::Mode mode, const std::string &lname, bool use_pid)
 
     journal::m_log_header.clear();
     journal::m_log_header += xstr::datetime(journal::m_tstamp);
-    std::cerr << __PRETTY_FUNCTION__ << " - important debug trace :  logger::m_stamp:" << journal::m_tstamp() << "\n";
+    //std::cerr << __PRETTY_FUNCTION__ << " - important debug trace :  logger::m_stamp:" << journal::m_tstamp() << "\n";
     journal::m_log_header += " -  journal: name '%s%s%s'" + journal::m_attr_table[(int) journal::HCyan] + lname + journal::attrreset();
 
     if(use_pid) {

@@ -17,6 +17,7 @@ namespace teacc::parsers
 
 parse_tree::~parse_tree()
 {
+    logdebugpfn << " \\O/!" << ends;
 }
 
 /*!

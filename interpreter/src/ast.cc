@@ -590,5 +590,9 @@ node::product node::expr_root()
     } while (p);
     return  x ;
 }
+node::~node()
+{
+
+}
 
 }

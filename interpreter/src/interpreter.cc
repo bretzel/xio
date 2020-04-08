@@ -1,6 +1,6 @@
 #include <xio/interpreter/interpreter.h>
 //#include <xio/interpreter/parsers/ast.h>
-
+#include <xio/utils/journal.h>
 
 
 namespace teacc
@@ -27,21 +27,61 @@ utils::result_code interpreter::run()
 
 utils::result_code interpreter::build()
 {
-    lexer::lexscanners lex;
+    _unit = new interpreter::tree_unit;
     
-//    utils::result_code r = pstree.build();
-//    if(!r)
-//    {
-//        return {(
-//            utils::notification::push(), __PRETTY_FUNCTION__, ": build aborted because of previous errors (",
-//            r.note()(),
-//            ")."
-//        )};
-//    }
+    
+    // *_text is not corrupted in this stack, and left untouched after leave.
+    _unit->_text = "a = 4ac(45 * pi  + b) + sin0.3;";
+    _unit->compile();
     
     return {(
         utils::notification::push(), "not implemented"
     )};
 }
+interpreter::~interpreter()
+{
+    delete _unit;
+}
+
+utils::expect<ast::node *> interpreter::tree_unit::compile()
+{
+    
+    return
+    {(
+        notification::push(), __PRETTY_FUNCTION__, '\n',
+        '"',_text, '"', '\n',
+        " - Not implemented, yet! :)"
+    )};
+}
+
+
+interpreter::tree_unit::~tree_unit()
+{
+    logdebugpfn << " \\O/!" << ends;
+    logdebugpfn << " \\O/!" << ends;
+    const char *yeah = R"(
+\O/
+ |
+- -
+)";
+    
+    const char *warn = R"(
+\O
+ |\
+- -
+)";
+    
+    const char *err = R"(
+/O\
+ |
+- -
+)";
+    
+    logerror << err << ends;
+    logwarning << warn << ends;
+    logsuccess << yeah << ends;
+    
+}
+
 
 }

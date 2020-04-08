@@ -52,7 +52,7 @@ struct INTERPRETERAPI node
     node()  = default;
     node(node* _parent_node, lexer::type::token_t* a_token);
     
-    virtual ~node() = default;
+    ~node();
     
     lexer::type::token_t* _token = nullptr;
     
