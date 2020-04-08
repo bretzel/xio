@@ -35,7 +35,7 @@ struct INTERPRETERAPI ast_node
     using collection    = std::vector<ast_node*>;
     using product       = utils::expect<ast_node*>;
     
-    ast_node*     _parent;   ///< Parent node  (Noeud parent).
+    ast_node*     _parent = nullptr;   ///< Parent node  (Noeud parent).
     
     // Arithmetic Expression (Sub)Tree
     ast_node* _lhs= nullptr; ///< Left-hand side operand node;
@@ -47,7 +47,7 @@ struct INTERPRETERAPI ast_node
     parsers::term_t  _term; ///< Element de la règle : { sous-règle en récursion; terminale; directive; }
                             ///< Element's rule : { récursive (sub-)rule; terminal; directive; }
     
-    ast_node*      _xio;  ///< Élément concret produit.
+    xio*      _xio = nullptr;  ///< Élément concret produit.
                             ///< Produced concrete element
     ast_node()  = default;
     ast_node(ast_node* _parent_node, lexer::type::token_t* a_token);
@@ -94,8 +94,8 @@ struct INTERPRETERAPI ast_node
 class INTERPRETERAPI astbloc
 {
     parsers::teacc_grammar  _rules;
-    ast_node*        _root;
-    ast_node*        _node;
+    ast_node* _root = nullptr;
+    ast_node* _node = nullptr;
     
     using product = utils::expect<ast_node*>;
     
