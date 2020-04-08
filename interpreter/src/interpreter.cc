@@ -2,7 +2,7 @@
 //#include <xio/interpreter/parsers/ast.h>
 #include <xio/utils/journal.h>
 
-
+using logger = teacc::utils::journal;
 namespace teacc
 {
 
@@ -77,9 +77,9 @@ interpreter::tree_unit::~tree_unit()
 - -
 )";
     
-    logerror << err << ends;
-    logwarning << warn << ends;
-    logsuccess << yeah << ends;
+    logerror << logger::Red << err << ends;
+    logwarning << logger::Yellow << warn << ends;
+    logsuccess << logger:: Green << yeah << ends;
     
 }
 
