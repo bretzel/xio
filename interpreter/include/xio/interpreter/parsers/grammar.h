@@ -73,7 +73,7 @@ identifier      :  function_id,  object_id,  variable_id ..
 
 namespace teacc::parsers
 {
-struct attr
+struct INTERPRETERAPI attr
 {
     int8_t z : 1; ///< Zero or one (optional * )
     int8_t r : 1; ///< Repeat      (        + )
@@ -124,7 +124,7 @@ struct attr
 struct rule_t;
 class teacc_grammar;
 
-struct term_t
+struct INTERPRETERAPI term_t
 {
     mutable attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
 
@@ -220,7 +220,7 @@ struct term_t
 //
 //};
 
-struct seq_t
+struct INTERPRETERAPI seq_t
 {
 
     attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
@@ -257,7 +257,7 @@ struct seq_t
     seq_t &operator<<(rule_t *a_t);
 };
 
-struct rule_t
+struct INTERPRETERAPI rule_t
 {
 
     seq_t::collection sequences;
@@ -291,7 +291,9 @@ struct rule_t
     bool end(seq_t::const_iterator s) const { return s == sequences.cend(); }
 };
 
-class teacc_grammar
+
+
+class INTERPRETERAPI teacc_grammar
 {
 public:
     using result = utils::expect<utils::notification::code>; // accepted, rejected.

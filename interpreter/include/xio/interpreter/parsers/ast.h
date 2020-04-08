@@ -118,6 +118,17 @@ private:
     auto begin();
     auto end();
     
+#pragma region TRIGRAPH
+public:
+    static void trace_tree_start(utils::xstr& a_out, const utils::xstr& Title);
+    static void trace_node(ast_node* A, utils::xstr& a_out);
+    static void trace_null_node(ast_node*, int, utils::xstr&);
+    static void trace_tree(ast_node* a_root, utils::xstr& a_out);
+    static void trace_tree_close(utils::xstr& a_out);
+    void tree_attr(utils::xstr& a_out);
+    std::string attribute();
+#pragma endregion TRIGRAPH
+
     // -----------------------------------------
     //ast_node::collection::iterator
     //ast_node::shared lr_next(ast_node::shared to);

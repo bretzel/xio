@@ -48,6 +48,39 @@ auto astbloc::end()
     return _children.end();
 }
 
+#pragma region TRIGRAPH
+
+void astbloc::trace_tree_start(utils::xstr& a_out, const utils::xstr& Title)
+{
+}
+
+void astbloc::trace_node(ast_node* A, utils::xstr& a_out)
+{
+}
+
+void astbloc::trace_null_node(ast_node*, int, utils::xstr&)
+{
+}
+
+void astbloc::trace_tree(ast_node* a_root, utils::xstr& a_out)
+{
+}
+
+void astbloc::trace_tree_close(utils::xstr& a_out)
+{
+}
+
+void astbloc::tree_attr(utils::xstr& a_out)
+{
+}
+
+std::string astbloc::attribute()
+{
+    return std::string();
+}
+
+#pragma endregion TRIGRAPH
+
 ast_node::ast_node(ast_node* _parent_node, lexer::type::token_t *a_token)
 :_parent(_parent_node), _token(a_token) {}
 
