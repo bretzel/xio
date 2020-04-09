@@ -31,6 +31,9 @@ class INTERPRETERAPI parse_tree
 public:
     using result = utils::expect<ast::node*>;
     
+    /*!
+        @brief Future sequence parse
+    */
     struct input_tokens
     {
         lexer::type::token_t::iterator _start_token;
@@ -65,7 +68,8 @@ public:
     
 private:
     input_tokens _tokens;
-    
+    void discard_nodes(ast::node* input_location);
+
 };
 
 }

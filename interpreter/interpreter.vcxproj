@@ -161,6 +161,7 @@
     <ClCompile Include="src\bloc.cc" />
     <ClCompile Include="src\grammar.cc" />
     <ClCompile Include="src\interpreter.cc" />
+    <ClCompile Include="src\parsers.cc" />
     <ClCompile Include="src\teacc_idl.cc" />
     <ClCompile Include="src\var.cc" />
     <ClCompile Include="src\xio.cc" />
@@ -172,6 +173,7 @@
     <ClInclude Include="include\xio\interpreter\interpreterdll.h" />
     <ClInclude Include="include\xio\interpreter\parsers\ast.h" />
     <ClInclude Include="include\xio\interpreter\parsers\grammar.h" />
+    <ClInclude Include="include\xio\interpreter\parsers\parsers.h" />
     <ClInclude Include="include\xio\interpreter\teacc_idl.h" />
     <ClInclude Include="include\xio\interpreter\var.h" />
     <ClInclude Include="include\xio\interpreter\xio.h" />

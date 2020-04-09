@@ -85,6 +85,32 @@ std::string node::attribute()
     return _token ? _token->attribute() : "[]";
 }
 
+int node::clear_children()
+{
+    for (auto c : _children)
+    {
+        c->clear_children();
+        c->detach();
+        delete c;
+    }
+
+    return 0;
+}
+
+void node::detach()
+{
+    if (!_parent) return;
+    _parent->remove_child(this);
+}
+
+void node::remove_child(ast::node* n)
+{
+    auto ci = std::find(_children.begin(), _children.end(), n);
+    if (ci != _children.end())
+        _children.erase(ci);
+}
+
+
 #pragma endregion TRIGRAPH
 
 node::node(node* _parent_node, lexer::type::token_t *a_token)

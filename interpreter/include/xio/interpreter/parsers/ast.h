@@ -101,40 +101,12 @@ public:
     std::string attribute();
     #pragma endregion TRIGRAPH
     
+
+    int clear_children();
+    void detach();
+    void remove_child(ast::node* n);
 };
 
-//class INTERPRETERAPI astbloc
-//{
-//    parsers::teacc_grammar  _rules;
-//    node* _root = nullptr;
-//    node* _node = nullptr;
-//
-//    using product = utils::expect<node*>;
-//
-//public:
-//    astbloc()   = default;
-//    ~astbloc() = default;
-//
-//    utils::result_code build();
-//
-//private:
-//    // building ast:
-//    astbloc::product enter_rule(parsers::rule_t* rule);
-//
-//
-//    //-------------------------------------------------
-//
-//    // Visiation/Navigation :
-//    node* up();
-//    node::collection _children;
-//    auto begin();
-//    auto end();
-//
-//
-//    // -----------------------------------------
-//    //node::collection::iterator
-//    //node::shared lr_next(node::shared to);
-//};
 
 }
 

@@ -50,6 +50,7 @@ parse_tree::result parse_tree::parse(ast::node *a_input_node)
  */
 parse_tree::result parse_tree::parse_rule(const rule_t *rule, ast::node *input_location)
 {
+    
     return {(notification::push(), " Implement")};
     
 }
@@ -67,6 +68,11 @@ parse_tree::result parse_tree::parse_expression(ast::node *input_location)
 std::string parse_tree::make_dotgraph()
 {
     return "not implemented yet";
+}
+
+void parse_tree::discard_nodes(ast::node* input_location)
+{
+    
 }
 
 }
