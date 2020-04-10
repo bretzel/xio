@@ -23,9 +23,10 @@ class INTERPRETERAPI parse_tree
     ast::node*                      _node = nullptr;
     ast::node*                      _input_node = nullptr;
     
-    
-    
-    lexer::type::token_t::collection*    _tokens_stream = nullptr; ///< Mandatory external working tokens stream storage.
+    teacc_grammar* _rules = nullptr;
+    bloc* _bloc = nullptr;
+
+    lexer::type::token_t::collection*   _tokens_stream = nullptr; ///< Mandatory external working tokens stream storage.
     const char*                         _source = nullptr;
     
 public:
@@ -48,6 +49,7 @@ public:
     
     
     parse_tree() = default;
+    parse_tree(bloc* _bloc, teacc_grammar* rules);
     ~parse_tree();
     
     

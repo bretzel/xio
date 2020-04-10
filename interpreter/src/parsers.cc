@@ -14,8 +14,12 @@ using logger = teacc::utils::journal;
 
 namespace teacc::parsers
 {
+    parse_tree::parse_tree(bloc* _bloc, teacc_grammar* rules)_bloc(_bloc), _rules(rules)
+    {
 
-parse_tree::~parse_tree()
+    }
+
+    parse_tree::~parse_tree()
 {
     logdebugpfn << " \\O/!" << ends;
 }

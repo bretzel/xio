@@ -11,6 +11,7 @@ namespace teacc
 class INTERPRETERAPI interpreter : public bloc
 {
     
+    parsers::teacc_grammar _rules;
     /*!
      * @brief
      */
