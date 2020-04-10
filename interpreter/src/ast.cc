@@ -59,6 +59,8 @@ void node::trace_null_node(node*, int, utils::xstr&)
 
 void node::trace_tree_close(utils::xstr& a_out)
 {
+    a_out << "}\n";
+
 }
 
 void node::tree_attr(utils::xstr& a_out)

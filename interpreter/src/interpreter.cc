@@ -45,7 +45,8 @@ interpreter::~interpreter()
 
 utils::expect<ast::node *> interpreter::tree_unit::compile()
 {
-    
+    _parser.source() = _text;
+    _parser.tokens_stream() = _tokens
     return
     {(
         notification::push(), __PRETTY_FUNCTION__, '\n',
