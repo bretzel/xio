@@ -6,7 +6,7 @@
 #include <xio/lexer/lexer.h>
 #include <xio/utils/notification.h>
 #include <xio/utils/journal.h>
-
+#include <xio/interpreter/interpreter.h>
 
 using teacc::utils::notification;
 using logger = teacc::utils::journal;
@@ -17,14 +17,14 @@ namespace teacc::parsers
 
     
     
-parse_tree::parse_tree(bloc* _bloc, teacc_grammar* rules):_bloc(_bloc), _rules(rules)
+parser::parser(bloc* _bloc):_bloc(_bloc)
 {
 
 }
 
 
     
-parse_tree::~parse_tree()
+parser::~parser()
 {
     logdebugpfn << " \\O/!" << ends;
 }
@@ -34,8 +34,9 @@ parse_tree::~parse_tree()
  * @param a_input_node
  * @return ast::node* root node of the parse tree.
  */
-parse_tree::result parse_tree::parse(ast::node *a_input_node)
+parser::result parser::parse(ast::node *a_input_node)
 {
+
     if(!_tokens_stream || !_source)
     {
         return
@@ -57,29 +58,29 @@ parse_tree::result parse_tree::parse(ast::node *a_input_node)
  * @param input_location
  * @return ast::node*
  */
-parse_tree::result parse_tree::parse_rule(const rule_t *rule, ast::node *input_location)
+parser::result parser::parse_rule(const rule_t *rule, ast::node *input_location)
 {
     
     return {(notification::push(), " Implement")};
     
 }
 
-utils::result_code parse_tree::parse_rule_elements(seq_t::const_iterator seq, ast::node *input_location)
+utils::result_code parser::parse_rule_elements(seq_t::const_iterator seq, ast::node *input_location)
 {
     return {(notification::push(), " Implement")};
     
 }
-parse_tree::result parse_tree::parse_expression(ast::node *input_location)
+parser::result parser::parse_expression(ast::node *input_location)
 {
     return {(notification::push(), " Implement")};
     
 }
-std::string parse_tree::make_dotgraph()
+std::string parser::make_dotgraph()
 {
     return "not implemented yet";
 }
 
-void parse_tree::discard_nodes(ast::node* input_location)
+void parser::discard_nodes(ast::node* input_location)
 {
     
 }

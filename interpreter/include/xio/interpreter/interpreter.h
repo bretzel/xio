@@ -11,24 +11,24 @@ namespace teacc
 class INTERPRETERAPI interpreter : public bloc
 {
     
-    parsers::teacc_grammar _rules;
+    static parsers::teacc_grammar _rules;
+    //parsers::parser               _parser;
     /*!
      * @brief
      */
-    struct tree_unit
+    struct translation_unit
     {
-        using collection = std::vector<interpreter::tree_unit*>;
-        using ast = utils::expect<ast::node*>;
+        using collection    = std::vector<interpreter::translation_unit*>;
+        using expect_ast    = utils::expect<ast::node*>;
         
         std::string         _file;
         const char*         _text = nullptr;
-        parsers::parse_tree _parser;
         lexer::lexscanners  _lexical_data;
+        ast::node*          _ast  = nullptr;
         //...to be continued...
         
-        tree_unit::ast compile();
-        
-        ~tree_unit();
+        translation_unit::expect_ast compile();  
+        ~translation_unit();
     };
     
 public:
@@ -37,11 +37,11 @@ public:
     
     alu jsr() override;
     utils::result_code run();
-    
+    static parsers::teacc_grammar& grammar();
 private:
     utils::result_code build();
-    tree_unit::collection _units;
-    tree_unit*            _unit = nullptr;
+    translation_unit::collection _units;
+    translation_unit*            _unit = nullptr;
 };
 
 }

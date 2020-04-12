@@ -6,6 +6,13 @@ using logger = teacc::utils::journal;
 namespace teacc
 {
 
+
+
+
+
+parsers::teacc_grammar interpreter::_rules;
+
+
 using utils::notification;
 
 
@@ -24,10 +31,15 @@ utils::result_code interpreter::run()
 //        )};
 }
 
+parsers::teacc_grammar& interpreter::grammar()
+{
+    return interpreter::_rules;
+}
+
 
 utils::result_code interpreter::build()
 {
-    _unit = new interpreter::tree_unit;
+    _unit = new interpreter::translation_unit;
     
     
     // *_text is not corrupted in this stack, and left untouched after leave.
@@ -43,10 +55,9 @@ interpreter::~interpreter()
     delete _unit;
 }
 
-utils::expect<ast::node *> interpreter::tree_unit::compile()
+utils::expect<ast::node *> interpreter::translation_unit::compile()
 {
-    _parser.source() = _text;
-    _parser.tokens_stream() = _tokens
+    
     return
     {(
         notification::push(), __PRETTY_FUNCTION__, '\n',
@@ -56,7 +67,7 @@ utils::expect<ast::node *> interpreter::tree_unit::compile()
 }
 
 
-interpreter::tree_unit::~tree_unit()
+interpreter::translation_unit::~translation_unit()
 {
     logdebugpfn << " \\O/!" << ends;
     logdebugpfn << " \\O/!" << ends;

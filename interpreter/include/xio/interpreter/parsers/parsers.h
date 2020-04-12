@@ -11,27 +11,23 @@
 #include <xio/interpreter/parsers/ast.h>
 #include <utility>
 
-//#include <xio/lexer/lexer.h>
+
 
 namespace teacc::parsers
 {
-
-
-class INTERPRETERAPI parse_tree
+class INTERPRETERAPI parser
 {
-    ast::node*                      _root = nullptr;
-    ast::node*                      _node = nullptr;
-    ast::node*                      _input_node = nullptr;
-    
-    teacc_grammar* _rules = nullptr;
+    ast::node* _root = nullptr;
+    ast::node* _node = nullptr;
+    ast::node* _input_node = nullptr;
     bloc* _bloc = nullptr;
 
-    lexer::type::token_t::collection*   _tokens_stream = nullptr; ///< Mandatory external working tokens stream storage.
-    const char*                         _source = nullptr;
-    
+    lexer::type::token_t::collection* _tokens_stream = nullptr; ///< Mandatory external working tokens stream storage.
+    const char* _source = nullptr;
+
 public:
     using result = utils::expect<ast::node*>;
-    
+
     /*!
         @brief Future sequence parse
     */
@@ -40,40 +36,34 @@ public:
         lexer::type::token_t::iterator _start_token;
         lexer::type::token_t::iterator _stop_token;
     };
-    
+
     lexer::type::token_t::collection*& tokens_stream() { return _tokens_stream; }
     const char*& source() { return _source; }
-    ast::node*   ast_root() { return _root; }
-    
-    parse_tree::input_tokens& tokens_sequence() { return _tokens; }
-    
-    
-    parse_tree() = default;
-    parse_tree(bloc* _bloc, teacc_grammar* rules);
-    ~parse_tree();
-    
-    
-    parse_tree::result parse(ast::node* a_input_node = nullptr);
-    parse_tree::result parse_rule(const rule_t* rule, ast::node *input_location);
+    ast::node* ast_root() { return _root; }
+
+    parser::input_tokens& tokens_sequence() { return _tokens; }
+
+    parser() = default;
+    parser(bloc* _bloc);
+    ~parser();
+
+    parser::result parse(ast::node* a_input_node = nullptr);
+    parser::result parse_rule(const rule_t* rule, ast::node* input_location);
     utils::result_code parse_rule_elements(seq_t::const_iterator seq, ast::node* input_location);
-    
+
     /*!
      * @brief -- THE -- reason of teacc grammar and parse tree.
      * @param input_location
      * @return expected ast::node* expression ast root(entry-point) into the parse_tree::result.
      */
-    parse_tree::result parse_expression(ast::node* input_location);
-    
-    
+    parser::result parse_expression(ast::node* input_location);
+
     std::string make_dotgraph();
-    
-    
+
 private:
     input_tokens _tokens;
     void discard_nodes(ast::node* input_location);
-
 };
-
 }
 
 //#endif //LIBXIO_PARSERS_H
