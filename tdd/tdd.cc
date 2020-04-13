@@ -9,6 +9,8 @@
 //#include <xio/interpreter/bloc.h>
 #include <xio/interpreter/interpreter.h>
 
+#include <xio/utils/cargs.h>
+
 #include <signal.h>
 
 void signal_int(int s)
@@ -68,7 +70,7 @@ tdd::result tdd::run()
     //logbook();
     //lexer();
     //alu();
-    interpreter();
+    //interpreter();
     return {
         (
          notification::push(), __PRETTY_FUNCTION__ , ": not implemented, yet..."
@@ -83,9 +85,9 @@ tdd::~tdd()
     teacc::utils::journal::close();
 }
 
-auto main() -> int {
-   tdd _tdd;
-   
+auto main(int arc, char** argv) -> int {
+    tdd _tdd = tdd(arc,argv);
+    
     tdd::result r = _tdd.run();
     loginfopfn << " Notifications:" << ends; //?????????????
     notification::clear(
@@ -186,50 +188,17 @@ tdd::result tdd::init()
     journal::resetstamp(), journal::Hour24;
     logdebugpfn << " mark" << Ends;
     
-
-    // struct a{
-    //     using shared = std::shared_ptr<a>;
-    //     virtual a::shared copy(a::shared _a)
-    //     {
-    //         logdebugpfn << "_a;" << ends;
-    //         return _a;
-    //     }
-    // };
-
-    // struct b:a{
-    //     a::shared copy(a::shared _b) override
-    //     {
-    //         logdebugpfn << "_b;" << ends;
-    //         return _b;
-    //     }
- 
-            
-        
-    // };
-
-    // struct c:b{
-    //     a::shared copy(a::shared _c) override
-    //     {
-    //        logdebugpfn << "_c;" << ends;
-    //        return _c;
-    //     }
-         
-    // };
-
-    // a::shared sa = std::make_shared<a>();
-    // a::shared sb = std::make_shared<b>();
-    // a::shared sc = std::make_shared<c>();
-    // sb->copy(sa);
-    // sc->copy(sa);
-
-    // sa = sb;
-    // sa->copy(sc);
-    // sa = sc;
-    // sa->copy(sb);
-    // teacc::bloc::shared the_root_bloc = teacc::make<teacc::bloc>(nullptr,nullptr,nullptr);
-
-
-
+    teacc::utils::cargs<tdd> cmd;
+    //for(teacc::utils::cargs<tdd>::arg& arg :
+    for(const auto& arg : teacc::utils::cargs<tdd>::arg::collection
+        {
+            {"test", 't', true, 1,&tdd::test_cargs},{"logfile",'l',true,1,&tdd::set_logfile}
+        }
+    )
+    {
+        cmd  << arg;
+    }
+    
     return notification::code::ok;
 }
 
@@ -245,3 +214,19 @@ tdd::result tdd::interpreter()
         notification::push(), __PRETTY_FUNCTION__, " complete."
     )};
 }
+tdd::result tdd::test_cargs(const std::string &_arg)
+{
+    logdebugpfn << ends;
+    
+    return teacc::utils::notification::code::implement;
+}
+tdd::result tdd::set_logfile(const std::string &_arg)
+{
+        return tdd::result();
+}
+
+
+
+
+
+
