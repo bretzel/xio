@@ -166,6 +166,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\collection.cc" />
     <ClCompile Include="src\journal.cc" />
     <ClCompile Include="src\notification.cc" />
     <ClCompile Include="src\xchronos.cc" />
@@ -180,6 +181,7 @@
     <None Include="include\xio\utils\expect" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\xio\utils\collection.h" />
     <ClInclude Include="include\xio\utils\journal.h" />
     <ClInclude Include="include\xio\utils\notification.h" />
     <ClInclude Include="include\xio\utils\xchronos.h" />
