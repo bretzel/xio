@@ -43,7 +43,7 @@ public:
         std::string _name;
         bool        _opt = true;
         char        _s   = 0;
-        int         _argc = 0;
+        int         _argc = -1; ///< -1 = unlimited arguments to this arg; 0 = no args; >0 = 1.._argc args
         cargs<ClassT>::proc_fn _proc = nullptr;
         xstr::collection _args;
         
@@ -88,7 +88,10 @@ public:
             _proc = std::move(_a._proc);
             return *this;
         }
-        ~arg() = default;
+        ~arg()
+        {
+            _args.clear();
+        }
         
     };
     
@@ -99,6 +102,18 @@ public:
     {
         _args.push_back(_a);
         return *this;
+    }
+    
+    result_code process(int argc, char** argv)
+    {
+        if(_args.empty())
+            return {( teacc::utils::notification::push(), "Command line arguments processor is empty")};
+        if(argc < 2)
+            return {(teacc::utils::notification::push(), "No command line arguments given (argc = ", argc, ')')};
+        
+        //...
+        
+        return notification::code::implement;
     }
     
 };

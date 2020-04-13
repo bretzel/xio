@@ -189,15 +189,17 @@ tdd::result tdd::init()
     logdebugpfn << " mark" << Ends;
     
     teacc::utils::cargs<tdd> cmd;
-    //for(teacc::utils::cargs<tdd>::arg& arg :
+    
     for(const auto& arg : teacc::utils::cargs<tdd>::arg::collection
         {
-            {"test", 't', true, 1,&tdd::test_cargs},{"logfile",'l',true,1,&tdd::set_logfile}
-        }
-    )
+            {"test", 't', true, 1,&tdd::test_cargs},
+            {"logfile",'l',true,1,&tdd::set_logfile}
+        })
     {
         cmd  << arg;
     }
+    
+    cmd.process(_argc, _argv);
     
     return notification::code::ok;
 }
