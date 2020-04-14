@@ -192,8 +192,8 @@ tdd::result tdd::init()
     
     for(const auto& arg : teacc::utils::cargs<tdd>::arg::collection
         {
-            {"test", 't', true, 1,&tdd::test_cargs},
-            {"logfile",'l',true,1,&tdd::set_logfile}
+            {"test", 't', true, 1,&tdd::test_cargs, "This is a description text..."},
+            {"logfile",'l',true,1,&tdd::set_logfile, "Give the log file/path/name"}
         })
     {
         cmd  << arg;
