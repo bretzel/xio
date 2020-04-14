@@ -11,7 +11,7 @@
 
 #include <xio/utils/cargs.h>
 
-#include <signal.h>
+#include <csignal>
 
 void signal_int(int s)
 {
@@ -42,11 +42,11 @@ void install_signals()
 {
     
     LogNoticeFn << teacc::utils::log::color::Yellow << " SIGINT" << Ends;
-    ::signal(SIGINT, signal_int);
+    std::signal(SIGINT, signal_int);
     LogNoticeFn  << teacc::utils::log::color::HRed << " SIGSEGV" << Ends;
-    ::signal(SIGSEGV, signal_segfault);
+    std::signal(SIGSEGV, signal_segfault);
     LogNoticeFn << teacc::utils::log::color::HRed << "SIGABRT" << Ends;
-    ::signal(SIGABRT, sig_abort);
+    std::signal(SIGABRT, sig_abort);
 }
 
 

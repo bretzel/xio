@@ -8,7 +8,7 @@
 
 #include <xio/utils/xstr.h>
 #include <xio/utils/expect.h>
-
+#include <xio/utils/journal.h>
 
 namespace teacc::utils
 {
@@ -77,6 +77,7 @@ public:
             _opt = _a._opt;
             _s = _a._s;
             _proc = _a._proc;
+            _argc = _a.argc;
             return *this;
         }
         
@@ -86,11 +87,22 @@ public:
             _opt = std::move(_a._opt);
             _s = std::move(_a._s);
             _proc = std::move(_a._proc);
+            _argc = std::move(_a.argc);
             return *this;
         }
         ~arg()
         {
             _args.clear();
+        }
+        std::string operator()()
+        {
+            utils::xstr str;
+            str = "{\n";
+            str << "    long ID :" << _name << "\n"
+            <<  "    short ID:"  << _s <<  "\n"
+            << "    optional:"  << (_opt ? "yes" : "no") << "\n"
+            << "    required:"  << _argc << "\n}";
+            return str();
         }
         
     };
@@ -111,6 +123,11 @@ public:
         if(argc < 2)
             return {(teacc::utils::notification::push(), "No command line arguments given (argc = ", argc, ')')};
         
+        logdebugpfn << " dump arguments:" << ends;
+        for(auto argument : _args)
+        {
+            loginfo << utils::journal::brk() <<  argument() << ends;
+        }
         //...
         
         return notification::code::implement;
