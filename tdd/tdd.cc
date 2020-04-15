@@ -102,7 +102,7 @@ auto main(int arc, char** argv) -> int {
 }
 
 
-tdd::result tdd::alu()
+tdd::result tdd::alu(const std::string &src_code)
 {
     teacc::alu a = 4.02;
     teacc::alu b = 0;
@@ -139,10 +139,10 @@ tdd::result tdd::alu()
 
 
 
-tdd::result tdd::lexer()
+tdd::result tdd::lexer(const std::string &src_code)
 {
     teacc::lexer::lexscanners lexer;
-    teacc::lexer::lexscanners::code code = lexer["a = 4ac(45 * pi  + b) + sin0.3;"];
+    teacc::lexer::lexscanners::code code = lexer[src_code.c_str()]; //lexer["a = 4ac(45 * pi  + b) + sin0.3;"];
     if (!code) return code.note();
 
 //    for (auto t : lexer.tokens())
@@ -163,7 +163,7 @@ tdd::result tdd::lexer()
     return notification::code::ok;
 }
 
-tdd::result tdd::logbook()
+tdd::result tdd::logbook(const std::string &src_code)
 {
     std::cout << "teacc::logbook::document_element::tagname(teacc::logbook::document_element::tag::div): " << doc_element::tagname(doc_element::tag::div)() << '\n';
 
@@ -205,7 +205,7 @@ tdd::result tdd::init()
 }
 
 
-tdd::result tdd::interpreter()
+tdd::result tdd::interpreter(const std::string &src_code)
 {
     teacc::interpreter interpreter;
     teacc::utils::result_code r = interpreter.run();

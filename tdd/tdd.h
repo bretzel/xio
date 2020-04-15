@@ -25,10 +25,10 @@ public:
 
     tdd::result init();
     
-    tdd::result lexer();
-    tdd::result logbook();
-    tdd::result alu();
-    tdd::result interpreter();
+    tdd::result lexer(const std::string& src_code);
+    tdd::result logbook(const std::string& logfile);
+    tdd::result alu(const std::string&);
+    tdd::result interpreter(const std::string &src_code);
     tdd::result test_cargs(const std::string& _arg);
     tdd::result set_logfile(const std::string &_arg);
     

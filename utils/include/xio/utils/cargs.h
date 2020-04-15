@@ -44,8 +44,8 @@ public:
         std::string _name;
         bool        _opt = true;
         char        _s   = 0;
-        int         _argc = -1; ///< -1 = unlimited arguments to this arg; 0 = no args; >0 = 1.._argc args
-        std::string _desc;
+        int         _argc = -1; ///< -1 = unlimited arguments to this arg; 0 = no args; >0 = 1+ args
+        std::string _desc; ///< Description text;
         // ------------------------------------------------------------------------------------------------
         cargs<ClassT>::proc_fn _proc = nullptr;
         
@@ -121,6 +121,7 @@ public:
     typename arg::collection::iterator _c;
     
     cargs() = default;
+    
     cargs&  operator << (const arg& _a) noexcept
     {
         _args.push_back(_a);
@@ -133,11 +134,18 @@ public:
     
     auto find(const std::string& _in_args)
     {
+        std::string token;
         auto ci = begin();
+        if(_in_args.find_first_of("--",0) == 0)
+            token = "--" + _in_args;
+        else if(_in_args.find_first_of('-', 0) == 0)
+            token = "-" + _in_args;
+        else
+            token = _in_args;
+
         while(ci != end())
         {
-            std::string token = "--" + _in_args;
-            
+        
         }
     }
     result_code process(int argc, char** argv)
@@ -147,13 +155,15 @@ public:
         if(argc < 2)
             return {(teacc::utils::notification::push(), "No command line arguments given (argc = ", argc, ')')};
         
-        
+        _c = _args.begin();
         int i = 1; // First argument;
         
         do
         {
             
             logdebugfn << ": " << utils::journal::White << i << "(" << std::strlen(argv[i]) << "): '" << utils::journal::Yellow << argv[i++] << utils::journal::White << "'\n" << ends;
+            arg& a = find(argv[i]);
+            
             
         }while(i<argc);
         
