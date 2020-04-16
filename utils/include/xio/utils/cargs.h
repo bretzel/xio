@@ -138,10 +138,8 @@ public:
         std::string token = _in_args;
         int e;
         auto ci = begin();
-        e = _in_args.find_first_of("--", 0) != 0 ? 2 : _in_args.find_first_of('-', 0) != 0 ? 1 : 0;
-        
-        if(e)
-            token.erase(0,e);
+
+        token.erase(0, _in_args.find_first_of("--", 0) != 0 ? 2 : _in_args.find_first_of('-', 0) != 0 ? 1 : 0);
         
         return std::find(_args.begin(),_args.end(), token);
     }
