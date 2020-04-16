@@ -192,12 +192,13 @@ tdd::result tdd::init()
     
     for(const auto& arg : teacc::utils::cargs<tdd>::arg::collection
         {
+            {"help", 'h', true, 1,&tdd::help, "print out the usage on the console."},
             {"test", 't', true, 1,&tdd::test_cargs, "This is a description text..."},
             {"logfile",'l',true,1,&tdd::set_logfile, "Give the log file/path/name"}
-        })
-    {
+        }
+        )
         cmd  << arg;
-    }
+    
     
     cmd.process(_argc, _argv);
     
@@ -224,7 +225,11 @@ tdd::result tdd::test_cargs(const std::string &_arg)
 }
 tdd::result tdd::set_logfile(const std::string &_arg)
 {
-        return tdd::result();
+    return teacc::utils::notification::code::implement;
+}
+tdd::result tdd::help(const std::string &)
+{
+    return teacc::utils::notification::code::implement;
 }
 
 

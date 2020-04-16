@@ -118,6 +118,7 @@ public:
     };
     
     typename arg::collection _args;
+    std::vector<typename arg::collection::iterator> _uses;
     typename arg::collection::iterator _c;
     
     cargs() = default;
@@ -134,38 +135,40 @@ public:
     
     auto find(const std::string& _in_args)
     {
-        std::string token;
+        std::string token = _in_args;
+        int e;
         auto ci = begin();
-        if(_in_args.find_first_of("--",0) == 0)
-            token = "--" + _in_args;
-        else if(_in_args.find_first_of('-', 0) == 0)
-            token = "-" + _in_args;
-        else
-            token = _in_args;
-
-        while(ci != end())
-        {
+        e = _in_args.find_first_of("--", 0) != 0 ? 2 : _in_args.find_first_of('-', 0) != 0 ? 1 : 0;
         
-        }
+        if(e)
+            token.erase(0,e);
+        
+        return std::find(_args.begin(),_args.end(), token);
     }
+    
+    
     result_code process(int argc, char** argv)
     {
+        int argn = 1; // First switch/argument
+        
         if(_args.empty())
             return {( teacc::utils::notification::push(), "Command line arguments processor is empty")};
         if(argc < 2)
             return {(teacc::utils::notification::push(), "No command line arguments given (argc = ", argc, ')')};
         
-        _c = _args.begin();
-        int i = 1; // First argument;
-        
         do
         {
+            logdebugfn << ": " << utils::journal::White << argn << "(" << std::strlen(argv[argn]) << "): '" << utils::journal::Yellow << argv[argn] << utils::journal::White << "'\n" << ends;
+            arg a  = find(argv[argn]);
+            if(a==_args.end())
+            {
+                if(_c == _args.end())
+                {
+                
+                }
+            }
             
-            logdebugfn << ": " << utils::journal::White << i << "(" << std::strlen(argv[i]) << "): '" << utils::journal::Yellow << argv[i++] << utils::journal::White << "'\n" << ends;
-            arg& a = find(argv[i]);
-            
-            
-        }while(i<argc);
+        }while(argn<argc);
         
         logdebugpfn << " dump arguments:" << ends;
         for(auto argument : _args)

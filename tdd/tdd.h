@@ -30,6 +30,7 @@ public:
     tdd::result alu(const std::string&);
     tdd::result interpreter(const std::string &src_code);
     tdd::result test_cargs(const std::string& _arg);
+    tdd::result help(const std::string &);
     tdd::result set_logfile(const std::string &_arg);
     
 
