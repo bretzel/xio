@@ -156,7 +156,12 @@ public:
         
         do
         {
-            logdebugfn << ": " << utils::journal::White << argn << "(" << std::strlen(argv[argn]) << "): '" << utils::journal::Yellow << argv[argn] << utils::journal::White << "'\n" << ends;
+            logdebugfn << ": "
+            << utils::journal::White
+            << argn
+            << "(" << std::strlen(argv[argn]) << "): '"
+            << utils::journal::Yellow << argv[argn] << utils::journal::White << "'\n"
+            << ends;
             arg a  = find(argv[argn]);
             if(a==_args.end())
             {
