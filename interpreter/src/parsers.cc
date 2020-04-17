@@ -17,7 +17,7 @@ namespace teacc::parsers
 
     
     
-parser::parser(bloc* _bloc):_bloc(_bloc)
+parser::parser(ast::node* a_bloc): _bloc(a_bloc)
 {
 
 }

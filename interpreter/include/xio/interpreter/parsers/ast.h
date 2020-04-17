@@ -27,7 +27,8 @@ namespace teacc::ast
 /*!
     @brief ...
 
-    @note Pour l'instant, les ast sont des structures passives. 
+    @note Pour l'instant, les ast sont des structures passives exceptées celles d'une expression arithmétique.
+          Right now, the ast structs are passive unless parsing arithmetic expression...
 */
 struct INTERPRETERAPI node
 {
@@ -45,7 +46,7 @@ struct INTERPRETERAPI node
     
     node::collection _children; ///< Recursive descendant immeditate children ast nodes. Récursion descendante de l'arbre abstrait.
     parsers::term_t  _term; ///< Element de la règle : { sous-règle en récursion; terminale; directive; }
-                            ///< Element's rule : { récursive (sub-)rule; terminal; directive; }
+                            ///< Element's rule : { recursive (sub-)rule; terminal; directive; }
     
     xio*      _xio = nullptr;  ///< Élément concret produit.
                             ///< Produced concrete element

@@ -160,16 +160,16 @@ public:
             << utils::journal::White
             << argn
             << "(" << std::strlen(argv[argn]) << "): '"
-            << utils::journal::Yellow << argv[argn] << utils::journal::White << "'\n"
+            << utils::journal::Yellow << argv[argn++] << utils::journal::White << "'\n"
             << ends;
-            arg a  = find(argv[argn]);
-            if(a==_args.end())
-            {
-                if(_c == _args.end())
-                {
-                
-                }
-            }
+//            arg a  = find(argv[argn]);
+//            if(a==_args.end())
+//            {
+//                if(_c == _args.end())
+//                {
+//
+//                }
+//            }
             
         }while(argn<argc);
         

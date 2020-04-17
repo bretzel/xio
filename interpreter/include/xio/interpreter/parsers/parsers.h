@@ -15,21 +15,31 @@
 
 namespace teacc::parsers
 {
+
+
+/*!
+ * @brief Class parser produces the AST from the|sequence of tokens stream.
+ *
+ * @author &copy; 2020, Serge Lussier / Lonesomecoder (lussier.serge@gmail.com)
+ *
+ */
 class INTERPRETERAPI parser
 {
-    ast::node* _root = nullptr;
-    ast::node* _node = nullptr;
-    ast::node* _input_node = nullptr;
-    bloc* _bloc = nullptr;
+    ast::node* _root = nullptr; ///< Entry node of the AST.
+    ast::node* _node = nullptr; ///< Current node;
+    ast::node* _input_node = nullptr; ///< ...Input node...
+    ast::node* _bloc = nullptr; ///< Current Bloc/?
+    // bloc* _bloc = nullptr;
+    
 
-    lexer::type::token_t::collection* _tokens_stream = nullptr; ///< Mandatory external working tokens stream storage.
-    const char* _source = nullptr;
+    lexer::type::token_t::collection* _tokens_stream = nullptr; ///< Does not owns the tokens stream.
+    const char* _source = nullptr; ///< Source code...
 
 public:
-    using result = utils::expect<ast::node*>;
-
+    using result = utils::expect<ast::node*>; ///< Holds the _root node (ptr-to).
+    
     /*!
-        @brief Future sequence parse
+        @brief For Future tokens  (sub-)sequence parse
     */
     struct input_tokens
     {
@@ -41,10 +51,10 @@ public:
     const char*& source() { return _source; }
     ast::node* ast_root() { return _root; }
 
-    parser::input_tokens& tokens_sequence() { return _tokens; }
+    parser::input_tokens& tokens_sequence() { return _tokens_seq; }
 
     parser() = default;
-    parser(bloc* _bloc);
+    parser(ast::node* a_bloc);
     ~parser();
 
     parser::result parse(ast::node* a_input_node = nullptr);
@@ -61,7 +71,7 @@ public:
     std::string make_dotgraph();
 
 private:
-    input_tokens _tokens;
+    input_tokens _tokens_seq;
     void discard_nodes(ast::node* input_location);
 };
 }
